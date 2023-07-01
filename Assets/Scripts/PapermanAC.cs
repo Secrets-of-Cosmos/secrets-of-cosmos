@@ -52,29 +52,29 @@ public class PapermanAC : MonoBehaviour
     {
         vertical = Input.GetAxis("Vertical");
         horizontal = Input.GetAxis("Horizontal");
-        Vector3 movementDirection = new Vector3(horizontal, 0, vertical).normalized;
-        if(movementDirection != Vector3.zero)
-        {
-            float targetAngle = Mathf.Atan2(movementDirection.x, movementDirection.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, 0.1f);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-        }
-        //animator.SetFloat("Vertical", vertical, 0.1f, Time.deltaTime);
-        //animator.SetFloat("Horizontal", horizontal, 0.1f, Time.deltaTime);
-        bool movement = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) 
-            || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
-        if (movement && Input.GetKey(KeyCode.LeftShift))
-        {
-            animator.SetFloat("inputMag", 1f, 0.05f, Time.deltaTime);
-        }
-        else if(movement)
-        {
-            animator.SetFloat("inputMag", 0.5f, 0.05f, Time.deltaTime);
-        }
-        else
-        {
-            animator.SetFloat("inputMag", 0.0f, 0.05f, Time.deltaTime);
-        }
+        //Vector3 movementDirection = new Vector3(horizontal, 0, vertical).normalized;
+        //if (movementDirection != Vector3.zero)
+        //{
+        //    float targetAngle = Mathf.Atan2(movementDirection.x, movementDirection.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+        //    float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, 0.1f);
+        //    transform.rotation = Quaternion.Euler(0f, angle, 0f);
+        //}
+        animator.SetFloat("Vertical", vertical, 0.1f, Time.deltaTime);
+        animator.SetFloat("Horizontal", horizontal, 0.1f, Time.deltaTime);
+        //bool movement = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) 
+        //    || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
+        //if (movement && Input.GetKey(KeyCode.LeftShift))
+        //{
+        //    animator.SetFloat("inputMag", 1f, 0.05f, Time.deltaTime);
+        //}
+        //else if(movement)
+        //{
+        //    animator.SetFloat("inputMag", 0.5f, 0.05f, Time.deltaTime);
+        //}
+        //else
+        //{
+        //    animator.SetFloat("inputMag", 0.0f, 0.05f, Time.deltaTime);
+        //}
 
 
         //Vector3 movementDirection = new Vector3(horizontal, 0, vertical);
@@ -85,6 +85,7 @@ public class PapermanAC : MonoBehaviour
         //    Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
         //    transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 720f * Time.deltaTime);
         //}
+
 
 
 
