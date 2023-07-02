@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class SpaceTravel : MonoBehaviour
+public class SceneAdmin : MonoBehaviour
 {
     public Transform spaceship; // Uzay aracının Transform component'ı
     public Transform[] planets; // Gezegenlerin Transform component'ları
@@ -64,8 +64,5 @@ public class SpaceTravel : MonoBehaviour
         RenderSettings.skybox = skyboxes[planetIndex];
         Camera.main.transform.position = new Vector3(0, 1000, 0);
         Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
-    
-        
-
     }
 }
