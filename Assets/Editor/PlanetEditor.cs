@@ -1,46 +1,61 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(Planet))]
-public class PlanetEditor : Editor
-{
+public class PlanetEditor : Editor {
+
     Planet planet;
+    Editor shapeEditor;
+    Editor colourEditor;
 
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
+	public override void OnInspectorGUI()
+	{
+        using (var check = new EditorGUI.ChangeCheckScope())
+        {
+            base.OnInspectorGUI();
+            if (check.changed)
+            {
+                planet.GeneratePlanet();
+            }
+        }
 
-        if(GUILayout.Button("Generate Planet"))
+        if (GUILayout.Button("Generate Planet"))
         {
             planet.GeneratePlanet();
         }
 
-        DrawSettingsEditor(planet.shapeSettings, planet.OnShapeSettingsUpdated);
-        DrawSettingsEditor(planet.colorSettings, planet.OnColorSettingsUpdated);
-    }
+        DrawSettingsEditor(planet.shapeSettings, planet.OnShapeSettingsUpdated, ref planet.shapeSettingsFoldout, ref shapeEditor);
+        DrawSettingsEditor(planet.colourSettings, planet.OnColourSettingsUpdated, ref planet.colourSettingsFoldout, ref colourEditor);
+	}
 
-    void DrawSettingsEditor(Object settings, System.Action onSettingsUpdated)
+    void DrawSettingsEditor(Object settings, System.Action onSettingsUpdated, ref bool foldout, ref Editor editor)
     {
-        using (var check = new EditorGUI.ChangeCheckScope())
+        if (settings != null)
         {
-            EditorGUILayout.InspectorTitlebar(true, settings);
-            Editor editor = CreateEditor(settings);
-            editor.OnInspectorGUI();
-
-            if(check.changed)
+            foldout = EditorGUILayout.InspectorTitlebar(foldout, settings);
+            using (var check = new EditorGUI.ChangeCheckScope())
             {
-                if(onSettingsUpdated != null) 
+                if (foldout)
                 {
-                    onSettingsUpdated();
+                    CreateCachedEditor(settings, null, ref editor);
+                    editor.OnInspectorGUI();
+
+                    if (check.changed)
+                    {
+                        if (onSettingsUpdated != null)
+                        {
+                            onSettingsUpdated();
+                        }
+                    }
                 }
             }
         }
     }
 
-    private void OnEnable()
-    {
-        planet = (Planet) target;
-    }
+	private void OnEnable()
+	{
+        planet = (Planet)target;
+	}
 }
