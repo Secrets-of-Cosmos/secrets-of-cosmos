@@ -29,23 +29,14 @@ public class PapermanAC : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
-        animator.SetBool("isMoving", true);
     }
 
     private void Update()
     {
+        
         if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded)
         {
             updateJump = true;
-        }
-        if (Input.GetKeyDown(KeyCode.LeftShift) && characterController.isGrounded && Input.GetKey("w"))
-        {
-            bool run = animator.GetBool("isRunning");
-            animator.SetBool("isRunning", !run);
-        }
-        else if (!Input.GetKey("w") | Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            animator.SetBool("isRunning", false);
         }
     }
     private void FixedUpdate()
@@ -59,10 +50,11 @@ public class PapermanAC : MonoBehaviour
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, 0.1f);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
         }
-        //animator.SetFloat("Vertical", vertical, 0.1f, Time.deltaTime);
-        //animator.SetFloat("Horizontal", horizontal, 0.1f, Time.deltaTime);
+
+
         bool movement = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) 
             || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
+
         if (movement && Input.GetKey(KeyCode.LeftShift))
         {
             animator.SetFloat("inputMag", 1f, 0.05f, Time.deltaTime);
@@ -76,50 +68,8 @@ public class PapermanAC : MonoBehaviour
             animator.SetFloat("inputMag", 0.0f, 0.05f, Time.deltaTime);
         }
 
+        JumpCheck();
 
-        //Vector3 movementDirection = new Vector3(horizontal, 0, vertical);
-        //movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
-        //movementDirection.Normalize();
-        //if (movementDirection != Vector3.zero && Input.GetKey("w"))
-        //{
-        //    Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-        //    transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 720f * Time.deltaTime);
-        //}
-
-
-
-        if (updateJump)
-        {
-            animator.SetBool("isJumpingUp", true);
-            animator.SetBool("isMoving", false);
-            Jump();
-            updateJump = false;
-        }
-        else
-        {
-            animator.SetBool("isJumpingUp", false);
-        }
-
-        if(isJumping)
-        {
-            animator.SetBool("isFalling", true);
-            animator.SetBool("isMoving", false);
-            velocity.y -= gravity * Time.deltaTime;
-            characterController.Move(velocity * Time.deltaTime);
-            isJumping = !characterController.isGrounded;
-            rootMotion = Vector3.zero;
-        }
-        else
-        {
-            characterController.Move(rootMotion + Vector3.down);
-            rootMotion = Vector3.zero;
-            animator.SetBool("isMoving", true);
-        }
-
-        if(characterController.isGrounded)
-        {
-            animator.SetBool("isFalling", false);
-        }
     }
 
     private void OnAnimatorMove()
@@ -135,6 +85,39 @@ public class PapermanAC : MonoBehaviour
         isJumping = true;
         velocity = animator.velocity * jumpSpeed;
         velocity.y = Mathf.Sqrt(2 * gravity * jumpHeight);
+    }
+
+    private void JumpCheck()
+    {
+        if (updateJump)
+        {
+            animator.SetBool("isJumpingUp", true);
+            Jump();
+            updateJump = false;
+        }
+        else
+        {
+            animator.SetBool("isJumpingUp", false);
+        }
+
+        if (isJumping | !characterController.isGrounded)
+        {
+            animator.SetBool("isFalling", true);
+            velocity.y -= gravity * Time.deltaTime;
+            characterController.Move(velocity * Time.deltaTime);
+            isJumping = !characterController.isGrounded;
+            rootMotion = Vector3.zero;
+        }
+        else
+        {
+            characterController.Move(rootMotion + Vector3.down);
+            rootMotion = Vector3.zero;
+        }
+
+        if (characterController.isGrounded)
+        {
+            animator.SetBool("isFalling", false);
+        }
     }
 
     private void OnApplicationFocus(bool focus)
