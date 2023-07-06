@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b43860785a59f7a40a3ea16e8cb36996
+guid: a4a68fccea24c2848815a9d3b8a7b3f7
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -528,13 +528,13 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: X Bot@Idle (1)(Clone)
+    - name: Idle_Paperman 1(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: mixamorig:Hips
-      parentName: X Bot@Idle (1)(Clone)
+      parentName: Idle_Paperman 1(Clone)
       position: {x: -0.0014418326, y: 1.0337951, z: 0.01422837}
       rotation: {x: -0.02475516, y: 0.046750005, z: 0.030972213, w: 0.9981194}
       scale: {x: 1, y: 1, z: 1}
