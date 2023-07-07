@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Level/Scenes/Earth.unity
     guid: ef6131f4f15fc4c338fe14eb26065c39
+  - enabled: 1
+    path: Assets/Level/Scenes/Start.unity
+    guid: f58c60207850b487c99ad2dda69f8557
+  - enabled: 1
+    path: Assets/Level/Scenes/Interior_ISS.unity
+    guid: 86019d02e2b1c4f48b987af5da643a9c
   m_configObjects: {}
