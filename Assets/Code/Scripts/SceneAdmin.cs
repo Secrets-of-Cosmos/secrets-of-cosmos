@@ -62,7 +62,8 @@ public class SceneAdmin : MonoBehaviour
         transitionAnimator.SetTrigger("End");
         RenderSettings.ambientIntensity = 10f;
         RenderSettings.skybox = skyboxes[planetIndex];
-        Camera.main.transform.position = new Vector3(0, 1000, 0);
-        Camera.main.transform.rotation = Quaternion.Euler(90, 0, 0);
+        spaceship.transform.position = new Vector3(0, 1000, 0);
+        spaceship.transform.rotation = Quaternion.Euler(90, 0, 0);
+        spaceship.GetComponent<Rigidbody>().useGravity = true;
     }
 }
