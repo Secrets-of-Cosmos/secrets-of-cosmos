@@ -13,7 +13,6 @@ public class TerrainGenerator : MonoBehaviour {
 
 	public MeshSettings meshSettings;
 	public HeightMapSettings heightMapSettings;
-	public TextureData textureSettings;
 
 	public Transform viewer;
 	public Material mapMaterial;
@@ -31,6 +30,9 @@ public class TerrainGenerator : MonoBehaviour {
 		float maxViewDst = detailLevels [detailLevels.Length - 1].visibleDstThreshold;
 		meshWorldSize = meshSettings.meshWorldSize;
 		chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / meshWorldSize);
+
+		var spaceShip = FindFirstObjectByType<SceneAdmin>()?.spaceship;
+		if (spaceShip != null) viewer = spaceShip;
 
 		UpdateVisibleChunks ();
 	}

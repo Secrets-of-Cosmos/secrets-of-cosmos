@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Level/Scenes/Solar System.unity
     guid: 3d30ea45d92064393b6d5fe80c5d7357
   - enabled: 1
-    path: Assets/Level/Scenes/Earth.unity
-    guid: ef6131f4f15fc4c338fe14eb26065c39
+    path: Assets/Level/Scenes/PlanetSurfaces/Mars.unity
+    guid: d9f8c2fdf48824faaa2ed178aa5dc8ef
+  - enabled: 1
+    path: Assets/Level/Scenes/PlanetSurfaces/Earth.unity
+    guid: 1d61ee1984dc64801a57a0322c2b59b4
   m_configObjects: {}
