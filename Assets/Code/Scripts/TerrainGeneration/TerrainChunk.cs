@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Unity.AI.Navigation;
 using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class TerrainChunk {
 	
@@ -120,14 +116,14 @@ public class TerrainChunk {
 						meshFilter.mesh = lodMesh.mesh;
 
 						if (lodIndex == 0) {
-							if (!placedObjects) PlaceObjects(meshFilter.mesh.vertices);
+							if (!placedObjects) PlaceObjects();
 							else objects.ForEach(x => {
-								if (x.IsDestroyed() is false) x.SetActive(true);
+								if (!x.IsDestroyed()) x.SetActive(true);
 							});
 						}
 						else {
 							if (placedObjects) objects.ForEach(x => {
-								if (x.IsDestroyed() is false) x.SetActive(false);
+								if (!x.IsDestroyed()) x.SetActive(false);
 							});
 						}
 						
@@ -149,8 +145,8 @@ public class TerrainChunk {
 		}
 	}
 
-	public void PlaceObjects(Vector3[] vertices) {
-		List<int> indices = Enumerable.Range(0, vertices.Length).ToList();
+	public void PlaceObjects() {
+		List<int> indices = Enumerable.Range(0, meshFilter.mesh.vertices.Length).ToList();
 		
 		for (int i = 0; i < generator.placeableObjects.Length; i++)
 		{
@@ -163,8 +159,14 @@ public class TerrainChunk {
 				Vector3 verticePosition = meshFilter.mesh.vertices[selectedVertice];
 				Vector3 worldVerticePosition = meshFilter.transform.TransformPoint(verticePosition);
 
-				GameObject gameObject = Object.Instantiate(generator.placeableObjects[i].gameObject, worldVerticePosition, Quaternion.identity);
-				gameObject.transform.localScale = Vector3.one * (5 * Random.Range(0.7f, 1.3f)); // TODO: Remove this
+				Quaternion rotation = Quaternion.FromToRotation(Vector3.up, meshFilter.mesh.normals[selectedVertice]);
+
+				GameObject gameObject = Object.Instantiate(generator.placeableObjects[i].gameObject, worldVerticePosition, rotation);
+				
+				// TODO: Local scale and position will be adjusted furthermore
+				gameObject.transform.localScale = Vector3.one * (generator.placeableObjects[i].scale * Random.Range(0.7f, 1.3f)); 
+				gameObject.transform.localPosition -= Vector3.up * 0.2f;
+				
 				gameObject.transform.parent = meshObject.transform;
 
 				objects.Add(gameObject);

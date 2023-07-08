@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.AI.Navigation;
-using UnityEngine.AI;
 
 public class TerrainGenerator : MonoBehaviour {
 
@@ -110,5 +107,6 @@ public struct LODInfo {
 [System.Serializable]
 public struct PlaceableObject {
 	public int countPerChunk;
+	public float scale;
 	public GameObject gameObject;
 }
