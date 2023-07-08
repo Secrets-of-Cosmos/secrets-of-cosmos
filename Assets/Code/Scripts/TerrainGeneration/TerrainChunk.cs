@@ -1,4 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Unity.AI.Navigation;
+using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
+using UnityEditor.Timeline.Actions;
+using UnityEngine;
+using UnityEngine.AI;
 
 public class TerrainChunk {
 	
@@ -10,6 +17,7 @@ public class TerrainChunk {
 	Vector2 sampleCentre;
 	Bounds bounds;
 
+	TerrainGenerator generator;
 	MeshRenderer meshRenderer;
 	MeshFilter meshFilter;
 	MeshCollider meshCollider;
@@ -28,6 +36,9 @@ public class TerrainChunk {
 	MeshSettings meshSettings;
 	Transform viewer;
 
+	private List<GameObject> objects = new List<GameObject>();
+	private bool placedObjects = false;
+	
 	public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material) {
 		this.coord = coord;
 		this.detailLevels = detailLevels;
@@ -39,8 +50,7 @@ public class TerrainChunk {
 		sampleCentre = coord * meshSettings.meshWorldSize / meshSettings.meshScale;
 		Vector2 position = coord * meshSettings.meshWorldSize ;
 		bounds = new Bounds(position,Vector2.one * meshSettings.meshWorldSize );
-
-
+		
 		meshObject = new GameObject("Terrain Chunk");
 		meshRenderer = meshObject.AddComponent<MeshRenderer>();
 		meshFilter = meshObject.AddComponent<MeshFilter>();
@@ -49,6 +59,7 @@ public class TerrainChunk {
 
 		meshObject.transform.position = new Vector3(position.x,0,position.y);
 		meshObject.transform.parent = parent;
+		generator = meshObject.GetComponentInParent<TerrainGenerator>();
 		SetVisible(false);
 
 		lodMeshes = new LODMesh[detailLevels.Length];
@@ -107,6 +118,19 @@ public class TerrainChunk {
 					if (lodMesh.hasMesh) {
 						previousLODIndex = lodIndex;
 						meshFilter.mesh = lodMesh.mesh;
+
+						if (lodIndex == 0) {
+							if (!placedObjects) PlaceObjects(meshFilter.mesh.vertices);
+							else objects.ForEach(x => {
+								if (x.IsDestroyed() is false) x.SetActive(true);
+							});
+						}
+						else {
+							if (placedObjects) objects.ForEach(x => {
+								if (x.IsDestroyed() is false) x.SetActive(false);
+							});
+						}
+						
 					} else if (!lodMesh.hasRequestedMesh) {
 						lodMesh.RequestMesh (heightMap, meshSettings);
 					}
@@ -123,6 +147,31 @@ public class TerrainChunk {
 				}
 			}
 		}
+	}
+
+	public void PlaceObjects(Vector3[] vertices) {
+		List<int> indices = Enumerable.Range(0, vertices.Length).ToList();
+		
+		for (int i = 0; i < generator.placeableObjects.Length; i++)
+		{
+			for (int j = 0; j < generator.placeableObjects[i].countPerChunk; j++) 
+			{
+				int randomIndex = Random.Range(0, indices.Count);
+				int selectedVertice = indices[randomIndex];
+				indices.RemoveAt(randomIndex);
+
+				Vector3 verticePosition = meshFilter.mesh.vertices[selectedVertice];
+				Vector3 worldVerticePosition = meshFilter.transform.TransformPoint(verticePosition);
+
+				GameObject gameObject = Object.Instantiate(generator.placeableObjects[i].gameObject, worldVerticePosition, Quaternion.identity);
+				gameObject.transform.localScale = Vector3.one * (5 * Random.Range(0.7f, 1.3f)); // TODO: Remove this
+				gameObject.transform.parent = meshObject.transform;
+
+				objects.Add(gameObject);
+			}
+		}
+		
+		placedObjects = true;
 	}
 
 	public void UpdateCollisionMesh() {
@@ -169,7 +218,7 @@ class LODMesh {
 	void OnMeshDataReceived(object meshDataObject) {
 		mesh = ((MeshData)meshDataObject).CreateMesh ();
 		hasMesh = true;
-
+		
 		updateCallback ();
 	}
 
