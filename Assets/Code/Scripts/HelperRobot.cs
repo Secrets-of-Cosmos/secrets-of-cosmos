@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class HelperRobot : MonoBehaviour
@@ -7,6 +7,7 @@ public class HelperRobot : MonoBehaviour
     public float followDistance = 3.0f;
     public float proximityDistance = 2.0f;
     public float walkAroundDistance = 5.0f;
+    public float stopDistance = 1.5f;
 
     private enum State { Follow, Idle, WalkAround, WalkRandom };
     private State state = State.Idle;
@@ -25,66 +26,35 @@ public class HelperRobot : MonoBehaviour
 
     private void Update()
     {
+        float distanceToPlayer = Vector3.Distance(transform.position, new Vector3(player.position.x, transform.position.y, player.position.z));
+
         switch (state)
         {
             case State.Follow:
                 anim.SetBool("Walk_Anim", true);
-                if (Vector3.Distance(transform.position, new Vector3(agent.destination.x, transform.position.y, agent.destination.z)) < proximityDistance)
+                if (distanceToPlayer < proximityDistance)
                 {
                     state = State.Idle;
                     timeSinceStateChanged = Time.time;
+                    agent.isStopped = true; // Robot durduğunda NavMeshAgent'i durdur
                 }
                 break;
-            case State.Idle: 
+            case State.Idle:
                 anim.SetBool("Walk_Anim", false);
-                agent.isStopped = true;
-                if (Vector3.Distance(transform.position, new Vector3(player.position.x, transform.position.y, player.position.z)) > proximityDistance)
+                if (distanceToPlayer > proximityDistance)
                 {
                     state = State.Follow;
                     timeSinceStateChanged = Time.time;
-                    agent.SetDestination(new Vector3(10, 0, 10));
-                    // agent.SetDestination(new Vector3(player.position.x, transform.position.y, player.position.z));
+                    agent.isStopped = false; // Robot hareket etmeye başladığında NavMeshAgent'i çalıştır
+                }
+                else if (distanceToPlayer <= stopDistance)
+                {
+                    agent.isStopped = true; // Robot oyuncuya çok yaklaştığında NavMeshAgent'i durdur
                 }
                 break;
-            // case State.Idle:
-            //     anim.SetBool("Walk_Anim", false);
-            //     agent.isStopped = true;
-            //     if (Time.time - timeSinceStateChanged > 3.0f)
-            //     {
-            //         state = Random.Range(0, 2) == 0 ? State.WalkAround : State.WalkRandom;
-            //         timeSinceStateChanged = Time.time;
-            //         Vector3 randomPos = transform.position + Random.onUnitSphere * 5.0f;
-            //         agent.SetDestination(randomPos);
-            //         agent.isStopped = false;
-            //     }
-            //     break;
-
-            // case State.WalkAround:
-            //     anim.SetBool("Walk_Anim", true);
-            //     if (Time.time - timeSinceStateChanged > 3.0f)
-            //     {
-            //         state = State.Follow;
-            //         timeSinceStateChanged = Time.time;
-            //     }
-            //     break;
-
-            // case State.WalkRandom:
-            //     anim.SetBool("Walk_Anim", true);
-            //     if (Time.time - timeSinceStateChanged > 5.0f)
-            //     {
-            //         state = State.Follow;
-            //         timeSinceStateChanged = Time.time;
-            //     }
-            //     break;
         }
 
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     state = State.Follow;
-        //     Vector3 inFrontOfPlayer = player.position + player.forward * -5;
-        //     agent.SetDestination(inFrontOfPlayer);
-        //     transform.LookAt(player.position);
-        // }
+        agent.destination = player.position;
     }
 
     void OnDrawGizmos() {

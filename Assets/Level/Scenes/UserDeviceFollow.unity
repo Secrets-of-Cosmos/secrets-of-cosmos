@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -613,6 +613,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4532726864411000, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532726864411000, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532726864411000, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532726864411000, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.95
       objectReference: {fileID: 0}
@@ -660,6 +672,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1181187312201563439, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1612830108}
+    - target: {fileID: 1181187312201563439, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6985016583827307784, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
       propertyPath: player
       value: 
@@ -677,9 +697,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1258481190858562, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1300712252}
-    - targetCorrespondingSourceObject: {fileID: 1258481190858562, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1300712253}
   m_SourcePrefab: {fileID: 100100000, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
 --- !u!1 &1300712240 stripped
 GameObject:
@@ -708,22 +725,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1300712253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1300712240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc84a07d7c31413f9b9bc8518621242, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1612830108}
-  followDistance: 3
-  proximityDistance: 3.55
-  walkAroundDistance: 5.18
 --- !u!1 &1460275449
 GameObject:
   m_ObjectHideFlags: 0
