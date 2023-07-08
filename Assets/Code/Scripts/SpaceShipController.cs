@@ -12,6 +12,7 @@ public class SpaceShipController : MonoBehaviour
     private CockpitController controls;
     private Vector2 moveInput;
     private Vector2 rotateInput;
+    private bool controlsEnabled = true;
 
     private void Awake()
     {
@@ -37,6 +38,14 @@ public class SpaceShipController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (controlsEnabled)
+        {
+            MoveShip();
+        }
+    }
+
+    void MoveShip()
+    {
         Vector3 forwardThrustVec = transform.forward * moveInput.y * forwardThrust;
         Vector3 sideThrustVec = transform.right * moveInput.x * sideThrust;
 
@@ -48,5 +57,21 @@ public class SpaceShipController : MonoBehaviour
 
         rb.AddTorque(pitchTorqueVec, ForceMode.Force);
         rb.AddTorque(rollTorqueVec, ForceMode.Force);
+    }
+
+    public void ShakeShip()
+    {
+        rb.AddForce(Random.insideUnitSphere * 1000f, ForceMode.Impulse);
+        rb.AddTorque(Random.insideUnitSphere * 3f, ForceMode.Impulse);
+    }
+
+    public void DisableControls()
+    {
+        controlsEnabled = false;
+    }
+
+    public void EnableControls()
+    {
+        controlsEnabled = true;
     }
 }
