@@ -25,7 +25,7 @@ public class PapermanAC : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        characterController = GetComponent<CharacterController>(); ;
+        characterController = GetComponent<CharacterController>();
     }
 
     private void Update()
@@ -33,6 +33,12 @@ public class PapermanAC : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && characterController.isGrounded)
         {
             updateJump = true;
+        }
+
+        //Temporary Sitting to Idle Transition
+        if(Input.GetKey(KeyCode.K))
+        {
+            animator.Play("Sit To Idle");
         }
     }
 
@@ -107,7 +113,6 @@ public class PapermanAC : MonoBehaviour
             rootMotion = Vector3.zero;
         }
 
-        Debug.Log(characterController.isGrounded);
         if (characterController.isGrounded)
         {
             animator.SetBool("isFalling", false);
