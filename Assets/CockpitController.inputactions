@@ -22,6 +22,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "thrust",
+                    "type": "Value",
+                    "id": "c66ff210-9ae9-43c8-a5a2-0f2b287a3a6d",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -94,7 +103,7 @@
                 {
                     "name": "up",
                     "id": "be801da1-e9dd-478a-8528-a2112d71a10c",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -105,7 +114,7 @@
                 {
                     "name": "down",
                     "id": "31cbcab1-957c-427d-b7cc-840b55698a3b",
-                    "path": "<Keyboard>/leftShift",
+                    "path": "<Keyboard>/x",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -132,6 +141,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "cda898c4-cb8d-4db4-af1b-efcddeb81106",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "thrust",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "89ec01b0-41d4-4f97-a0cf-f5ac482d0d7a",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "thrust",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "04cc6fb7-8361-4fbe-bf81-0892df5c948c",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "thrust",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
