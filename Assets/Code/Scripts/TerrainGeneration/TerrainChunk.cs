@@ -150,8 +150,10 @@ public class TerrainChunk {
 		
 		for (int i = 0; i < generator.placeableObjects.Length; i++)
 		{
-			for (int j = 0; j < generator.placeableObjects[i].countPerChunk; j++) 
-			{
+			for (int j = 0; j < generator.placeableObjects[i].countPerChunk; j++) {
+				float spawnProbability = generator.placeableObjects[i].spawnProbability;
+				if (Random.value > spawnProbability) continue;
+				
 				int randomIndex = Random.Range(0, indices.Count);
 				int selectedVertice = indices[randomIndex];
 				indices.RemoveAt(randomIndex);

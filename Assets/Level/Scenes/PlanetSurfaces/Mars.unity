@@ -468,48 +468,63 @@ MonoBehaviour:
   colliderLODIndex: 0
   placeableObjects:
   - countPerChunk: 10
+    spawnProbability: 1
     scale: 2
     gameObject: {fileID: -8276368158398125291, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 5
+    spawnProbability: 1
     scale: 4
     gameObject: {fileID: 6224901972590062580, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 6
+    spawnProbability: 1
     scale: 4
     gameObject: {fileID: -1570413276365696803, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: -1844266689461829701, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: -6167428424563711535, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: -2564631767154820411, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: 2189011131829382151, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: -5091504070323623024, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: -7009183667777550850, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: -6453827353466515376, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: -6532225449845387656, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: -1451058113952450443, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: 5952472057180228047, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: -5056164092277678279, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   - countPerChunk: 7
+    spawnProbability: 1
     scale: 1
     gameObject: {fileID: -9052166721058392437, guid: 4aeae27ca8c2645df825f4329b15ee50, type: 3}
   detailLevels:

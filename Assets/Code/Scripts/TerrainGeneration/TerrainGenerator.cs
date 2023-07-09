@@ -107,6 +107,8 @@ public struct LODInfo {
 [System.Serializable]
 public struct PlaceableObject {
 	public int countPerChunk;
+	[Range(0,1)]
+	public float spawnProbability;
 	public float scale;
 	public GameObject gameObject;
 }
