@@ -440,6 +440,82 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 22400004, guid: 05a81c3d5091440058129444d28322f3, type: 3}
   m_PrefabInstance: {fileID: 49082034}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &85321659 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: eb7591061733543f6bb0777b56d2fa4f, type: 3}
+  m_PrefabInstance: {fileID: 612678948}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &85321660 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: eb7591061733543f6bb0777b56d2fa4f, type: 3}
+  m_PrefabInstance: {fileID: 612678948}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &85321661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85321659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9ecce1e2aaa243b195efe7db19baf81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forwardThrust: 2000
+  sideThrust: 500
+  pitchTorque: 50
+  rollTorque: 30
+  thrustForce: 200
+  planet: {fileID: 0}
+--- !u!54 &85321662
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85321659}
+  serializedVersion: 4
+  m_Mass: 1000
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &85321663
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85321659}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.546875, y: 3.0113454, z: 7.709503}
+  m_Center: {x: 0.22558594, y: 3.2465465, z: 8.444778}
 --- !u!1 &150899138
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,19 +560,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d4bb5da31df0486ab92b484d9e9d436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spaceship: {fileID: 612678949}
-  planets:
-  - {fileID: 1701657570}
-  - {fileID: 1092280108200933333}
+  spaceship: {fileID: 85321660}
   shouldDisable:
   - {fileID: 1829366448}
-  planetScenes:
-  - Earth
-  - Mars
-  threshold: 100
-  skyboxes:
-  - {fileID: 2100000, guid: 16b78c575e609814bb93a544b494d466, type: 2}
   transitionAnimator: {fileID: 1433946535}
+  sceneObjects:
+  - planet: {fileID: 1092280108200933333}
+    sceneName: Mars
+    threshold: 100
+    skybox: {fileID: 2100000, guid: bb3b276bce10d4992ac7221919a200cd, type: 2}
+    ambientIntensity: 5
+  - planet: {fileID: 1701657570}
+    sceneName: Earth
+    threshold: 100
+    skybox: {fileID: 2100000, guid: 16b78c575e609814bb93a544b494d466, type: 2}
+    ambientIntensity: 10
 --- !u!1 &557468885
 GameObject:
   m_ObjectHideFlags: 0
@@ -1211,117 +1289,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: eb7591061733543f6bb0777b56d2fa4f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 612678954}
+      addedObject: {fileID: 85321661}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: eb7591061733543f6bb0777b56d2fa4f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 612678955}
+      addedObject: {fileID: 85321662}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: eb7591061733543f6bb0777b56d2fa4f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 612678956}
+      addedObject: {fileID: 85321663}
   m_SourcePrefab: {fileID: 100100000, guid: eb7591061733543f6bb0777b56d2fa4f, type: 3}
---- !u!4 &612678949 stripped
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 612678950}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1512.4214, y: 0, z: -171.40494}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 684063024}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &612678950
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 612678949}
-  - component: {fileID: 612678954}
-  - component: {fileID: 612678955}
-  - component: {fileID: 612678956}
-  - component: {fileID: 612678958}
-  - component: {fileID: 612678957}
-  m_Layer: 0
-  m_Name: 'Futuristic_combat_jet WIP 2 Version 1_2 (Missing Prefab with guid: eb7591061733543f6bb0777b56d2fa4f)'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &612678954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 612678950}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9ecce1e2aaa243b195efe7db19baf81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  forwardThrust: 1000
-  sideThrust: 500
-  pitchTorque: 200
-  rollTorque: 100
-  thrustForce: 10000
-  planet: {fileID: 1916986716}
---- !u!54 &612678955
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 612678950}
-  serializedVersion: 4
-  m_Mass: 1000
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!65 &612678956
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 612678950}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4.2, y: 3.8492894, z: 6.950001}
-  m_Center: {x: 0, y: 3.2153552, z: 8.52}
 --- !u!1 &684063021
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,7 +1388,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 612678949}
+  m_Father: {fileID: 85321660}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 12.84, y: 0, z: 0}
 --- !u!114 &684063026
@@ -2503,7 +2478,7 @@ MonoBehaviour:
   questionText: {fileID: 1887702189}
   answerText: {fileID: 1181416310}
   panel: {fileID: 1327939210}
-  shipController: {fileID: 612678954}
+  shipController: {fileID: 0}
 --- !u!4 &1936155992
 Transform:
   m_ObjectHideFlags: 0
