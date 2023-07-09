@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "rotatemouse",
+                    "type": "Value",
+                    "id": "9d203279-cc16-4d7e-b4ea-5cd7948a2341",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -176,6 +185,17 @@
                     "action": "thrust",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "ba6ba53b-37ba-4968-959c-809d0ca780bf",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "rotatemouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

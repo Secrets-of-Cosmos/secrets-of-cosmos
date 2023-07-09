@@ -16,20 +16,27 @@ public class SpaceShipController : MonoBehaviour
     private CockpitController controls;
     private Vector2 moveInput;
     private Vector2 rotateInput;
+    private Vector2 rotateInputMouse;
     private float thrustInput;
 
     private bool controlsEnabled = true;
 
     private void Awake()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         rb = GetComponent<Rigidbody>();
         controls = new CockpitController();
 
         controls.Player.move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controls.Player.move.canceled += ctx => moveInput = Vector2.zero;
 
+        //Old Rotation
         controls.Player.rotate.performed += ctx => rotateInput = ctx.ReadValue<Vector2>();
         controls.Player.rotate.canceled += ctx => rotateInput = Vector2.zero;
+
+        //Mouse Rotation
+        controls.Player.rotatemouse.performed += ctx => rotateInputMouse = ctx.ReadValue<Vector2>();
+        controls.Player.rotatemouse.canceled += ctx => rotateInputMouse = Vector2.zero;
 
         controls.Player.thrust.performed += ctx => thrustInput = ctx.ReadValue<float>();
         controls.Player.thrust.canceled += ctx => thrustInput = 0f;
@@ -63,11 +70,18 @@ public class SpaceShipController : MonoBehaviour
 
     void MoveShip()
     {
+        Debug.Log(rotateInputMouse);
+
         Vector3 forwardThrustVec = transform.forward * moveInput.y * forwardThrust;
         Vector3 sideThrustVec = transform.right * moveInput.x * sideThrust;
 
-        Vector3 pitchTorqueVec = transform.right * -rotateInput.y * pitchTorque;
-        Vector3 rollTorqueVec = transform.forward * -rotateInput.x * rollTorque;
+        //Old Rotation
+        //Vector3 pitchTorqueVec = transform.right * -rotateInput.y * pitchTorque;
+        //Vector3 rollTorqueVec = transform.forward * -rotateInput.x * rollTorque;
+
+        //Mouse Rotation
+        Vector3 pitchTorqueVec = transform.right * -rotateInputMouse.y * pitchTorque;
+        Vector3 rollTorqueVec = transform.up * rotateInputMouse.x * rollTorque;
 
         Vector3 thrustVector = transform.up * thrustInput * thrustForce;
 
