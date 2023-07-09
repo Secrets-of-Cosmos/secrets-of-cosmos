@@ -2,16 +2,22 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
+[System.Serializable]
+public struct SceneObject {
+    public Transform planet;
+    public string sceneName;
+    public float threshold;
+    public Material skybox;
+    public int ambientIntensity;
+}
+
 public class SceneAdmin : MonoBehaviour
 {
     public Transform spaceship; // Uzay aracının Transform component'ı
-    public Transform[] planets; // Gezegenlerin Transform component'ları
     public GameObject[] shouldDisable;
-    public string[] planetScenes; // Gezegenlerin sahne isimleri
-    public float threshold = 100f; // Yükleme mesafesi eşiği
-    public Material [] skyboxes;
     public Animator transitionAnimator; // Fade efekti için bir Animator component'ı
     private bool isLoading = false; // Kilit mekanizması olarak kullanılacak değişken
+    public SceneObject[] sceneObjects;
 
 
     void Start()
@@ -21,12 +27,12 @@ public class SceneAdmin : MonoBehaviour
     void Update()
     {
         // Tüm gezegenleri kontrol et
-        for (int i = 0; i < planets.Length; i++)
+        for (int i = 0; i < sceneObjects.Length; i++)
         {
-            float distance = Vector3.Distance(spaceship.position, planets[i].position);
+            float distance = Vector3.Distance(spaceship.position, sceneObjects[i].planet.position);
 
             // Eğer uzay aracı bir gezegene yeterince yaklaştıysa, sahneyi yükle
-            if (distance < threshold)
+            if (distance < sceneObjects[i].threshold)
             {
                 StartCoroutine(LoadPlanetScene(i));
                 break;
@@ -52,7 +58,7 @@ public class SceneAdmin : MonoBehaviour
             shouldDisable[i].SetActive(false);
 
         // Gezegen indeksine bağlı olarak uygun sahneyi yükle
-        string sceneName = planetScenes[planetIndex];
+        string sceneName = sceneObjects[planetIndex].sceneName;
         var asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         while (!asyncLoad.isDone) {
             yield return null;
@@ -60,8 +66,8 @@ public class SceneAdmin : MonoBehaviour
 
         // Fade-in animasyonunu başlat
         transitionAnimator.SetTrigger("End");
-        RenderSettings.ambientIntensity = 10f;
-        RenderSettings.skybox = skyboxes[planetIndex];
+        RenderSettings.ambientIntensity = sceneObjects[planetIndex].ambientIntensity;
+        RenderSettings.skybox = sceneObjects[planetIndex].skybox;
         spaceship.transform.position = new Vector3(0, 1000, 0);
         spaceship.transform.rotation = Quaternion.Euler(90, 0, 0);
         spaceship.GetComponent<Rigidbody>().useGravity = true;

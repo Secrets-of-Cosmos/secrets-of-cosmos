@@ -44,6 +44,15 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""thrust"",
+                    ""type"": ""Value"",
+                    ""id"": ""c66ff210-9ae9-43c8-a5a2-0f2b287a3a6d"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -116,7 +125,7 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""up"",
                     ""id"": ""be801da1-e9dd-478a-8528-a2112d71a10c"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/z"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -127,7 +136,7 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""31cbcab1-957c-427d-b7cc-840b55698a3b"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""path"": ""<Keyboard>/x"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -156,6 +165,39 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
                     ""action"": ""rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""cda898c4-cb8d-4db4-af1b-efcddeb81106"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""thrust"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""89ec01b0-41d4-4f97-a0cf-f5ac482d0d7a"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""thrust"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""04cc6fb7-8361-4fbe-bf81-0892df5c948c"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""thrust"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -166,6 +208,7 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_move = m_Player.FindAction("move", throwIfNotFound: true);
         m_Player_rotate = m_Player.FindAction("rotate", throwIfNotFound: true);
+        m_Player_thrust = m_Player.FindAction("thrust", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -229,12 +272,14 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_move;
     private readonly InputAction m_Player_rotate;
+    private readonly InputAction m_Player_thrust;
     public struct PlayerActions
     {
         private @CockpitController m_Wrapper;
         public PlayerActions(@CockpitController wrapper) { m_Wrapper = wrapper; }
         public InputAction @move => m_Wrapper.m_Player_move;
         public InputAction @rotate => m_Wrapper.m_Player_rotate;
+        public InputAction @thrust => m_Wrapper.m_Player_thrust;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -250,6 +295,9 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
             @rotate.started += instance.OnRotate;
             @rotate.performed += instance.OnRotate;
             @rotate.canceled += instance.OnRotate;
+            @thrust.started += instance.OnThrust;
+            @thrust.performed += instance.OnThrust;
+            @thrust.canceled += instance.OnThrust;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -260,6 +308,9 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
             @rotate.started -= instance.OnRotate;
             @rotate.performed -= instance.OnRotate;
             @rotate.canceled -= instance.OnRotate;
+            @thrust.started -= instance.OnThrust;
+            @thrust.performed -= instance.OnThrust;
+            @thrust.canceled -= instance.OnThrust;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -281,5 +332,6 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
+        void OnThrust(InputAction.CallbackContext context);
     }
 }
