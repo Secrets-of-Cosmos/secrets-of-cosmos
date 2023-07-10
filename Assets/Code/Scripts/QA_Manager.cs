@@ -126,28 +126,17 @@ public class QA_Manager : MonoBehaviour
     private bool answeringQuestion = false;
     [SerializeField]
     private float asteroidSpawnDistance;
-    private bool inputActive;
+    private bool inputActive = false;
 
     void Start()
     {
         startTime = (int)Time.time;
     }
-
-    private void OnEnable()
-    {
-        Invoke(nameof(EnableInput), 1);
-    }
-
+    
     private void OnDisable()
     {
         inputActive = false;
     }
-
-    private void EnableInput()
-    {
-        inputActive = true;
-    }
-
 
     // Update is called once per frame
     void Update()
@@ -205,6 +194,8 @@ public class QA_Manager : MonoBehaviour
 
     void InputHandler()
     {
+        if (Input.anyKeyDown) inputActive = true;
+        
         if (Input.GetKeyDown(KeyCode.Return))
         {
             if (answerText.text == answers[1])
@@ -235,8 +226,8 @@ public class QA_Manager : MonoBehaviour
         {
             answerText.text = answerText.text.Substring(0, answerText.text.Length - 1);
         }
-        else if(inputActive) {
-
+        else if(inputActive) 
+        {
             answerText.text += Input.inputString;
         }
     }
