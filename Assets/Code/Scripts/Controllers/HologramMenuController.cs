@@ -70,10 +70,13 @@ public class HologramMenuController : MonoBehaviour
         for (var i = 0; i < tabButtons.Count; i++, mostLeft++) {
             tabButtons[i].transform.localPosition = tabButtonsStartPosition + new Vector3(mostLeft * tabButtonsStartGap + tabButtonsStartGap/2, 0f, 0f);
         }
-        tabButtons.ForEach(button => button.transform.localScale = new Vector3(0f, 0f, 0f));
-        tabButtons.ForEach(button => button.SetActive(true));
-        tabButtons.ForEach(button => button.transform.SetAsLastSibling());
-        tabButtons.ForEach(button => LeanTween.scale(button, new Vector3(1.2f, 1.2f, 1.2f), 0.5f).setEaseOutBack());
+        tabButtons.ForEach(button =>
+        {
+            button.transform.localScale = new Vector3(0f, 0f, 0f);
+            button.SetActive(true);
+            button.transform.SetAsLastSibling();
+            LeanTween.scale(button, new Vector3(1.2f, 1.2f, 1.2f), 0.5f).setEaseOutBack();
+        });
     }
     
     public void CloseMenu() {

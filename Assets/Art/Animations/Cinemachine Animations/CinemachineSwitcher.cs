@@ -19,5 +19,10 @@ public class CinemachineSwitcher : MonoBehaviour
         {
             animator.Play("Third Person");
         }   
+        
+        if (Input.GetKey(KeyCode.T))
+        {
+            animator.Play("FirstPerson");
+        }   
     }
 }
