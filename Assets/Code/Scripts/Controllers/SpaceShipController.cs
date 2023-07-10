@@ -70,7 +70,7 @@ public class SpaceShipController : MonoBehaviour
 
     void MoveShip()
     {
-        Debug.Log(rotateInputMouse);
+
 
         Vector3 forwardThrustVec = transform.forward * moveInput.y * forwardThrust;
         Vector3 sideThrustVec = transform.right * moveInput.x * sideThrust;
@@ -105,8 +105,8 @@ public class SpaceShipController : MonoBehaviour
 
     public void ShakeShip()
     {
-        rb.AddForce(Random.insideUnitSphere * 1000f, ForceMode.Impulse);
-        rb.AddTorque(Random.insideUnitSphere * 3f, ForceMode.Impulse);
+        rb.AddForce(Random.insideUnitSphere * 300f, ForceMode.Impulse);
+        rb.AddTorque(Random.insideUnitSphere * 3000f, ForceMode.Impulse);
     }
 
     public void DisableControls()
