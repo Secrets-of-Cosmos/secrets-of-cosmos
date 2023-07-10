@@ -18,13 +18,15 @@ public class Tabs : MonoBehaviour, IButton
     }
 
     public void OnMouseEnter() {
-        Debug.Log(buttonType + " OnMouseEnter");
-        LeanTween.rotateY(gameObject, 180f, 0.5f).setEaseOutBack();
+        var currentRot = transform.localRotation.eulerAngles;
+        currentRot.y = 180;
+        LeanTween.rotateLocal(gameObject, currentRot, 0.5f).setEaseOutBack();
     }
     
     public void OnMouseExit() {
-        Debug.Log(buttonType + " OnMouseExit");
-        LeanTween.rotateY(gameObject, 0f, 0.5f).setEaseOutBack();
+        var currentRot = transform.localRotation.eulerAngles;
+        currentRot.y = 0;
+        LeanTween.rotateLocal(gameObject, currentRot, 0.5f).setEaseOutBack();
     }
 }
 
