@@ -30,9 +30,6 @@ public class TerrainGenerator : MonoBehaviour {
 		meshWorldSize = meshSettings.meshWorldSize;
 		chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / meshWorldSize);
 
-		var spaceShip = FindFirstObjectByType<SceneAdmin>()?.spaceship;
-		if (spaceShip != null) viewer = spaceShip;
-
 		UpdateVisibleChunks ();
 	}
 

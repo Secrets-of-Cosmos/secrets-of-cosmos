@@ -47,7 +47,9 @@ public class SceneAdmin : MonoBehaviour
             {
                 spaceshipInsideOutsideController.GoOutside();
                 spaceship.GetComponentsInChildren<Camera>()[0].enabled = false;
-                Instantiate(playerPrefab, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
+                GameObject playerNew = Instantiate(playerPrefab, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
+                TerrainGenerator terrainGenerator = GameObject.FindObjectOfType<TerrainGenerator>();
+                terrainGenerator.viewer = playerNew.transform;
             }
         }
 
@@ -104,5 +106,8 @@ public class SceneAdmin : MonoBehaviour
         spaceship.transform.position = new Vector3(0, 1000, 0);
         spaceship.transform.rotation = Quaternion.Euler(90, 0, 0);
         spaceship.GetComponent<Rigidbody>().useGravity = true;
+
+        TerrainGenerator terrainGenerator = GameObject.FindObjectOfType<TerrainGenerator>();
+        terrainGenerator.viewer = spaceship;
     }
 }
