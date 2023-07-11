@@ -53,6 +53,15 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""rotatemouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""9d203279-cc16-4d7e-b4ea-5cd7948a2341"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -198,6 +207,17 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
                     ""action"": ""thrust"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba6ba53b-37ba-4968-959c-809d0ca780bf"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""rotatemouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -209,6 +229,7 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
         m_Player_move = m_Player.FindAction("move", throwIfNotFound: true);
         m_Player_rotate = m_Player.FindAction("rotate", throwIfNotFound: true);
         m_Player_thrust = m_Player.FindAction("thrust", throwIfNotFound: true);
+        m_Player_rotatemouse = m_Player.FindAction("rotatemouse", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -273,6 +294,7 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_move;
     private readonly InputAction m_Player_rotate;
     private readonly InputAction m_Player_thrust;
+    private readonly InputAction m_Player_rotatemouse;
     public struct PlayerActions
     {
         private @CockpitController m_Wrapper;
@@ -280,6 +302,7 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
         public InputAction @move => m_Wrapper.m_Player_move;
         public InputAction @rotate => m_Wrapper.m_Player_rotate;
         public InputAction @thrust => m_Wrapper.m_Player_thrust;
+        public InputAction @rotatemouse => m_Wrapper.m_Player_rotatemouse;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -298,6 +321,9 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
             @thrust.started += instance.OnThrust;
             @thrust.performed += instance.OnThrust;
             @thrust.canceled += instance.OnThrust;
+            @rotatemouse.started += instance.OnRotatemouse;
+            @rotatemouse.performed += instance.OnRotatemouse;
+            @rotatemouse.canceled += instance.OnRotatemouse;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -311,6 +337,9 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
             @thrust.started -= instance.OnThrust;
             @thrust.performed -= instance.OnThrust;
             @thrust.canceled -= instance.OnThrust;
+            @rotatemouse.started -= instance.OnRotatemouse;
+            @rotatemouse.performed -= instance.OnRotatemouse;
+            @rotatemouse.canceled -= instance.OnRotatemouse;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -333,5 +362,6 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
         void OnThrust(InputAction.CallbackContext context);
+        void OnRotatemouse(InputAction.CallbackContext context);
     }
 }

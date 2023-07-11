@@ -10,6 +10,7 @@ public class QA_Manager : MonoBehaviour
     public Text answerText;
     public GameObject panel;
     public SpaceShipController shipController;
+    public AsteroidCollision asteroidCollisionController;
 
     // Start is called before the first frame update
     private string [] questions = {
@@ -120,22 +121,32 @@ public class QA_Manager : MonoBehaviour
         "Port-au-Prince",
     };
 
-    private int showQuestionInterval = 5;
+    public int showQuestionInterval = 10;
     private int startTime;
     private bool answeringQuestion = false;
+    [SerializeField]
+    private float asteroidSpawnDistance;
+    private bool inputActive = false;
+    public Transform lockedPlanet;
 
     void Start()
     {
         startTime = (int)Time.time;
     }
-
-
+    
+    private void OnDisable()
+    {
+        inputActive = false;
+    }
 
     // Update is called once per frame
     void Update()
     {
+
+
         if (Time.time - startTime > showQuestionInterval && !answeringQuestion)
         {
+            CreateAsteroid();
             answeringQuestion = true;
             startTime = (int)Time.time;
             int questionIndex = Random.Range(0, questions.Length);
@@ -148,23 +159,60 @@ public class QA_Manager : MonoBehaviour
             shipController.DisableControls();
             InputHandler();
         }
+
+        AsteroidCollision asteroidCollision = asteroidCollisionController.gameObject.GetComponent<AsteroidCollision>();
+        if (asteroidCollision != null && asteroidCollision.isCrashed)
+        {
+            startTime = (int)Time.time;
+            asteroidCollision.isCrashed = false;
+            answeringQuestion = false;
+            panel.gameObject.SetActive(false);
+            Time.timeScale = 1f;
+            Time.fixedDeltaTime = 0.02F;
+            shipController.EnableControls();
+        }
+    }
+
+    void CreateAsteroid()
+    {
+        GameObject asteroidGameObject = asteroidCollisionController.gameObject;
+        GameObject shipGameObject = shipController.gameObject;
+        AsteroidCollision asteroidCollision = asteroidGameObject.GetComponent<AsteroidCollision>();
+
+        asteroidGameObject.transform.position = shipGameObject.transform.position + shipGameObject.transform.forward * asteroidSpawnDistance;
+
+        asteroidGameObject.transform.localScale = Vector3.zero;
+        StartCoroutine(asteroidCollision.MoveAsteroid(asteroidGameObject.transform.position, shipGameObject.transform, 2f));
+        LeanTween.scale(asteroidGameObject, Vector3.one * 3, 2f).setEase(LeanTweenType.easeInOutCubic);
+        
+        asteroidGameObject.SetActive(true);
+
+
+        Time.timeScale = 0.05f;
+        Time.fixedDeltaTime = 0.02F * Time.timeScale;
+
     }
 
     void InputHandler()
     {
+        if (Input.anyKeyDown) inputActive = true;
+        
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (answerText.text == answers[0])
+            if (answerText.text == answers[1])
             {
                 Debug.Log("Correct!");
                 answeringQuestion = false;
                 panel.gameObject.SetActive(false);
                 shipController.EnableControls();
+                asteroidCollisionController.gameObject.SetActive(false);
+                Time.timeScale = 1f;
+                Time.fixedDeltaTime = 0.02F;
             }
             else
             {
                 Debug.Log("Incorrect!");
-                shipController.ShakeShip();
+
             }
             // Check if answer is correct
             // If correct, add to score
@@ -179,8 +227,10 @@ public class QA_Manager : MonoBehaviour
         {
             answerText.text = answerText.text.Substring(0, answerText.text.Length - 1);
         }
-        else {
+        else if(inputActive) 
+        {
             answerText.text += Input.inputString;
         }
     }
+
 }
