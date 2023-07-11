@@ -8,6 +8,8 @@ public class ConversationManager : MonoBehaviour
     public Text answerText1;
     public Text answerText2;
     public Text questionText;
+    public PapermanAC papermanAC;
+    public CinemachineSwitcher cinemachineSwitcher;
 
     // Define a dialogue node structure
     struct DialogueNode
@@ -92,6 +94,16 @@ public class ConversationManager : MonoBehaviour
     void DisplayCurrentNode()
     {
         questionText.text = currentNode.Question;
+        if(currentNode.Question == "Let's start!")
+        {
+            // Hide the answer texts
+            answerText1.text = "";
+            answerText2.text = "";
+            papermanAC.StandUp();
+            gameObject.SetActive(false);
+            cinemachineSwitcher.GetComponent<Animator>().Play("Third Person");   
+            return;
+        }
 
         // Check if there are any answers
         if(currentNode.Answers.Count > 0)

@@ -34,12 +34,11 @@ public class PapermanAC : MonoBehaviour
         {
             updateJump = true;
         }
+    }
 
-        //Temporary Sitting to Idle Transition
-        if(Input.GetKey(KeyCode.K))
-        {
-            animator.Play("Sit To Idle");
-        }
+    public void StandUp()
+    {
+        animator.Play("Sit To Idle");
     }
 
     private void FixedUpdate()
