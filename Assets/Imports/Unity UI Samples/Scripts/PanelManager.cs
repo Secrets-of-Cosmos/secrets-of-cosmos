@@ -74,7 +74,7 @@ public class PanelManager : MonoBehaviour {
 
 	public void LoadISS()
 	{
-		SceneManager.LoadScene("Test_Map");
+		SceneManager.LoadScene("Solar System");
 	}
 
 	IEnumerator DisablePanelDeleyed(Animator anim)
