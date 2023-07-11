@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TerrainChunk {
 	
-	const float colliderGenerationDistanceThreshold = 5;
+	const float colliderGenerationDistanceThreshold = 50;
 	public event System.Action<TerrainChunk, bool> onVisibilityChanged;
 	public Vector2 coord;
 	 

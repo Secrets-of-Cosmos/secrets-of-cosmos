@@ -45,9 +45,13 @@ public class SceneAdmin : MonoBehaviour
         if(spaceshipInsideOutsideController.inside) {
             if(Input.GetKeyDown(KeyCode.P))
             {
+                Transform viewer = GameObject.Find("Viewer").transform;
                 spaceshipInsideOutsideController.GoOutside();
                 spaceship.GetComponentsInChildren<Camera>()[0].enabled = false;
-                Instantiate(playerPrefab, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
+                GameObject playerNew = Instantiate(playerPrefab, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
+                //set child
+                viewer.SetParent(playerNew.transform);
+                viewer.localPosition = new Vector3(0, 0, 0);
             }
         }
 
@@ -104,5 +108,10 @@ public class SceneAdmin : MonoBehaviour
         spaceship.transform.position = new Vector3(0, 1000, 0);
         spaceship.transform.rotation = Quaternion.Euler(90, 0, 0);
         spaceship.GetComponent<Rigidbody>().useGravity = true;
+
+        Transform viewer = GameObject.Find("Viewer").transform;
+        //set child 
+        viewer.SetParent(spaceship);
+        viewer.localPosition = new Vector3(0, 0, 0);
     }
 }
