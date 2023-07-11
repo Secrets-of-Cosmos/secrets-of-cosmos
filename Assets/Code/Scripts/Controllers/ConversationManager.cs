@@ -35,6 +35,8 @@ public class ConversationManager : MonoBehaviour
     {
         // Initialize dialogue tree
         InitDialogueTree();
+        papermanAC.GetComponent<Animator>().Play("Sitting Idle");
+
 
         // Set current node to root node and display question and answers
         currentNode = rootNode;
