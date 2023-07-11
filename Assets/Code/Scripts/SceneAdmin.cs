@@ -18,6 +18,9 @@ public class SceneAdmin : MonoBehaviour
     public Animator transitionAnimator; // Fade efekti için bir Animator component'ı
     private bool isLoading = false; // Kilit mekanizması olarak kullanılacak değişken
     public SceneObject[] sceneObjects;
+    public InsideOutsideController issInsideOutsideController;
+    public InsideOutsideController spaceshipInsideOutsideController;
+    public GameObject playerPrefab;
 
 
     void Start()
@@ -26,7 +29,37 @@ public class SceneAdmin : MonoBehaviour
 
     void Update()
     {
+        var currentScene = SceneManager.GetActiveScene();
+        Debug.Log(currentScene.name);
         // Tüm gezegenleri kontrol et
+        if (currentScene.name == "Solar System")
+        {
+            CheckPlanets();
+
+            if(Input.GetKeyDown(KeyCode.O))
+            {
+                issInsideOutsideController.GoOutside();
+                spaceship.gameObject.SetActive(true);
+            }
+        }
+        if(spaceshipInsideOutsideController.inside) {
+            if(Input.GetKeyDown(KeyCode.P))
+            {
+                spaceshipInsideOutsideController.GoOutside();
+                spaceship.GetComponentsInChildren<Camera>()[0].enabled = false;
+                Instantiate(playerPrefab, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
+            }
+        }
+
+
+        // if(Input.GetKeyDown(KeyCode.Escape))
+        // {
+        //     SceneManager.LoadScene("MainMenu");
+        // }
+       
+    }
+
+    void CheckPlanets() {
         for (int i = 0; i < sceneObjects.Length; i++)
         {
             float distance = Vector3.Distance(spaceship.position, sceneObjects[i].planet.position);
