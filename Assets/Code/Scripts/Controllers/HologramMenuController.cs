@@ -140,6 +140,7 @@ public class HologramMenuController : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException(nameof(tab), tab, null);
         }
+        menuDescriptionController.Show();
     }
     public void OnControlButtonsPressed(ControlButtonsType button) {
         var direction = button == ControlButtonsType.LEFT ? -1 : 1;
