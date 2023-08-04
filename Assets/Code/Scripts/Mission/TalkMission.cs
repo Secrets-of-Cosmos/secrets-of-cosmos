@@ -91,12 +91,12 @@ public class TalkMission : Mission
     private void HandlePlayerNearby()
     {
 
-        if (isPlayerNearby() && !dialoguePanel.activeSelf && dialogueStartedBy == "")
+        if (IsPlayerNearby() && !dialoguePanel.activeSelf && dialogueStartedBy == "")
         {
             dialogueStartedBy = name;
             dialoguePanelScript.openDialogueText.gameObject.SetActive(true);
         }
-        else if (!isPlayerNearby() && dialogueStartedBy == name)
+        else if (!IsPlayerNearby() && dialogueStartedBy == name)
         {
             dialogueStartedBy = "";
             dialoguePanelScript.openDialogueText.gameObject.SetActive(false);
@@ -105,12 +105,13 @@ public class TalkMission : Mission
 
     private void HandlePlayerInteract()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isPlayerNearby() && dialogueStartedBy == name)
+        if (Input.GetKeyDown(KeyCode.E) && IsPlayerNearby() && dialogueStartedBy == name)
         {
             StartDialogue();
         }
     }
-    private bool isPlayerNearby()
+
+    private bool IsPlayerNearby()
     {
         return Vector3.Distance(player.transform.position, transform.position) < nearDistance;
     }
