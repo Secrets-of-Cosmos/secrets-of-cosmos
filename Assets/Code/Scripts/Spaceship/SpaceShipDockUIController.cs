@@ -28,8 +28,11 @@ public class SpaceShipDockUIController : MonoBehaviour
         yaw.text = yawf.ToString("F2") + "°";
         roll.text = rollf.ToString("F2") + "°";
 
-        //xyz[0].text = spaceShipTransform.position.x.ToString("F2") + " m";
-        //xyz[1].text = spaceShipTransform.position.y.ToString("F2") + " m";
-        //xyz[2].text = spaceShipTransform.position.z.ToString("F2") + " m";
+        Rigidbody spaceRb = spaceShipTransform.gameObject.GetComponent<Rigidbody>();
+        var locVel = transform.InverseTransformDirection(spaceRb.velocity);
+
+        xyz[0].text = locVel.x.ToString("F2") + " m/s";
+        xyz[1].text = locVel.y.ToString("F2") + " m/s";
+        xyz[2].text = locVel.z.ToString("F2") + " m/s";
     }
 }
