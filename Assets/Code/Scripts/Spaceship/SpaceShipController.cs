@@ -98,7 +98,6 @@ public class SpaceShipController : MonoBehaviour
 
         rb.AddForce(thrustVector, ForceMode.Force);
 
-        Debug.Log(rollZInput);
         rb.AddTorque(rollZTorqueVec, ForceMode.Force);
 
     }
