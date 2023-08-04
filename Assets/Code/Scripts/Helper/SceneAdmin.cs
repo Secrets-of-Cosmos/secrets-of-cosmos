@@ -21,6 +21,7 @@ public class SceneAdmin : MonoBehaviour
     public InsideOutsideController issInsideOutsideController;
     public InsideOutsideController spaceshipInsideOutsideController;
     public GameObject playerPrefab;
+    public GameObject spaceShipUI;
 
 
     void Start()
@@ -40,6 +41,7 @@ public class SceneAdmin : MonoBehaviour
             {
                 issInsideOutsideController.GoOutside();
                 spaceship.gameObject.SetActive(true);
+                spaceShipUI.SetActive(true);
             }
         }
         if(spaceshipInsideOutsideController.inside) {
