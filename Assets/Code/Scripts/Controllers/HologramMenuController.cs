@@ -25,6 +25,9 @@ public class HologramMenuController : MonoBehaviour
     [Header("Spacecrafts")]
     [SerializeField] private List<Mesh> spacecraftsMeshes;
     [SerializeField] private float spacecraftsRotationSpeed = 20f;
+    
+    [Header("DescriptionController")]
+    [SerializeField] private MenuDescriptionController menuDescriptionController;
 
     private TabsType _currentTab = TabsType.NOT_SELECTED;
     private int _currentPlanet;
@@ -137,6 +140,7 @@ public class HologramMenuController : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException(nameof(tab), tab, null);
         }
+        menuDescriptionController.Show();
     }
     public void OnControlButtonsPressed(ControlButtonsType button) {
         var direction = button == ControlButtonsType.LEFT ? -1 : 1;
