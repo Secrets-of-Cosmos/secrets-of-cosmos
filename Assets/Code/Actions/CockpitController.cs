@@ -71,6 +71,15 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""locktoplanet"",
+                    ""type"": ""Button"",
+                    ""id"": ""7914f57a-43f5-4860-aa87-cab1d2f98028"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -260,6 +269,17 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
                     ""action"": ""roll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""45d24e6f-881c-4a2a-9717-34f4b99e16e4"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""locktoplanet"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -273,6 +293,7 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
         m_Player_thrust = m_Player.FindAction("thrust", throwIfNotFound: true);
         m_Player_rotatemouse = m_Player.FindAction("rotatemouse", throwIfNotFound: true);
         m_Player_roll = m_Player.FindAction("roll", throwIfNotFound: true);
+        m_Player_locktoplanet = m_Player.FindAction("locktoplanet", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -339,6 +360,7 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_thrust;
     private readonly InputAction m_Player_rotatemouse;
     private readonly InputAction m_Player_roll;
+    private readonly InputAction m_Player_locktoplanet;
     public struct PlayerActions
     {
         private @CockpitController m_Wrapper;
@@ -348,6 +370,7 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
         public InputAction @thrust => m_Wrapper.m_Player_thrust;
         public InputAction @rotatemouse => m_Wrapper.m_Player_rotatemouse;
         public InputAction @roll => m_Wrapper.m_Player_roll;
+        public InputAction @locktoplanet => m_Wrapper.m_Player_locktoplanet;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -372,6 +395,9 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
             @roll.started += instance.OnRoll;
             @roll.performed += instance.OnRoll;
             @roll.canceled += instance.OnRoll;
+            @locktoplanet.started += instance.OnLocktoplanet;
+            @locktoplanet.performed += instance.OnLocktoplanet;
+            @locktoplanet.canceled += instance.OnLocktoplanet;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -391,6 +417,9 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
             @roll.started -= instance.OnRoll;
             @roll.performed -= instance.OnRoll;
             @roll.canceled -= instance.OnRoll;
+            @locktoplanet.started -= instance.OnLocktoplanet;
+            @locktoplanet.performed -= instance.OnLocktoplanet;
+            @locktoplanet.canceled -= instance.OnLocktoplanet;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -415,5 +444,6 @@ public partial class @CockpitController: IInputActionCollection2, IDisposable
         void OnThrust(InputAction.CallbackContext context);
         void OnRotatemouse(InputAction.CallbackContext context);
         void OnRoll(InputAction.CallbackContext context);
+        void OnLocktoplanet(InputAction.CallbackContext context);
     }
 }

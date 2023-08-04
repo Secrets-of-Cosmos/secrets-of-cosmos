@@ -10,9 +10,13 @@ public class SpaceShipController : MonoBehaviour
     public float rollTorque = 30f;
     public float thrustForce = 20f;
     public float rollZTorque = 2000f;
+    public float lockRotateSpeed = 0f;
+    public float lockSpeed = 700f;
 
     public GameObject planet;
-    private bool lockedToPlanet = false;
+    public bool lockPlanet = false;
+    public float distanceToLockedPlanet;
+
 
     private Rigidbody rb;
     private CockpitController controls;
@@ -21,6 +25,8 @@ public class SpaceShipController : MonoBehaviour
     private Vector2 rotateInputMouse;
     private float thrustInput;
     private float rollZInput;
+
+    public GameObject particleSystem;
 
     private bool controlsEnabled = true;
 
@@ -46,6 +52,23 @@ public class SpaceShipController : MonoBehaviour
 
         controls.Player.roll.performed += ctx => rollZInput = ctx.ReadValue<float>();
         controls.Player.roll.canceled += ctx => rollZInput = 0f;
+
+        controls.Player.locktoplanet.performed += _ =>
+        {
+            if(!lockPlanet)
+            {
+                rb.angularVelocity = Vector3.zero;
+                controls.Player.rotatemouse.Disable();
+                lockSpeed = 700f;
+                StartCoroutine(StartParticleEffect());
+            }
+            else
+            {
+                controls.Player.rotatemouse.Enable();
+                particleSystem.SetActive(false);
+            }
+            lockPlanet = !lockPlanet;
+        };
     }
 
     private void OnEnable()
@@ -68,6 +91,7 @@ public class SpaceShipController : MonoBehaviour
         {
             Teleport();
         }
+        LockToPlanet();
     }
 
     void MoveShip()
@@ -106,32 +130,66 @@ public class SpaceShipController : MonoBehaviour
         transform.position = planet.transform.position + planet.transform.forward * 100f;
     }
 
+    void LockToPlanet()
+    {
+        if (lockPlanet)
+        {
+
+            distanceToLockedPlanet = Vector3.Distance(planet.transform.position, transform.position);
+            Vector3 targetDir = planet.transform.position - transform.position;
+            float currDist = Vector3.Distance(planet.transform.position, transform.position);
+            if (currDist <= 50f)
+            {
+                rb.velocity = new Vector3(0, 0, 50f);
+                controls.Player.rotatemouse.Enable();
+                lockPlanet = false;
+                particleSystem.SetActive(false);
+                return;
+            }
+            else if (currDist <= 200f)
+            {
+                lockSpeed = 500f;
+            }
+            rb.velocity = Vector3.zero;
+            Quaternion targetRotation =  Quaternion.LookRotation(targetDir);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, lockRotateSpeed * Time.deltaTime);
+            rb.AddForce(transform.forward * lockSpeed, ForceMode.VelocityChange);
+        }
+
+    }
+    private IEnumerator StartParticleEffect()
+    {
+        yield return new WaitForSeconds(1.5f);
+        if(!particleSystem.activeInHierarchy) particleSystem.SetActive(true);
+
+    }
+
     // void LockToPlanet(GameObject planet)
     // {
-    //     if (!lockedToPlanet)
+    //     if (!lockPlanet)
     //     {
-    //         lockedToPlanet = true;
+    //         lockPlanet = true;
     //         StartCoroutine(RotateTowardsPlanet(planet.transform.position, 3.0f));
     //     }
     // }
 
-    // private IEnumerator RotateTowardsPlanet(Vector3 targetPosition, float duration)
-    // {
-    //     Vector3 directionToPlanet = (targetPosition - transform.position).normalized;
-    //     Quaternion targetRotation = Quaternion.LookRotation(directionToPlanet);
+    //private IEnumerator RotateTowardsPlanet(Vector3 targetPosition, float duration)
+    //{
+    //    Vector3 directionToPlanet = (targetPosition - transform.position).normalized;
+    //    Quaternion targetRotation = Quaternion.LookRotation(directionToPlanet);
 
-    //     float elapsedTime = 0.0f;
+    //    float elapsedTime = 0.0f;
 
-    //     while (elapsedTime < duration)
-    //     {
-    //         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, elapsedTime / duration);
-    //         elapsedTime += Time.deltaTime;
-    //         yield return null;
-    //     }
+    //    while (elapsedTime < duration)
+    //    {
+    //        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, elapsedTime / duration);
+    //        elapsedTime += Time.deltaTime;
+    //        yield return null;
+    //    }
 
-    //     transform.rotation = targetRotation;
-    //     lockedToPlanet = false;
-    // }
+    //    transform.rotation = targetRotation;
+    //    lockPlanet = false;
+    //}
 
 
     public void ShakeShip()

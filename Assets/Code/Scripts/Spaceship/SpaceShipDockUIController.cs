@@ -11,7 +11,9 @@ public class SpaceShipDockUIController : MonoBehaviour
     [SerializeField] TextMeshProUGUI pitch;
     [SerializeField] TextMeshProUGUI yaw;
     [SerializeField] TextMeshProUGUI[] xyz;
-    
+    [SerializeField] TextMeshProUGUI distanceToLockedPlanet;
+    [SerializeField] SpaceShipController ssc;
+
     void Start()
     {
         
@@ -34,5 +36,7 @@ public class SpaceShipDockUIController : MonoBehaviour
         xyz[0].text = locVel.x.ToString("F2") + " m/s";
         xyz[1].text = locVel.y.ToString("F2") + " m/s";
         xyz[2].text = locVel.z.ToString("F2") + " m/s";
+
+        distanceToLockedPlanet.text = ssc.lockPlanet ? "Distance\n" + ssc.distanceToLockedPlanet.ToString("F2") + " m" : "";
     }
 }
