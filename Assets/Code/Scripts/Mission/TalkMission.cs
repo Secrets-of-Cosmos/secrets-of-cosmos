@@ -16,6 +16,7 @@ public class TalkMission : Mission
     public float nearDistance = 5.0f;
 
     private string dialogueStartedBy = "";
+    private Rigidbody rb;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +28,6 @@ public class TalkMission : Mission
     // Update is called once per frame
     void Update()
     {
-        UpdateTalkMission();
         HandlePlayerNearby();
         HandlePlayerInteract();
         if (dialogueStartedBy == name)
@@ -38,6 +38,10 @@ public class TalkMission : Mission
 
     void InitializeTalkMission()
     {
+        if (GetComponent<Rigidbody>() != null)
+        {
+            rb = GetComponent<Rigidbody>();
+        }
         missionManager = GameObject.FindObjectOfType<MissionManager>();
         dialoguePanelScript = dialoguePanel.GetComponent<DialoguePanel>();
         missionType = MissionType.Talk;
@@ -46,7 +50,7 @@ public class TalkMission : Mission
 
     void UpdateTalkMission()
     {
-        // Code to update a talk mission, for example, checking if the player has talked to a character
+
     }
 
     public void StartDialogue()
@@ -57,6 +61,7 @@ public class TalkMission : Mission
         dialoguePanelScript.SetDialogueText(dialogueTree.GetQuestion());
         dialoguePanelScript.SetAnswer1Text(dialogueTree.GetAnswer1());
         dialoguePanelScript.SetAnswer2Text(dialogueTree.GetAnswer2());
+        FreezeRigidbody(true);
     }
 
     private void HandleAnswerSelection()
@@ -68,6 +73,7 @@ public class TalkMission : Mission
             if (dialogueTree.IsFinished())
             {
                 dialoguePanel.SetActive(false);
+                FreezeRigidbody(false);
                 CompleteMission();
                 return;
             }
@@ -114,5 +120,13 @@ public class TalkMission : Mission
     private bool IsPlayerNearby()
     {
         return Vector3.Distance(player.transform.position, transform.position) < nearDistance;
+    }
+
+    private void FreezeRigidbody(bool isFrozen)
+    {
+        if (rb != null)
+        {
+            rb.constraints = isFrozen ? RigidbodyConstraints.FreezeAll : RigidbodyConstraints.None;
+        }
     }
 }

@@ -3,7 +3,8 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 [System.Serializable]
-public struct SceneObject {
+public struct SceneObject
+{
     public Transform planet;
     public string sceneName;
     public float threshold;
@@ -25,6 +26,7 @@ public class SceneAdmin : MonoBehaviour
 
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
     }
 
     void Update()
@@ -36,14 +38,15 @@ public class SceneAdmin : MonoBehaviour
         {
             CheckPlanets();
 
-            if(Input.GetKeyDown(KeyCode.O))
+            if (Input.GetKeyDown(KeyCode.O))
             {
                 issInsideOutsideController.GoOutside();
                 spaceship.gameObject.SetActive(true);
             }
         }
-        if(spaceshipInsideOutsideController.inside) {
-            if(Input.GetKeyDown(KeyCode.P))
+        if (currentScene.name == "Solar System" && spaceshipInsideOutsideController.inside)
+        {
+            if (Input.GetKeyDown(KeyCode.P))
             {
                 Transform viewer = GameObject.Find("Viewer").transform;
                 spaceshipInsideOutsideController.GoOutside();
@@ -54,16 +57,10 @@ public class SceneAdmin : MonoBehaviour
                 viewer.localPosition = new Vector3(0, 0, 0);
             }
         }
-
-
-        // if(Input.GetKeyDown(KeyCode.Escape))
-        // {
-        //     SceneManager.LoadScene("MainMenu");
-        // }
-       
     }
 
-    void CheckPlanets() {
+    void CheckPlanets()
+    {
         for (int i = 0; i < sceneObjects.Length; i++)
         {
             float distance = Vector3.Distance(spaceship.position, sceneObjects[i].planet.position);
@@ -77,9 +74,17 @@ public class SceneAdmin : MonoBehaviour
         }
     }
 
+    public void LoadSolarSystemScene()
+    {
+        SceneManager.LoadScene("Solar System");
+
+        spaceship = GameObject.Find("Spaceship").transform;
+    }
+
     IEnumerator LoadPlanetScene(int planetIndex)
     {
-        if (isLoading) {
+        if (isLoading)
+        {
             yield break;
         }
 
@@ -97,7 +102,8 @@ public class SceneAdmin : MonoBehaviour
         // Gezegen indeksine bağlı olarak uygun sahneyi yükle
         string sceneName = sceneObjects[planetIndex].sceneName;
         var asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        while (!asyncLoad.isDone) {
+        while (!asyncLoad.isDone)
+        {
             yield return null;
         }
 
