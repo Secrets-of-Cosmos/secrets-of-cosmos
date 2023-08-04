@@ -8,7 +8,7 @@ public class MenuDescriptionController : MonoBehaviour {
     public ScrollViewController scrollViewPrefab;
 
     public float textScale = 0.15f;
-    
+
     public float leftAndRightWidthRatio = 0.3f;
     public float middleWidthRatio = 0.4f;
 
@@ -24,9 +24,9 @@ public class MenuDescriptionController : MonoBehaviour {
     public RectTransform middlePart;
     public RectTransform rightPart;
 
-    public string[] leftPartTexts;
-    public string[] middlePartTexts;
-    public string[] rightPartTexts;
+    public MenuDescription[] LeftPartTexts;
+    public MenuDescription[] MiddlePartTexts;
+    public MenuDescription[] RightPartTexts;
 
     private float refHeight;
     private float refWidth;
@@ -62,13 +62,13 @@ public class MenuDescriptionController : MonoBehaviour {
         var betweenHorizontalParts = refWidth * spaceBetweenHorizontalPartsRatio;
 
         var eachPartWidth = (refWidth - 2 * leftAndRight - 2 * betweenHorizontalParts) * leftAndRightWidthRatio;
-        var eachSizePartHeightLeft = (refHeight - betweenVerticalParts * (leftPartTexts.Length - 1) - 2 * topAndBottom) / leftPartTexts.Length;
-        var eachSizePartHeightRight = (refHeight - betweenVerticalParts * (rightPartTexts.Length - 1) - 2 * topAndBottom) / rightPartTexts.Length;
+        var eachSizePartHeightLeft = (refHeight - betweenVerticalParts * (LeftPartTexts.Length - 1) - 2 * topAndBottom) / LeftPartTexts.Length;
+        var eachSizePartHeightRight = (refHeight - betweenVerticalParts * (RightPartTexts.Length - 1) - 2 * topAndBottom) / RightPartTexts.Length;
 
-        for (var i = 0; i < leftPartTexts.Length; i++) {
+        for (var i = 0; i < LeftPartTexts.Length; i++) {
             var scrollView = Instantiate(scrollViewPrefab, leftPart);
             var rectTransform = scrollView.GetComponent<RectTransform>();
-            var text = leftPartTexts[i];
+            var menuDescription = LeftPartTexts[i];
 
             rectTransform.anchorMin = new Vector2(0, 0);
             rectTransform.anchorMax = new Vector2(0, 0);
@@ -78,14 +78,15 @@ public class MenuDescriptionController : MonoBehaviour {
 
             rectTransform.localScale = refScale * textScale;
             rectTransform.sizeDelta /= refScale * textScale;
-            
-            scrollView.description.text = text;
+
+            scrollView.header.text = menuDescription.Header;
+            scrollView.description.text = menuDescription.Text;
         }
 
-        for (var i = 0; i < rightPartTexts.Length; i++) {
+        for (var i = 0; i < RightPartTexts.Length; i++) {
             var scrollView = Instantiate(scrollViewPrefab, rightPart);
             var rectTransform = scrollView.GetComponent<RectTransform>();
-            var text = rightPartTexts[i];
+            var menuDescription = RightPartTexts[i];
 
             rectTransform.anchorMin = new Vector2(1, 0);
             rectTransform.anchorMax = new Vector2(1, 0);
@@ -93,12 +94,13 @@ public class MenuDescriptionController : MonoBehaviour {
             rectTransform.sizeDelta = new Vector2(eachPartWidth, eachSizePartHeightRight);
             rectTransform.anchoredPosition = new Vector2(-eachPartWidth - leftAndRight,
                 topAndBottom + (eachSizePartHeightRight * i) + (betweenVerticalParts * i));
-            
+
             rectTransform.localScale = refScale * textScale;
             rectTransform.sizeDelta /= refScale * textScale;
 
-            scrollView.description.text = text;
-        }   
+            scrollView.header.text = menuDescription.Header;
+            scrollView.description.text = menuDescription.Text;
+        }
     }
 
     private void InitializeMiddlePart() {
@@ -107,13 +109,13 @@ public class MenuDescriptionController : MonoBehaviour {
         var betweenHorizontalParts = refWidth * spaceBetweenHorizontalPartsRatio;
 
         var eachPartWidth = (refWidth - 2 * leftAndRight - 2 * betweenHorizontalParts) * middleWidthRatio;
-        var eachPartHeight = (refHeight - betweenVerticalParts * (middlePartTexts.Length - 1)) / middlePartTexts.Length *
+        var eachPartHeight = (refHeight - betweenVerticalParts * (MiddlePartTexts.Length - 1)) / MiddlePartTexts.Length *
                              (middleTopHeightEndRatio - middleTopHeightStartRatio);
 
-        for (var i = 0; i < middlePartTexts.Length; i++) {
+        for (var i = 0; i < MiddlePartTexts.Length; i++) {
             var scrollView = Instantiate(scrollViewPrefab, middlePart);
             var rectTransform = scrollView.GetComponent<RectTransform>();
-            var text = middlePartTexts[i];
+            var menuDescription = MiddlePartTexts[i];
 
             rectTransform.anchorMin = new Vector2(0.5f, 1);
             rectTransform.anchorMax = new Vector2(0.5f, 1);
@@ -121,11 +123,18 @@ public class MenuDescriptionController : MonoBehaviour {
             rectTransform.sizeDelta = new Vector2(eachPartWidth, eachPartHeight);
             rectTransform.anchoredPosition = new Vector2(-eachPartWidth / 2,
                 -refHeight * middleTopHeightStartRatio - eachPartHeight - (eachPartHeight * i) - (betweenVerticalParts * i));
-            
+
             rectTransform.localScale = refScale * textScale;
             rectTransform.sizeDelta /= refScale * textScale;
 
-            scrollView.description.text = text;
+            scrollView.header.text = menuDescription.Header;
+            scrollView.description.text = menuDescription.Text;
         }
+    }
+
+    [System.Serializable]
+    public struct MenuDescription {
+        public string Header;
+        public string Text;
     }
 }
