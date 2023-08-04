@@ -10,9 +10,11 @@ public class SpaceShipController : MonoBehaviour
     public float rollTorque = 30f;
     public float thrustForce = 20f;
     public float rollZTorque = 2000f;
+    public float lockRotateSpeed = 0f;
+    public float lockSpeed = 200f;
 
     public GameObject planet;
-    private bool lockedToPlanet = false;
+    private bool lockPlanet = false;
 
     private Rigidbody rb;
     private CockpitController controls;
@@ -21,6 +23,8 @@ public class SpaceShipController : MonoBehaviour
     private Vector2 rotateInputMouse;
     private float thrustInput;
     private float rollZInput;
+
+    
 
     private bool controlsEnabled = true;
 
@@ -46,6 +50,22 @@ public class SpaceShipController : MonoBehaviour
 
         controls.Player.roll.performed += ctx => rollZInput = ctx.ReadValue<float>();
         controls.Player.roll.canceled += ctx => rollZInput = 0f;
+
+        controls.Player.locktoplanet.performed += _ =>
+        {
+            if(!lockPlanet)
+            {
+                rb.angularVelocity = Vector3.zero;
+                controls.Player.rotatemouse.Disable();
+                //controls.Disable();
+            }
+            else
+            {
+                //rb.velocity = Vector3.zero;
+                controls.Player.rotatemouse.Enable();
+            }
+            lockPlanet = !lockPlanet;
+        };
     }
 
     private void OnEnable()
@@ -68,6 +88,7 @@ public class SpaceShipController : MonoBehaviour
         {
             Teleport();
         }
+        LockToPlanet();
     }
 
     void MoveShip()
@@ -106,11 +127,34 @@ public class SpaceShipController : MonoBehaviour
         transform.position = planet.transform.position + planet.transform.forward * 100f;
     }
 
+    void LockToPlanet()
+    {
+        Vector3 targetDir = planet.transform.position - transform.position;
+        Debug.Log("Distance with Mars: " + Vector3.Distance(planet.transform.position, transform.position));
+        if(lockPlanet)
+        {
+            rb.velocity = Vector3.zero;
+            Quaternion targetRotation =  Quaternion.LookRotation(targetDir);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, lockRotateSpeed * Time.deltaTime);
+            rb.AddForce(transform.forward * lockSpeed, ForceMode.VelocityChange);
+            //Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, dummySpeed * Time.deltaTime, 0f);
+            //transform.rotation = Quaternion.LookRotation(newDir);
+            //if (transform.rotation == targetRotation)
+            //{
+            //    float speed = 100000f;
+            //    rb.AddForce(transform.forward * speed, ForceMode.Impulse);
+            //    lockPlanet = false;
+            //    controls.Player.rotatemouse.Enable();
+            //}
+        }
+
+    }
+
     // void LockToPlanet(GameObject planet)
     // {
-    //     if (!lockedToPlanet)
+    //     if (!lockPlanet)
     //     {
-    //         lockedToPlanet = true;
+    //         lockPlanet = true;
     //         StartCoroutine(RotateTowardsPlanet(planet.transform.position, 3.0f));
     //     }
     // }
@@ -130,7 +174,7 @@ public class SpaceShipController : MonoBehaviour
     //     }
 
     //     transform.rotation = targetRotation;
-    //     lockedToPlanet = false;
+    //     lockPlanet = false;
     // }
 
 
