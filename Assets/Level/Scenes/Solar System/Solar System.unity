@@ -712,6 +712,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: QA_Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 5977484440406518580, guid: 0cd62037932624a31bae68c76b22811e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
