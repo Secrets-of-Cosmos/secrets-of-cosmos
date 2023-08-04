@@ -9,6 +9,7 @@ public class SpaceShipController : MonoBehaviour
     public float pitchTorque = 50f;
     public float rollTorque = 30f;
     public float thrustForce = 20f;
+    public float rollZTorque = 2000f;
 
     public GameObject planet;
     private bool lockedToPlanet = false;
@@ -19,6 +20,7 @@ public class SpaceShipController : MonoBehaviour
     private Vector2 rotateInput;
     private Vector2 rotateInputMouse;
     private float thrustInput;
+    private float rollZInput;
 
     private bool controlsEnabled = true;
 
@@ -41,6 +43,9 @@ public class SpaceShipController : MonoBehaviour
 
         controls.Player.thrust.performed += ctx => thrustInput = ctx.ReadValue<float>();
         controls.Player.thrust.canceled += ctx => thrustInput = 0f;
+
+        controls.Player.roll.performed += ctx => rollZInput = ctx.ReadValue<float>();
+        controls.Player.roll.canceled += ctx => rollZInput = 0f;
     }
 
     private void OnEnable()
@@ -83,6 +88,8 @@ public class SpaceShipController : MonoBehaviour
         Vector3 thrustVector = transform.up * thrustInput * thrustForce;
 
 
+        Vector3 rollZTorqueVec = transform.forward * rollZInput * rollZTorque;
+
         rb.AddForce(forwardThrustVec, ForceMode.Force);
         rb.AddForce(sideThrustVec, ForceMode.Force);
 
@@ -90,6 +97,9 @@ public class SpaceShipController : MonoBehaviour
         rb.AddTorque(rollTorqueVec, ForceMode.Force);
 
         rb.AddForce(thrustVector, ForceMode.Force);
+
+        Debug.Log(rollZInput);
+        rb.AddTorque(rollZTorqueVec, ForceMode.Force);
 
     }
 

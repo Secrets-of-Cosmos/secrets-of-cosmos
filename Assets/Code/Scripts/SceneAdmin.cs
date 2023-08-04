@@ -30,7 +30,7 @@ public class SceneAdmin : MonoBehaviour
     void Update()
     {
         var currentScene = SceneManager.GetActiveScene();
-        Debug.Log(currentScene.name);
+        //Debug.Log(currentScene.name);
         // Tüm gezegenleri kontrol et
         if (currentScene.name == "Solar System")
         {
