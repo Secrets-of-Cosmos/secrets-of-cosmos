@@ -40,16 +40,16 @@ public class MenuDescriptionController : MonoBehaviour {
         refScale = rectTransform.localScale;
     }
 
-    public void Show() {
+    public void Show(bool showMiddlePart, bool showLeftAndRightParts) {
         foreach (Transform child in leftPart) Destroy(child.gameObject);
         foreach (Transform child in middlePart) Destroy(child.gameObject);
         foreach (Transform child in rightPart) Destroy(child.gameObject);
 
-        InitializeLeftAndRightParts();
-        InitializeMiddlePart();
+        if (showMiddlePart) InitializeMiddlePart();
+        if (showLeftAndRightParts) InitializeLeftAndRightParts();
     }
 
-    public void Destroy() {
+    public void Hide() {
         foreach (Transform child in leftPart) Destroy(child.gameObject);
         foreach (Transform child in middlePart) Destroy(child.gameObject);
         foreach (Transform child in rightPart) Destroy(child.gameObject);
