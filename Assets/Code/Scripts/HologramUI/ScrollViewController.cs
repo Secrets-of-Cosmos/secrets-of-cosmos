@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScrollViewController : MonoBehaviour {
+public class CardViewController : MonoBehaviour {
     public Text header;
     public Text description;
     

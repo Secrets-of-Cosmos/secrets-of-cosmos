@@ -71,7 +71,7 @@ public class HologramMenuController : MonoBehaviour
         gameObject.SetActive(true);
         var mostLeft = tabButtons.Count / 2 * -1;
         for (var i = 0; i < tabButtons.Count; i++, mostLeft++) {
-            tabButtons[i].transform.localPosition = tabButtonsStartPosition + new Vector3(mostLeft * tabButtonsStartGap + tabButtonsStartGap/2, 0f, 0f);
+            tabButtons[i].transform.localPosition = tabButtonsStartPosition + new Vector3(mostLeft * tabButtonsStartGap, 0f, 0f);
         }
         tabButtons.ForEach(button =>
         {
@@ -91,6 +91,7 @@ public class HologramMenuController : MonoBehaviour
         planetGameObject.SetActive(false);
         hologramEffectGameObject.transform.rotation = Quaternion.identity;
         gameObject.SetActive(false);
+        menuDescriptionController.Hide();
         tabButtons.ForEach(button => {
             LeanTween.scale(button, new Vector3(1f, 1f, 1f), 0.5f).setEaseOutBack();
             button.GetComponent<MeshRenderer>().material.SetColor(EmissionColor, currentTabColor);
@@ -102,7 +103,7 @@ public class HologramMenuController : MonoBehaviour
         if (_currentTab == TabsType.NOT_SELECTED) {
             var mostLeft = tabButtons.Count/2*-1;
             for (var i = 0; i < tabButtons.Count; i++, mostLeft++) {
-                LeanTween.moveLocal(tabButtons[i], new Vector3(tabButtonsFinalPosition.x + mostLeft * tabButtonsFinalGap + tabButtonsFinalGap/2, tabButtonsFinalPosition.y, tabButtonsFinalPosition.z), 0.5f).setEaseOutBack();
+                LeanTween.moveLocal(tabButtons[i], new Vector3(tabButtonsFinalPosition.x + mostLeft * tabButtonsFinalGap, tabButtonsFinalPosition.y, tabButtonsFinalPosition.z), 0.5f).setEaseOutBack();
                 LeanTween.scale(tabButtons[i], new Vector3(0.5f, 0.5f, 0.5f), 0.5f).setEaseOutBack();
             }
         }
@@ -112,35 +113,40 @@ public class HologramMenuController : MonoBehaviour
             button.GetComponent<MeshRenderer>().material.SetColor(EmissionColor, currentTabColor);
         });
         _currentTab = tab;
-        leftButton.SetActive(true);
-        rightButton.SetActive(true);
         planetGameObject.SetActive(false);
         hologramEffectGameObject.transform.rotation = Quaternion.identity;
         switch (tab) {
             case TabsType.PLANETS:
+                ChangeControlButtonStatus(true);
+                SetDescriptionMenuMiddleLenght(false);
                 planetGameObject.SetActive(true);
                 _hologramEffect.SendEvent(PlanetEvent, _eventAttribute);
+                menuDescriptionController.Show(true, true);
                 break;
             case TabsType.MISSIONS:
-                Debug.Log("Missions");
+                ChangeControlButtonStatus(false);
+                SetDescriptionMenuMiddleLenght(true);
+                menuDescriptionController.Show(true, false);
                 break;
             case TabsType.SPACECRAFTS:
+                ChangeControlButtonStatus(true);
+                SetDescriptionMenuMiddleLenght(false);
                 _hologramEffect.SetMesh("SpacecraftMesh", spacecraftsMeshes[_currentSpacecraft]);
                 _hologramEffect.SendEvent(SpacecraftEvent, _eventAttribute);
+                menuDescriptionController.Show(true, false);
                 break;
             case TabsType.INVENTORY:
-                Debug.Log("Inventory");
+                menuDescriptionController.Hide();
+                SetDescriptionMenuMiddleLenght(true);
+                ChangeControlButtonStatus(false);
                 break;
             case TabsType.MAPS:
-                Debug.Log("Maps");
-                break;
-            case TabsType.DICTIONARY:
-                Debug.Log("Dictionary");
+                menuDescriptionController.Hide();
+                ChangeControlButtonStatus(false);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(tab), tab, null);
         }
-        menuDescriptionController.Show();
     }
     public void OnControlButtonsPressed(ControlButtonsType button) {
         var direction = button == ControlButtonsType.LEFT ? -1 : 1;
@@ -170,6 +176,15 @@ public class HologramMenuController : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    private void ChangeControlButtonStatus(bool isActive) {
+        leftButton.SetActive(isActive);
+        rightButton.SetActive(isActive);
+    }
+
+    private void SetDescriptionMenuMiddleLenght(bool extend) {
+        menuDescriptionController.middleTopHeightEndRatio = extend ? 0.99f : 0.7f;
     }
 }
 [Serializable]
