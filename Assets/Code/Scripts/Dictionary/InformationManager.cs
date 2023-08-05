@@ -6,10 +6,12 @@ public class InformationManager : MonoBehaviour
 {
     [Header("Planet Information")]
     [SerializeField]
-    PlanetInformation mars;
+    public PlanetInformation mars;
+    MenuDescriptionController menuDescriptionController;
 
     void Start()
     {
+        menuDescriptionController = GameObject.FindObjectOfType<MenuDescriptionController>();
         Dictionary<string, object> marsAttributes = new Dictionary<string, object>
         {
             { "name", "Mars" },
@@ -25,11 +27,41 @@ public class InformationManager : MonoBehaviour
         };
 
         mars = new PlanetInformation("mars", marsAttributes);
+
+        SetTexts(mars);
     }
 
     // Update is called once per frame
     void Update()
     {
+    }
 
+    public void SetTexts(PlanetInformation mars)
+    {
+        menuDescriptionController.MiddlePartTexts[0].Header = "Name";
+        menuDescriptionController.MiddlePartTexts[0].Text = mars.Get("name");
+
+        menuDescriptionController.MiddlePartTexts[1].Header = "Elements";
+        menuDescriptionController.MiddlePartTexts[1].Text = mars.Get("elements");
+
+        menuDescriptionController.LeftPartTexts[0].Header = "First Spacecraft";
+        menuDescriptionController.LeftPartTexts[0].Text = mars.Get("firstSpacecraft");
+
+        menuDescriptionController.LeftPartTexts[1].Header = "Surface Spacecraft";
+        menuDescriptionController.LeftPartTexts[1].Text = mars.Get("surfaceSpacecraft");
+
+        menuDescriptionController.LeftPartTexts[2].Header = "Fun Facts";
+        menuDescriptionController.LeftPartTexts[2].Text = mars.Get("funFacts");
+
+        menuDescriptionController.RightPartTexts[0].Header = "Atmosphere Condition";
+        menuDescriptionController.RightPartTexts[0].Text = mars.Get("atmosphereCondition");
+
+        menuDescriptionController.RightPartTexts[1].Header = "Proximity to Sun";
+        menuDescriptionController.RightPartTexts[1].Text = mars.Get("proximityToSun");
+
+        menuDescriptionController.RightPartTexts[2].Header = "Surface Temperature";
+        menuDescriptionController.RightPartTexts[2].Text = mars.Get("surfaceTemperature");
+
+        menuDescriptionController.UpdateTexts();
     }
 }

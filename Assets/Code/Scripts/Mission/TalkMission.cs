@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
-
 public class TalkMission : Mission
 {
     private DialogueTree dialogueTree;
@@ -22,7 +17,7 @@ public class TalkMission : Mission
     {
         InitializeTalkMission();
         AddMission();
-        dialogueTree = new DialogueTree();
+        dialogueTree = new DialogueTree(DialogueTree.DialogueType.WelcomeMission);
     }
 
     // Update is called once per frame
