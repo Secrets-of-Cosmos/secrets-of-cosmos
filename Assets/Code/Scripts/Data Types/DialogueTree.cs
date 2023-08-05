@@ -15,14 +15,92 @@ public class DialogueTree
         }
     }
 
+    public enum DialogueType
+    {
+        WakeUp,
+        WelcomeMission,
+        Ingenuity,
+        Information
+    }
+
     DialogueNode rootNode;
     DialogueNode currentNode;
 
-    public DialogueTree()
+    public DialogueTree(DialogueType type)
     {
-        BuildExampleDialogueTree();
+        switch (type)
+        {
+            case DialogueType.WakeUp:
+                BuildExampleDialogueTree();
+                break;
+            case DialogueType.WelcomeMission:
+                BuildExampleDialogueTree();
+                break;
+            case DialogueType.Ingenuity:
+                BuildIngenuityDialogueTree();
+                break;
+            case DialogueType.Information:
+                BuildInformationDialogueTree();
+                break;
+            default:
+                BuildExampleDialogueTree();
+                break;
+        }
+
         currentNode = rootNode;
     }
+    void BuildInformationDialogueTree()
+    {
+        rootNode = new DialogueNode("I analyzed the atmosphere. The data seems interesting.");
+
+        var node1 = new DialogueNode("Would you like to see the detailed analysis?");
+        var node2 = new DialogueNode("Do you need me to perform any specific actions based on the analysis?");
+
+        var node1a = new DialogueNode("Here are the details: [insert detailed analysis here].");
+        var node1b = new DialogueNode("Understood. Just let me know if you need more information later.");
+
+        var node2a = new DialogueNode("Action completed. What would you like to do next?");
+        var node2b = new DialogueNode("Okay, I'll stand by for further instructions.");
+
+        var nodeFinal = new DialogueNode("Mission accomplished. Awaiting next command.");
+
+        rootNode.Answers.Add("Can you show me the details?", node1);
+        rootNode.Answers.Add("Is there any action I should take?", node2);
+
+        node1.Answers.Add("Sure, here are the details.", node1a);
+        node1.Answers.Add("No need for details right now.", node1b);
+
+        node2.Answers.Add("Yes, please perform this action: [insert action here].", node2a);
+        node2.Answers.Add("No, no action needed at this time.", node2b);
+
+        node1a.Answers.Add("Thank you for the details.", nodeFinal);
+        node1b.Answers.Add("Thank you, I'll reach out if I need anything.", nodeFinal);
+
+        node2a.Answers.Add("Great job, thank you.", nodeFinal);
+        node2b.Answers.Add("Thank you, I'll let you know if anything is needed.", nodeFinal);
+    }
+
+
+    void BuildIngenuityDialogueTree()
+    {
+        rootNode = new DialogueNode("Hi, I am Ingenuity helicopter. Who are you?");
+
+        var node1 = new DialogueNode("Great! I will make my best to help you.");
+        var node2 = new DialogueNode("Fantastic! I will make my best to help you.");
+
+        var nodeFinal = new DialogueNode("Yep, let's fly!");
+
+        rootNode.Answers.Add("I'm the operator assigned to control you.", node1);
+        rootNode.Answers.Add("I'm a scientist working on this project.", node2);
+
+        node1.Answers.Add("Are you ready to analysis?", nodeFinal);
+        node1.Answers.Add("Shall we start the analysis?", nodeFinal);
+
+        node2.Answers.Add("Shall we start the analysis?", nodeFinal);
+        node2.Answers.Add("Are you ready to analysis?", nodeFinal);
+    }
+
+
 
     void BuildExampleDialogueTree()
     {

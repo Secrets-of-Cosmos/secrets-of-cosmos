@@ -1,8 +1,19 @@
 using UnityEngine;
-public class TalkMission : Mission
+public class SendMission : Mission
 {
+    private DialogueTree dialogueTreeSender;
+    private DialogueTree dialogueTreeInfo;
     private DialogueTree dialogueTree;
     public GameObject dialoguePanel;
+
+    enum SendMissionState
+    {
+        NotStarted,
+        Started,
+        Finished
+    }
+
+    SendMissionState state = SendMissionState.NotStarted;
 
     // UI elements
     public DialoguePanel dialoguePanelScript;
@@ -12,12 +23,15 @@ public class TalkMission : Mission
 
     private string dialogueStartedBy = "";
     private Rigidbody rb;
+    private Ingenuity ingenuity;
     // Start is called before the first frame update
     void Start()
     {
         InitializeTalkMission();
         AddMission();
-        dialogueTree = new DialogueTree(DialogueTree.DialogueType.WelcomeMission);
+        dialogueTreeSender = new DialogueTree(DialogueTree.DialogueType.Ingenuity);
+        dialogueTreeInfo = new DialogueTree(DialogueTree.DialogueType.Information);
+        dialogueTree = dialogueTreeSender;
     }
 
     // Update is called once per frame
@@ -39,13 +53,9 @@ public class TalkMission : Mission
         }
         missionManager = GameObject.FindObjectOfType<MissionManager>();
         dialoguePanelScript = dialoguePanel.GetComponent<DialoguePanel>();
-        missionType = MissionType.Talk;
+        missionType = MissionType.Send;
+        ingenuity = GetComponent<Ingenuity>();
         dialoguePanel.SetActive(false);
-    }
-
-    void UpdateTalkMission()
-    {
-
     }
 
     public void StartDialogue()
@@ -69,7 +79,18 @@ public class TalkMission : Mission
             {
                 dialoguePanel.SetActive(false);
                 FreezeRigidbody(false);
-                CompleteMission();
+                if (state == SendMissionState.NotStarted)
+                {
+                    state = SendMissionState.Started;
+                    dialogueTree = dialogueTreeInfo;
+                    ingenuity.Fly();
+                    return;
+                }
+                else if (state == SendMissionState.Started)
+                {
+                    state = SendMissionState.Finished;
+                    CompleteMission();
+                }
                 return;
             }
 
