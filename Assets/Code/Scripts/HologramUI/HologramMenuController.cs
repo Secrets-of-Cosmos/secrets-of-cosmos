@@ -167,10 +167,7 @@ public class HologramMenuController : MonoBehaviour
                 _hologramEffect.SetMesh("SpacecraftMesh", spacecraftsMeshes[_currentSpacecraft]);
                 break;
             case TabsType.INVENTORY:
-                break;
             case TabsType.MAPS:
-                break;
-            case TabsType.DICTIONARY:
                 break;
             case TabsType.NOT_SELECTED:
             default:

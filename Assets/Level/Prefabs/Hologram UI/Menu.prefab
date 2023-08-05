@@ -105,26 +105,51 @@ MonoBehaviour:
   middlePart: {fileID: 2054137224899246155}
   rightPart: {fileID: 8933218737074602184}
   LeftPartTexts:
+  - Header: HeaderLeft1
+    Text: Text
+    showButton: 0
+    ButtonText: Left1
   - Header: Header
     Text: Text
+    showButton: 0
+    ButtonText: Left2
   - Header: Header
     Text: Text
+    showButton: 0
+    ButtonText: Left3
   - Header: Header
     Text: Text
+    showButton: 0
+    ButtonText: Left4
   MiddlePartTexts:
   - Header: Header
     Text: Text
+    showButton: 1
+    ButtonText: Middle1
   - Header: Header
     Text: Text
+    showButton: 1
+    ButtonText: Middle2
   RightPartTexts:
   - Header: Header
     Text: Text
+    showButton: 0
+    ButtonText: Right1
   - Header: Header
     Text: Text
+    showButton: 0
+    ButtonText: Right2
   - Header: Header
     Text: Text
-  - Header: Header
-    Text: Text
+    showButton: 0
+    ButtonText: Right3
+  buttonInfo:
+    cardHeader: 
+    cardDesc: 
+    buttonName: 
+  buttonClickedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1611872836147298332
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,6 +384,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8933218737074602184}
   - component: {fileID: 6811125014196359436}
+  - component: {fileID: 3632309280618886623}
   m_Layer: 5
   m_Name: RightPart
   m_TagString: Untagged
@@ -404,11 +430,28 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &3632309280618886623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4465048623322563181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &4517056536009110957
 GameObject:
   m_ObjectHideFlags: 0
@@ -1123,6 +1166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1988394446007480447}
   - component: {fileID: 5687326988401115939}
+  - component: {fileID: 4681292656945264193}
   m_Layer: 5
   m_Name: LeftPart
   m_TagString: Untagged
@@ -1168,11 +1212,28 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &4681292656945264193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8529918611202097478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &8608010742922937085
 GameObject:
   m_ObjectHideFlags: 0

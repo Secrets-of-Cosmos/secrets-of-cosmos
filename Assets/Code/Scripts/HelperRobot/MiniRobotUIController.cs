@@ -6,21 +6,16 @@ public class MiniRobotUIController : MonoBehaviour
 {
     [SerializeField] private HologramMenuController menu;
     [SerializeField] private InputActionReference openMenuAction;
-    public bool IsMenuOpen { get; private set; }
+    private bool isMenuOpen;
     
-    private void Start() {
-        menu.gameObject.SetActive(false);
-    }
-
     private void Update() {
         if (Input.GetKeyDown(KeyCode.R)) {
-            if (!IsMenuOpen) {
-                menu.OpenMenu();
-            }
-            else {
-                menu.CloseMenu();
-            }
-            IsMenuOpen = !IsMenuOpen;
+            
+            if (!isMenuOpen) menu.OpenMenu();
+            else menu.CloseMenu();
+            
+            isMenuOpen = !isMenuOpen;
         }
+        
     }
 }

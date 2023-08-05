@@ -28,11 +28,17 @@ public class InformationManager : MonoBehaviour
         mars = new PlanetInformation("mars", marsAttributes);
 
         SetTexts(mars);
+        menuDescriptionController.buttonClickedEvent.AddListener(CardButtonClicked);
     }
 
     // Update is called once per frame
     void Update()
     {
+    }
+
+    public void CardButtonClicked() {
+        var buttonInfo = menuDescriptionController.buttonInfo;
+        Debug.Log("Button clicked: " + buttonInfo.buttonName);
     }
 
     public void SetTexts(PlanetInformation mars)
