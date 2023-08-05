@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class PapermanAC : MonoBehaviour
@@ -7,6 +8,7 @@ public class PapermanAC : MonoBehaviour
     Animator animator;
     CharacterController characterController;
     public Transform cameraTransform;
+    private InsideOutsideController issInsideOutsideController;
 
     float vertical;
     float horizontal;
@@ -26,6 +28,18 @@ public class PapermanAC : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
+        var controller = (AnimatorController)animator.runtimeAnimatorController;
+        AnimatorStateMachine asm = controller.layers[0].stateMachine;
+
+        if (transform.parent && transform.parent.gameObject.name == "interior_iss")
+        {
+
+            asm.defaultState = asm.states[4].state; // Changing the default state to Sitting
+        }
+        else
+        {
+            asm.defaultState = asm.states[0].state; // Changing the default state the Movement BlendTree
+        }
     }
 
     private void Update()
