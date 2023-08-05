@@ -493,22 +493,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8998507869433089346}
     m_Modifications:
-    - target: {fileID: 4507638049930433066, guid: e329c4a4834d645769651311036c23e8, type: 3}
-      propertyPath: m_Size.x
-      value: 148.9375
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507638049930433066, guid: e329c4a4834d645769651311036c23e8, type: 3}
-      propertyPath: m_Size.y
-      value: 46.012276
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507638049930433066, guid: e329c4a4834d645769651311036c23e8, type: 3}
-      propertyPath: m_Offset.x
-      value: 2.3486938
-      objectReference: {fileID: 0}
-    - target: {fileID: 4507638049930433066, guid: e329c4a4834d645769651311036c23e8, type: 3}
-      propertyPath: m_Offset.y
-      value: -2.0068398
-      objectReference: {fileID: 0}
     - target: {fileID: 5574653887176124645, guid: e329c4a4834d645769651311036c23e8, type: 3}
       propertyPath: onClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
