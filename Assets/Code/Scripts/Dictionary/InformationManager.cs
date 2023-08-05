@@ -7,11 +7,10 @@ public class InformationManager : MonoBehaviour
     [Header("Planet Information")]
     [SerializeField]
     public PlanetInformation mars;
-    MenuDescriptionController menuDescriptionController;
+    public MenuDescriptionController menuDescriptionController;
 
     void Start()
     {
-        menuDescriptionController = GameObject.FindObjectOfType<MenuDescriptionController>();
         Dictionary<string, object> marsAttributes = new Dictionary<string, object>
         {
             { "name", "Mars" },

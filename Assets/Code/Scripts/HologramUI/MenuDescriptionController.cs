@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class MenuDescriptionController : MonoBehaviour
 {
-    public ScrollViewController scrollViewPrefab;
+    public CardViewController scrollViewPrefab;
 
     public float textScale = 0.15f;
 
@@ -55,20 +55,20 @@ public class MenuDescriptionController : MonoBehaviour
     {
         foreach (Transform child in leftPart)
         {
-            child.GetComponent<ScrollViewController>().header.text = LeftPartTexts[child.GetSiblingIndex()].Header;
-            child.GetComponent<ScrollViewController>().description.text = LeftPartTexts[child.GetSiblingIndex()].Text;
+            child.GetComponent<CardViewController>().header.text = LeftPartTexts[child.GetSiblingIndex()].Header;
+            child.GetComponent<CardViewController>().description.text = LeftPartTexts[child.GetSiblingIndex()].Text;
         }
 
         foreach (Transform child in middlePart)
         {
-            child.GetComponent<ScrollViewController>().header.text = MiddlePartTexts[child.GetSiblingIndex()].Header;
-            child.GetComponent<ScrollViewController>().description.text = MiddlePartTexts[child.GetSiblingIndex()].Text;
+            child.GetComponent<CardViewController>().header.text = MiddlePartTexts[child.GetSiblingIndex()].Header;
+            child.GetComponent<CardViewController>().description.text = MiddlePartTexts[child.GetSiblingIndex()].Text;
         }
 
         foreach (Transform child in rightPart)
         {
-            child.GetComponent<ScrollViewController>().header.text = RightPartTexts[child.GetSiblingIndex()].Header;
-            child.GetComponent<ScrollViewController>().description.text = RightPartTexts[child.GetSiblingIndex()].Text;
+            child.GetComponent<CardViewController>().header.text = RightPartTexts[child.GetSiblingIndex()].Header;
+            child.GetComponent<CardViewController>().description.text = RightPartTexts[child.GetSiblingIndex()].Text;
         }
     }
 
