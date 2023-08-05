@@ -11,7 +11,8 @@ public class Mission : MonoBehaviour
         Escort,
         Explore,
         Talk,
-        Craft
+        Craft,
+        Send
     }
 
     [SerializeField]
