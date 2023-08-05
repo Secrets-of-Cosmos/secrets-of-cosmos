@@ -1116,11 +1116,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4532726864411000}
   - component: {fileID: 114247761394065854}
-  - component: {fileID: 8240370821700406633}
   - component: {fileID: 95842856641432470}
   - component: {fileID: 135024287105061088}
   - component: {fileID: 4973961681606789027}
-  - component: {fileID: 1181187312201563439}
   - component: {fileID: 5907832296091331951}
   m_Layer: 0
   m_Name: robotSphere
@@ -1166,26 +1164,6 @@ MonoBehaviour:
   landDelay: 1
   jumpHight: 3
   openDelay: 1
---- !u!114 &8240370821700406633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1258481190858562}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bb9a736d815f4fa6ae97aa3e684f6f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  maxSpeed: 5
-  maxDistance: 10
-  openDelay: 0.5
-  footStepSound: {fileID: 0}
-  soundActivated: 0
-  circleRadius: 10
-  circleSpeed: 2
 --- !u!95 &95842856641432470
 Animator:
   serializedVersion: 5
@@ -1250,22 +1228,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1181187312201563439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1258481190858562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc84a07d7c31413f9b9bc8518621242, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  followDistance: 7.44
-  proximityDistance: 8.22
-  walkAroundDistance: 12.17
 --- !u!54 &5907832296091331951
 Rigidbody:
   m_ObjectHideFlags: 0

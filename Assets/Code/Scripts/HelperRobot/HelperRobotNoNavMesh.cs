@@ -34,6 +34,7 @@ public class HelperRobotNoNavMesh : MonoBehaviour
                 {
                     state = State.Idle;
                     anim.SetBool("Walk_Anim", false);
+                    anim.SetBool("Jump_Anim", true);
                 }
                 else
                 {
@@ -47,14 +48,17 @@ public class HelperRobotNoNavMesh : MonoBehaviour
 
             case State.Idle:
                 anim.SetBool("Walk_Anim", false);
+                anim.SetBool("Jump_Anim", true);
                 if (distanceToPlayer > proximityDistance)
                 {
                     state = State.Follow;
                     anim.SetBool("Walk_Anim", true);
+                    anim.SetBool("Jump_Anim", false);
                 }
                 else if (distanceToPlayer <= stopDistance)
                 {
                     anim.SetBool("Walk_Anim", false);
+                    anim.SetBool("Jump_Anim", true);
                 }
                 break;
         }
