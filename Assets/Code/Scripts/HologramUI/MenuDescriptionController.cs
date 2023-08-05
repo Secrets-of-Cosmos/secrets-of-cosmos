@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class MenuDescriptionController : MonoBehaviour {
+public class MenuDescriptionController : MonoBehaviour
+{
     public ScrollViewController scrollViewPrefab;
 
     public float textScale = 0.15f;
@@ -32,7 +33,8 @@ public class MenuDescriptionController : MonoBehaviour {
     private float refWidth;
     private Vector2 refScale;
 
-    void Start() {
+    void Start()
+    {
         var rectTransform = middlePart.transform.parent.GetComponent<RectTransform>();
         var sizeDelta = rectTransform.sizeDelta;
         refWidth = sizeDelta.x;
@@ -40,7 +42,8 @@ public class MenuDescriptionController : MonoBehaviour {
         refScale = rectTransform.localScale;
     }
 
-    public void Show() {
+    public void Show()
+    {
         foreach (Transform child in leftPart) Destroy(child.gameObject);
         foreach (Transform child in middlePart) Destroy(child.gameObject);
         foreach (Transform child in rightPart) Destroy(child.gameObject);
@@ -49,13 +52,36 @@ public class MenuDescriptionController : MonoBehaviour {
         InitializeMiddlePart();
     }
 
-    public void Destroy() {
+    public void UpdateTexts()
+    {
+        foreach (Transform child in leftPart)
+        {
+            child.GetComponent<ScrollViewController>().header.text = LeftPartTexts[child.GetSiblingIndex()].Header;
+            child.GetComponent<ScrollViewController>().description.text = LeftPartTexts[child.GetSiblingIndex()].Text;
+        }
+
+        foreach (Transform child in middlePart)
+        {
+            child.GetComponent<ScrollViewController>().header.text = MiddlePartTexts[child.GetSiblingIndex()].Header;
+            child.GetComponent<ScrollViewController>().description.text = MiddlePartTexts[child.GetSiblingIndex()].Text;
+        }
+
+        foreach (Transform child in rightPart)
+        {
+            child.GetComponent<ScrollViewController>().header.text = RightPartTexts[child.GetSiblingIndex()].Header;
+            child.GetComponent<ScrollViewController>().description.text = RightPartTexts[child.GetSiblingIndex()].Text;
+        }
+    }
+
+    public void Destroy()
+    {
         foreach (Transform child in leftPart) Destroy(child.gameObject);
         foreach (Transform child in middlePart) Destroy(child.gameObject);
         foreach (Transform child in rightPart) Destroy(child.gameObject);
     }
 
-    private void InitializeLeftAndRightParts() {
+    private void InitializeLeftAndRightParts()
+    {
         var leftAndRight = refWidth * spaceForLeftAndRightRatio;
         var topAndBottom = refHeight * spaceForTopAndBottomRatio;
         var betweenVerticalParts = refHeight * spaceBetweenVerticalPartsRatio;
@@ -65,7 +91,8 @@ public class MenuDescriptionController : MonoBehaviour {
         var eachSizePartHeightLeft = (refHeight - betweenVerticalParts * (LeftPartTexts.Length - 1) - 2 * topAndBottom) / LeftPartTexts.Length;
         var eachSizePartHeightRight = (refHeight - betweenVerticalParts * (RightPartTexts.Length - 1) - 2 * topAndBottom) / RightPartTexts.Length;
 
-        for (var i = 0; i < LeftPartTexts.Length; i++) {
+        for (var i = 0; i < LeftPartTexts.Length; i++)
+        {
             var scrollView = Instantiate(scrollViewPrefab, leftPart);
             var rectTransform = scrollView.GetComponent<RectTransform>();
             var menuDescription = LeftPartTexts[i];
@@ -83,7 +110,8 @@ public class MenuDescriptionController : MonoBehaviour {
             scrollView.description.text = menuDescription.Text;
         }
 
-        for (var i = 0; i < RightPartTexts.Length; i++) {
+        for (var i = 0; i < RightPartTexts.Length; i++)
+        {
             var scrollView = Instantiate(scrollViewPrefab, rightPart);
             var rectTransform = scrollView.GetComponent<RectTransform>();
             var menuDescription = RightPartTexts[i];
@@ -103,7 +131,8 @@ public class MenuDescriptionController : MonoBehaviour {
         }
     }
 
-    private void InitializeMiddlePart() {
+    private void InitializeMiddlePart()
+    {
         var leftAndRight = refWidth * spaceForLeftAndRightRatio;
         var betweenVerticalParts = refHeight * spaceBetweenVerticalPartsRatio;
         var betweenHorizontalParts = refWidth * spaceBetweenHorizontalPartsRatio;
@@ -112,7 +141,8 @@ public class MenuDescriptionController : MonoBehaviour {
         var eachPartHeight = (refHeight - betweenVerticalParts * (MiddlePartTexts.Length - 1)) / MiddlePartTexts.Length *
                              (middleTopHeightEndRatio - middleTopHeightStartRatio);
 
-        for (var i = 0; i < MiddlePartTexts.Length; i++) {
+        for (var i = 0; i < MiddlePartTexts.Length; i++)
+        {
             var scrollView = Instantiate(scrollViewPrefab, middlePart);
             var rectTransform = scrollView.GetComponent<RectTransform>();
             var menuDescription = MiddlePartTexts[i];
@@ -133,7 +163,8 @@ public class MenuDescriptionController : MonoBehaviour {
     }
 
     [System.Serializable]
-    public struct MenuDescription {
+    public struct MenuDescription
+    {
         public string Header;
         public string Text;
     }

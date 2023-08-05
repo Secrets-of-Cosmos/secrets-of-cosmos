@@ -55,7 +55,7 @@ public class SpaceShipController : MonoBehaviour
 
         controls.Player.locktoplanet.performed += _ =>
         {
-            if(!lockPlanet)
+            if (!lockPlanet)
             {
                 rb.angularVelocity = Vector3.zero;
                 controls.Player.rotatemouse.Disable();
@@ -87,7 +87,7 @@ public class SpaceShipController : MonoBehaviour
         {
             MoveShip();
         }
-        if(Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.V))
         {
             Teleport();
         }
@@ -126,7 +126,8 @@ public class SpaceShipController : MonoBehaviour
 
     }
 
-    void Teleport() {
+    void Teleport()
+    {
         transform.position = planet.transform.position + planet.transform.forward * 100f;
     }
 
@@ -151,7 +152,7 @@ public class SpaceShipController : MonoBehaviour
                 lockSpeed = 500f;
             }
             rb.velocity = Vector3.zero;
-            Quaternion targetRotation =  Quaternion.LookRotation(targetDir);
+            Quaternion targetRotation = Quaternion.LookRotation(targetDir);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, lockRotateSpeed * Time.deltaTime);
             rb.AddForce(transform.forward * lockSpeed, ForceMode.VelocityChange);
         }
@@ -160,7 +161,7 @@ public class SpaceShipController : MonoBehaviour
     private IEnumerator StartParticleEffect()
     {
         yield return new WaitForSeconds(1.5f);
-        if(!particleSystem.activeInHierarchy) particleSystem.SetActive(true);
+        if (!particleSystem.activeInHierarchy) particleSystem.SetActive(true);
 
     }
 

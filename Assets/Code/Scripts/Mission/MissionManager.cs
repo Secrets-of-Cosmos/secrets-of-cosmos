@@ -8,7 +8,7 @@ public class MissionManager : MonoBehaviour
     public List<Mission> availableMissions = new List<Mission>();
     public List<Mission> activeMissions = new List<Mission>();
     public List<Mission> completedMissions = new List<Mission>();
-
+    public InformationManager informationManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,8 +36,10 @@ public class MissionManager : MonoBehaviour
 
         if (index != -1)
         {
+            informationManager.mars.Discover(activeMissions[index].attributeToCheck);
             completedMissions.Add(activeMissions[index]);
             activeMissions.RemoveAt(index);
+            informationManager.SetTexts(informationManager.mars);
         }
     }
 }
