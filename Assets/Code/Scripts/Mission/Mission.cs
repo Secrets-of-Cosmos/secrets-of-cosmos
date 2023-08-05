@@ -25,6 +25,8 @@ public class Mission : MonoBehaviour
     string missionDescription;
     [SerializeField]
     bool isComplete = false;
+    [SerializeField]
+    public string attributeToCheck;
 
     public PapermanAC player;
 
