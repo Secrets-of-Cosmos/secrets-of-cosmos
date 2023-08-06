@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,8 +35,12 @@ public class MenuDescriptionController : MonoBehaviour
     private float refWidth;
     private Vector2 refScale;
 
-    public CardViewController.ClickedButtonInfo buttonInfo;
-    public UnityEvent buttonClickedEvent = new();
+    public static MenuDescriptionController Instance { get; private set; }
+    public UnityEvent<ClickedButtonInfo> buttonClickedEvent = new();
+
+    private void Awake() {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -164,7 +169,6 @@ public class MenuDescriptionController : MonoBehaviour
     private CardViewController InitializeCardView(Transform parent) {
         var cardView = Instantiate(scrollViewPrefab, parent);
         cardView.buttonClickedEvent = this.buttonClickedEvent;
-        cardView.buttonInfo = this.buttonInfo;
         return cardView;
     }
     
