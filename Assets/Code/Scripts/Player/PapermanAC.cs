@@ -133,6 +133,10 @@ public class PapermanAC : MonoBehaviour
                 if(isOnGroundMovements)
                     asm.states[0].state.speed = 1;
                 movementDirection = new Vector3(vcam.transform.forward.x, vcam.transform.forward.y, vcam.transform.forward.z * asm.states[0].state.speed);
+                if (Vector3.Dot(transform.forward, vcam.transform.forward) >= 0)
+                {
+                    movementDirection = Vector3.zero;
+                }
             }
             else
             {
