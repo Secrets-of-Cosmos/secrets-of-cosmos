@@ -6,12 +6,12 @@ public class Ingenuity : MonoBehaviour
 {
     public Transform rotors_01;
     public Transform rotors_02;
-    public float speed = 5f;
+    public float maxSpeed = 5f;
     public float maxRotationSpeed = 1000f;
     private float rotationSpeed = 0f;
     public float maxHeight = 50f;
     private bool flying = false;
-    private bool landing = false;
+    public bool landing = false;
 
     private Rigidbody rb;
 
@@ -32,7 +32,7 @@ public class Ingenuity : MonoBehaviour
         {
             Land();
         }
-        if (flying && transform.position.y < maxHeight)
+        if (flying && transform.position.y < maxHeight && rb.velocity.y < maxSpeed)
         {
             rb.AddForce(Vector3.up * rotationSpeed * Time.deltaTime, ForceMode.Acceleration);
 
@@ -71,6 +71,7 @@ public class Ingenuity : MonoBehaviour
     {
         flying = false;
         landing = true;
+        GetComponent<SendMission>().StartMission();
     }
 
 }

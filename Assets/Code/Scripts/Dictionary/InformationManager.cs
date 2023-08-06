@@ -7,8 +7,8 @@ public class InformationManager : MonoBehaviour
     [Header("Planet Information")]
     [SerializeField]
     public PlanetInformation mars;
-    public MenuDescriptionController menuDescriptionController;
-
+    private MenuDescriptionController menuDescriptionController;
+    
     void Start()
     {
         Dictionary<string, object> marsAttributes = new Dictionary<string, object>
@@ -27,12 +27,25 @@ public class InformationManager : MonoBehaviour
 
         mars = new PlanetInformation("mars", marsAttributes);
 
+        HologramMenuController.Instance.tabSelectedEvent.AddListener(MenuTabChanged);
+        menuDescriptionController = MenuDescriptionController.Instance;
+        menuDescriptionController.buttonClickedEvent.AddListener(CardButtonClicked);
         SetTexts(mars);
     }
 
     // Update is called once per frame
     void Update()
     {
+    }
+
+    private void CardButtonClicked(ClickedButtonInfo buttonInfo) {
+        Debug.Log("Button clicked: " + buttonInfo.buttonName);
+        // You can also get current selected tab with:
+        // HologramMenuController.Instance.CurrentTab
+    }
+
+    private void MenuTabChanged(TabType tabType) {
+        Debug.Log("New tab type: " + tabType);
     }
 
     public void SetTexts(PlanetInformation mars)

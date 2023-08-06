@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.VFX;
 
+[RequireComponent(typeof(MenuDescriptionController))]
 public class HologramMenuController : MonoBehaviour
 {
     [Header("Hologram Effect")]
@@ -29,7 +31,7 @@ public class HologramMenuController : MonoBehaviour
     [Header("DescriptionController")]
     [SerializeField] private MenuDescriptionController menuDescriptionController;
 
-    private TabsType _currentTab = TabsType.NOT_SELECTED;
+    public TabType CurrentTab { get; private set; } = TabType.NOT_SELECTED;
     private int _currentPlanet;
     private int _currentSpacecraft;
     private VisualEffect _hologramEffect;
@@ -42,6 +44,7 @@ public class HologramMenuController : MonoBehaviour
     private static readonly int PlanetRayColor = Shader.PropertyToID("PlanetRayColor");
 
     public static HologramMenuController Instance { get; private set; }
+    public UnityEvent<TabType> tabSelectedEvent = new UnityEvent<TabType>();
     
     private void Awake() {
         Instance = this;
@@ -62,7 +65,7 @@ public class HologramMenuController : MonoBehaviour
     }
 
     private void Update() {
-        if (_currentTab == TabsType.SPACECRAFTS || _currentTab == TabsType.PLANETS) {
+        if (CurrentTab == TabType.SPACECRAFTS || CurrentTab == TabType.PLANETS) {
             hologramEffectGameObject.transform.Rotate(Vector3.up, spacecraftsRotationSpeed * Time.deltaTime);
         }
     }
@@ -71,7 +74,7 @@ public class HologramMenuController : MonoBehaviour
         gameObject.SetActive(true);
         var mostLeft = tabButtons.Count / 2 * -1;
         for (var i = 0; i < tabButtons.Count; i++, mostLeft++) {
-            tabButtons[i].transform.localPosition = tabButtonsStartPosition + new Vector3(mostLeft * tabButtonsStartGap, 0f, 0f);
+            tabButtons[i].transform.localPosition = tabButtonsStartPosition + new Vector3(mostLeft * tabButtonsStartGap + tabButtonsStartGap / 2, 0f, 0f);
         }
         tabButtons.ForEach(button =>
         {
@@ -83,7 +86,7 @@ public class HologramMenuController : MonoBehaviour
     }
     
     public void CloseMenu() {
-        _currentTab = TabsType.NOT_SELECTED;
+        CurrentTab = TabType.NOT_SELECTED;
         _currentPlanet = 0;
         _currentSpacecraft = 0;
         leftButton.SetActive(false);
@@ -98,12 +101,13 @@ public class HologramMenuController : MonoBehaviour
         });
     }
     
-    public void OnTabSelected(TabsType tab) {
-        if (_currentTab == tab) return;
-        if (_currentTab == TabsType.NOT_SELECTED) {
+    public void OnTabSelected(TabType tab) {
+        if (CurrentTab == tab) return;
+        tabSelectedEvent.Invoke(tab);
+        if (CurrentTab == TabType.NOT_SELECTED) {
             var mostLeft = tabButtons.Count/2*-1;
             for (var i = 0; i < tabButtons.Count; i++, mostLeft++) {
-                LeanTween.moveLocal(tabButtons[i], new Vector3(tabButtonsFinalPosition.x + mostLeft * tabButtonsFinalGap, tabButtonsFinalPosition.y, tabButtonsFinalPosition.z), 0.5f).setEaseOutBack();
+                LeanTween.moveLocal(tabButtons[i], new Vector3(tabButtonsFinalPosition.x + mostLeft * tabButtonsFinalGap + tabButtonsFinalGap/2, tabButtonsFinalPosition.y, tabButtonsFinalPosition.z), 0.5f).setEaseOutBack();
                 LeanTween.scale(tabButtons[i], new Vector3(0.5f, 0.5f, 0.5f), 0.5f).setEaseOutBack();
             }
         }
@@ -112,35 +116,30 @@ public class HologramMenuController : MonoBehaviour
             LeanTween.scale(button, new Vector3(0.5f, 0.5f, 0.5f), 0.5f).setEaseOutBack();
             button.GetComponent<MeshRenderer>().material.SetColor(EmissionColor, currentTabColor);
         });
-        _currentTab = tab;
+        CurrentTab = tab;
         planetGameObject.SetActive(false);
         hologramEffectGameObject.transform.rotation = Quaternion.identity;
         switch (tab) {
-            case TabsType.PLANETS:
+            case TabType.PLANETS:
                 ChangeControlButtonStatus(true);
                 SetDescriptionMenuMiddleLenght(false);
                 planetGameObject.SetActive(true);
                 _hologramEffect.SendEvent(PlanetEvent, _eventAttribute);
                 menuDescriptionController.Show(true, true);
                 break;
-            case TabsType.MISSIONS:
+            case TabType.MISSIONS:
                 ChangeControlButtonStatus(false);
                 SetDescriptionMenuMiddleLenght(true);
                 menuDescriptionController.Show(true, false);
                 break;
-            case TabsType.SPACECRAFTS:
+            case TabType.SPACECRAFTS:
                 ChangeControlButtonStatus(true);
                 SetDescriptionMenuMiddleLenght(false);
                 _hologramEffect.SetMesh("SpacecraftMesh", spacecraftsMeshes[_currentSpacecraft]);
                 _hologramEffect.SendEvent(SpacecraftEvent, _eventAttribute);
                 menuDescriptionController.Show(true, false);
                 break;
-            case TabsType.INVENTORY:
-                menuDescriptionController.Hide();
-                SetDescriptionMenuMiddleLenght(true);
-                ChangeControlButtonStatus(false);
-                break;
-            case TabsType.MAPS:
+            case TabType.MAPS:
                 menuDescriptionController.Hide();
                 ChangeControlButtonStatus(false);
                 break;
@@ -150,8 +149,8 @@ public class HologramMenuController : MonoBehaviour
     }
     public void OnControlButtonsPressed(ControlButtonsType button) {
         var direction = button == ControlButtonsType.LEFT ? -1 : 1;
-        switch (_currentTab) {
-            case TabsType.PLANETS:
+        switch (CurrentTab) {
+            case TabType.PLANETS:
                 _currentPlanet += direction;
                 _currentPlanet = _currentPlanet < 0 ? planetsProperties.Count - 1 : (_currentPlanet >= planetsProperties.Count ? 0 : _currentPlanet);
                 planetGameObject.transform.localScale = planetsProperties[_currentPlanet].planetSize * Vector3.one * 0.1f;
@@ -159,20 +158,16 @@ public class HologramMenuController : MonoBehaviour
                 _hologramEffect.SetVector4(PlanetRayColor, planetsProperties[_currentPlanet].rayColor);
                 planetGameObject.GetComponent<MeshRenderer>().material.SetTexture(BaseTexture, planetsProperties[_currentPlanet].planetTexture);
                 break;
-            case TabsType.MISSIONS:
+            case TabType.MISSIONS:
                 break;
-            case TabsType.SPACECRAFTS:
+            case TabType.SPACECRAFTS:
                 _currentSpacecraft += direction;
                 _currentSpacecraft = _currentSpacecraft < 0 ? spacecraftsMeshes.Count - 1 : (_currentSpacecraft >= spacecraftsMeshes.Count ? 0 : _currentSpacecraft);
                 _hologramEffect.SetMesh("SpacecraftMesh", spacecraftsMeshes[_currentSpacecraft]);
                 break;
-            case TabsType.INVENTORY:
+            case TabType.MAPS:
                 break;
-            case TabsType.MAPS:
-                break;
-            case TabsType.DICTIONARY:
-                break;
-            case TabsType.NOT_SELECTED:
+            case TabType.NOT_SELECTED:
             default:
                 throw new ArgumentOutOfRangeException();
         }

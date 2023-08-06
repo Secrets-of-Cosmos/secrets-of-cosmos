@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -32,6 +34,13 @@ public class MenuDescriptionController : MonoBehaviour
     private float refHeight;
     private float refWidth;
     private Vector2 refScale;
+
+    public static MenuDescriptionController Instance { get; private set; }
+    public UnityEvent<ClickedButtonInfo> buttonClickedEvent = new();
+
+    private void Awake() {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -78,7 +87,7 @@ public class MenuDescriptionController : MonoBehaviour
         foreach (Transform child in middlePart) Destroy(child.gameObject);
         foreach (Transform child in rightPart) Destroy(child.gameObject);
     }
-
+    
     private void InitializeLeftAndRightParts()
     {
         var leftAndRight = refWidth * spaceForLeftAndRightRatio;
@@ -92,8 +101,8 @@ public class MenuDescriptionController : MonoBehaviour
 
         for (var i = 0; i < LeftPartTexts.Length; i++)
         {
-            var scrollView = Instantiate(scrollViewPrefab, leftPart);
-            var rectTransform = scrollView.GetComponent<RectTransform>();
+            var cardView = InitializeCardView(leftPart.transform);
+            var rectTransform = cardView.GetComponent<RectTransform>();
             var menuDescription = LeftPartTexts[i];
 
             rectTransform.anchorMin = new Vector2(0, 0);
@@ -105,14 +114,12 @@ public class MenuDescriptionController : MonoBehaviour
             rectTransform.localScale = refScale * textScale;
             rectTransform.sizeDelta /= refScale * textScale;
 
-            scrollView.header.text = menuDescription.Header;
-            scrollView.description.text = menuDescription.Text;
+            SetCardViewTexts(cardView, menuDescription);
         }
 
-        for (var i = 0; i < RightPartTexts.Length; i++)
-        {
-            var scrollView = Instantiate(scrollViewPrefab, rightPart);
-            var rectTransform = scrollView.GetComponent<RectTransform>();
+        for (var i = 0; i < RightPartTexts.Length; i++) {
+            var cardView = InitializeCardView(rightPart.transform);
+            var rectTransform = cardView.GetComponent<RectTransform>();
             var menuDescription = RightPartTexts[i];
 
             rectTransform.anchorMin = new Vector2(1, 0);
@@ -125,8 +132,7 @@ public class MenuDescriptionController : MonoBehaviour
             rectTransform.localScale = refScale * textScale;
             rectTransform.sizeDelta /= refScale * textScale;
 
-            scrollView.header.text = menuDescription.Header;
-            scrollView.description.text = menuDescription.Text;
+            SetCardViewTexts(cardView, menuDescription);
         }
     }
 
@@ -142,8 +148,8 @@ public class MenuDescriptionController : MonoBehaviour
 
         for (var i = 0; i < MiddlePartTexts.Length; i++)
         {
-            var scrollView = Instantiate(scrollViewPrefab, middlePart);
-            var rectTransform = scrollView.GetComponent<RectTransform>();
+            var cardView = InitializeCardView(middlePart.transform);
+            var rectTransform = cardView.GetComponent<RectTransform>();
             var menuDescription = MiddlePartTexts[i];
 
             rectTransform.anchorMin = new Vector2(0.5f, 1);
@@ -155,10 +161,23 @@ public class MenuDescriptionController : MonoBehaviour
 
             rectTransform.localScale = refScale * textScale;
             rectTransform.sizeDelta /= refScale * textScale;
-
-            scrollView.header.text = menuDescription.Header;
-            scrollView.description.text = menuDescription.Text;
+            
+            SetCardViewTexts(cardView, menuDescription);
         }
+    }
+
+    private CardViewController InitializeCardView(Transform parent) {
+        var cardView = Instantiate(scrollViewPrefab, parent);
+        cardView.buttonClickedEvent = this.buttonClickedEvent;
+        return cardView;
+    }
+    
+    private void SetCardViewTexts(CardViewController cardView, MenuDescription menuDescription)
+    {
+        cardView.header.text = menuDescription.Header;
+        cardView.description.text = menuDescription.Text;
+        cardView.buttonLabel.text = menuDescription.ButtonText ?? "";
+        cardView.button.gameObject.SetActive(menuDescription.showButton);
     }
 
     [System.Serializable]
@@ -166,5 +185,7 @@ public class MenuDescriptionController : MonoBehaviour
     {
         public string Header;
         public string Text;
+        public bool showButton;
+        public string ButtonText;
     }
 }
