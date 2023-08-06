@@ -1,19 +1,24 @@
 using UnityEngine;
+using UnityEngine.VFX;
+
 public class SendMission : Mission
 {
     private DialogueTree dialogueTreeSender;
     private DialogueTree dialogueTreeInfo;
     private DialogueTree dialogueTree;
     public GameObject dialoguePanel;
+    private VisualEffect visualEffect;
 
     enum SendMissionState
     {
+        Broken,
         NotStarted,
+        Flying,
         Started,
         Finished
     }
 
-    SendMissionState state = SendMissionState.NotStarted;
+    SendMissionState state = SendMissionState.Broken;
 
     // UI elements
     public DialoguePanel dialoguePanelScript;
@@ -51,6 +56,7 @@ public class SendMission : Mission
         {
             rb = GetComponent<Rigidbody>();
         }
+        visualEffect = GetComponentInChildren<VisualEffect>();
         missionManager = GameObject.FindObjectOfType<MissionManager>();
         dialoguePanelScript = dialoguePanel.GetComponent<DialoguePanel>();
         missionType = MissionType.Send;
@@ -69,6 +75,19 @@ public class SendMission : Mission
         FreezeRigidbody(true);
     }
 
+    public void Fix()
+    {
+        state = SendMissionState.NotStarted;
+        visualEffect.Stop();
+        dialoguePanelScript.openDialogueText.text = "Press E to talk to Ingenuity";
+    }
+
+    public void StartMission()
+    {
+        state = SendMissionState.Started;
+        dialogueTree = dialogueTreeInfo;
+    }
+
     private void HandleAnswerSelection()
     {
         bool isAlpha1Pressed = Input.GetKeyDown(KeyCode.Alpha1);
@@ -81,9 +100,8 @@ public class SendMission : Mission
                 FreezeRigidbody(false);
                 if (state == SendMissionState.NotStarted)
                 {
-                    state = SendMissionState.Started;
-                    dialogueTree = dialogueTreeInfo;
                     ingenuity.Fly();
+                    state = SendMissionState.Flying;
                     return;
                 }
                 else if (state == SendMissionState.Started)
@@ -116,7 +134,21 @@ public class SendMission : Mission
         if (IsPlayerNearby() && !dialoguePanel.activeSelf && dialogueStartedBy == "")
         {
             dialogueStartedBy = name;
-            dialoguePanelScript.openDialogueText.gameObject.SetActive(true);
+            if (state == SendMissionState.Broken)
+            {
+                dialoguePanelScript.openDialogueText.text = "Press E to fix";
+                dialoguePanelScript.openDialogueText.gameObject.SetActive(true);
+            }
+            else if (state == SendMissionState.Flying || state == SendMissionState.Finished)
+            {
+                dialoguePanelScript.openDialogueText.gameObject.SetActive(false);
+            }
+            else
+            {
+                dialoguePanelScript.openDialogueText.text = "Press E to talk to Ingenuity";
+                dialoguePanelScript.openDialogueText.gameObject.SetActive(true);
+            }
+
         }
         else if (!IsPlayerNearby() && dialogueStartedBy == name)
         {
@@ -129,6 +161,20 @@ public class SendMission : Mission
     {
         if (Input.GetKeyDown(KeyCode.E) && IsPlayerNearby() && dialogueStartedBy == name)
         {
+            if (state == SendMissionState.Broken)
+            {
+                Fix();
+                return;
+            }
+            else if (state == SendMissionState.Flying)
+            {
+                return;
+            }
+            else if (state == SendMissionState.Finished)
+            {
+                return;
+            }
+
             StartDialogue();
         }
     }

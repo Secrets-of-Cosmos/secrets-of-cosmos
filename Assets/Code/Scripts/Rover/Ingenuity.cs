@@ -11,7 +11,7 @@ public class Ingenuity : MonoBehaviour
     private float rotationSpeed = 0f;
     public float maxHeight = 50f;
     private bool flying = false;
-    private bool landing = false;
+    public bool landing = false;
 
     private Rigidbody rb;
 
@@ -71,6 +71,7 @@ public class Ingenuity : MonoBehaviour
     {
         flying = false;
         landing = true;
+        GetComponent<SendMission>().StartMission();
     }
 
 }
