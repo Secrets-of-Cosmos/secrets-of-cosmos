@@ -8,6 +8,8 @@ public class SendMission : Mission
     private DialogueTree dialogueTree;
     public GameObject dialoguePanel;
     private VisualEffect visualEffect;
+    [SerializeField]
+    private int rocksNeeded = 3;
 
     enum SendMissionState
     {
@@ -21,10 +23,7 @@ public class SendMission : Mission
     SendMissionState state = SendMissionState.Broken;
 
     // UI elements
-    public DialoguePanel dialoguePanelScript;
-
-    // Distance to player to start dialogue
-    public float nearDistance = 5.0f;
+    private DialoguePanel dialoguePanelScript;
 
     private string dialogueStartedBy = "";
     private Rigidbody rb;
@@ -77,15 +76,29 @@ public class SendMission : Mission
 
     public void Fix()
     {
-        state = SendMissionState.NotStarted;
-        visualEffect.Stop();
-        dialoguePanelScript.openDialogueText.text = "Press E to talk to Ingenuity";
+        int rocksCollected = CollectedRocks();
+        if (rocksCollected >= rocksNeeded)
+        {
+            state = SendMissionState.NotStarted;
+            visualEffect.Stop();
+            dialoguePanelScript.openDialogueText.text = "Press E to talk to Ingenuity";
+        }
+        else
+        {
+            dialoguePanelScript.openDialogueText.text = "Press E to fix ( " + rocksCollected + " / " + rocksNeeded + " )";
+        }
     }
 
     public void StartMission()
     {
         state = SendMissionState.Started;
         dialogueTree = dialogueTreeInfo;
+    }
+
+    private int CollectedRocks()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10f, 1 << LayerMask.NameToLayer("Collectable"));
+        return hitColliders.Length;
     }
 
     private void HandleAnswerSelection()
@@ -136,7 +149,7 @@ public class SendMission : Mission
             dialogueStartedBy = name;
             if (state == SendMissionState.Broken)
             {
-                dialoguePanelScript.openDialogueText.text = "Press E to fix";
+                dialoguePanelScript.openDialogueText.text = "Press E to fix ( " + CollectedRocks() + " / " + rocksNeeded + " )";
                 dialoguePanelScript.openDialogueText.gameObject.SetActive(true);
             }
             else if (state == SendMissionState.Flying || state == SendMissionState.Finished)
@@ -176,19 +189,6 @@ public class SendMission : Mission
             }
 
             StartDialogue();
-        }
-    }
-
-    private bool IsPlayerNearby()
-    {
-        return Vector3.Distance(player.transform.position, transform.position) < nearDistance;
-    }
-
-    private void FreezeRigidbody(bool isFrozen)
-    {
-        if (rb != null)
-        {
-            rb.constraints = isFrozen ? RigidbodyConstraints.FreezeAll : RigidbodyConstraints.None;
         }
     }
 }
