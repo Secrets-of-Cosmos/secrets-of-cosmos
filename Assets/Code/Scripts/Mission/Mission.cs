@@ -25,7 +25,7 @@ public class Mission : MonoBehaviour
 
 
     [SerializeField]
-    protected MissionManager missionManager;
+    public MissionManager missionManager;
 
     [SerializeField]
     protected MissionType missionType;

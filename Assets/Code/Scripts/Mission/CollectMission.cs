@@ -23,7 +23,6 @@ public class CollectMission : Mission
     {
         gameObject.SetActive(false);
         InitializeCollectMission();
-        AddMission();
         dialogueTree = new DialogueTree(DialogueTree.DialogueType.WelcomeMission);
     }
 

@@ -16,6 +16,7 @@ public class InsideOutsideController : MonoBehaviour
     public void GoOutside()
     {
         outside.SetActive(true);
+        outside.transform.position = inside.transform.position;
         inside.SetActive(false);
     }
 }

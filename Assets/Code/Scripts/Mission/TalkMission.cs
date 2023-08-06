@@ -14,7 +14,6 @@ public class TalkMission : Mission
         gameObject.SetActive(false);
 
         InitializeTalkMission();
-        AddMission();
         dialogueTree = new DialogueTree(DialogueTree.DialogueType.WelcomeMission);
     }
 

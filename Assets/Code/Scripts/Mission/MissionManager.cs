@@ -11,11 +11,13 @@ public class MissionManager : MonoBehaviour
     public int missionPlacementDistance = 50;
     public int[] distances;
     public Image missionMarker;
-    private PapermanAC player;
+    public PapermanAC player;
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindObjectOfType<PapermanAC>();
+        SetPlayerForMissions(player);
+        SetManagerForMissions();
     }
 
     // Update is called once per frame
@@ -26,6 +28,17 @@ public class MissionManager : MonoBehaviour
 
     }
 
+    public void SetPlayerForMissions(PapermanAC player)
+    {
+        this.player = player;
+        missions.ForEach(mission => mission.player = player);
+    }
+
+    public void SetManagerForMissions()
+    {
+        missions.ForEach(mission => mission.missionManager = this);
+    }
+
     private void UpdateMissionArrow()
     {
         Mission activeMission = ActiveMission();
@@ -33,6 +46,7 @@ public class MissionManager : MonoBehaviour
         {
             missionMarker.gameObject.SetActive(true);
             Vector3 direction = activeMission.transform.position - player.transform.position;
+            direction.y = 0;
             float angle = Vector3.SignedAngle(direction, player.transform.forward, Vector3.up);
             missionMarker.transform.rotation = Quaternion.Euler(0, 0, angle);
         }

@@ -34,7 +34,6 @@ public class SendMission : Mission
         gameObject.SetActive(false);
 
         InitializeTalkMission();
-        AddMission();
         dialogueTreeSender = new DialogueTree(DialogueTree.DialogueType.Ingenuity);
         dialogueTreeInfo = new DialogueTree(DialogueTree.DialogueType.Information);
         dialogueTree = dialogueTreeSender;
