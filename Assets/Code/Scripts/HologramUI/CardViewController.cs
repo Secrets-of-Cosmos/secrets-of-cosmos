@@ -10,20 +10,22 @@ public class CardViewController : MonoBehaviour {
     public Text description;
     public GameObject button;
     public Text buttonLabel;
-    public UnityEvent buttonClickedEvent;
-    public ClickedButtonInfo buttonInfo;
+    public UnityEvent<ClickedButtonInfo> buttonClickedEvent;
 
     public void ButtonClicked() {
-        buttonInfo.buttonName = buttonLabel.text;
-        buttonInfo.cardHeader = header.text;
-        buttonInfo.cardDesc = description.text;
-        buttonClickedEvent.Invoke();
+        var buttonInfo = new ClickedButtonInfo {
+            buttonName = buttonLabel.text,
+            cardHeader = header.text,
+            cardDesc = description.text
+        };
+        buttonClickedEvent.Invoke(buttonInfo);
     }
     
-    [System.Serializable]
-    public class ClickedButtonInfo {
-        public string cardHeader;
-        public string cardDesc;
-        public string buttonName;
-    }
+}
+
+[System.Serializable]
+public struct ClickedButtonInfo {
+    public string cardHeader;
+    public string cardDesc;
+    public string buttonName;
 }
