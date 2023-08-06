@@ -15,17 +15,26 @@ public class Mission : MonoBehaviour
         Send
     }
 
+    public enum MissionStatus
+    {
+        Available,
+        Active,
+        Completed
+    }
+
+
+
     [SerializeField]
     protected MissionManager missionManager;
 
     [SerializeField]
     protected MissionType missionType;
     [SerializeField]
-    string missionName;
+    public string missionName;
     [SerializeField]
-    string missionDescription;
+    public string missionDescription;
     [SerializeField]
-    bool isComplete = false;
+    public MissionStatus missionStatus;
     [SerializeField]
     public string attributeToCheck;
 
