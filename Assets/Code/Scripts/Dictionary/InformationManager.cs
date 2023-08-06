@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 public class InformationManager : MonoBehaviour
@@ -7,8 +8,10 @@ public class InformationManager : MonoBehaviour
     [Header("Planet Information")]
     [SerializeField]
     public PlanetInformation mars;
+    public MissionManager missionManager;
     private MenuDescriptionController menuDescriptionController;
-    
+
+
     void Start()
     {
         Dictionary<string, object> marsAttributes = new Dictionary<string, object>
@@ -38,42 +41,87 @@ public class InformationManager : MonoBehaviour
     {
     }
 
-    private void CardButtonClicked(ClickedButtonInfo buttonInfo) {
-        Debug.Log("Button clicked: " + buttonInfo.buttonName);
-        // You can also get current selected tab with:
-        // HologramMenuController.Instance.CurrentTab
+    private void CardButtonClicked(ClickedButtonInfo buttonInfo)
+    {
+        missionManager.AcceptMission(buttonInfo.cardHeader);
+
+        menuDescriptionController.MiddlePartTexts = missionManager.GetMissionDescriptions();
+
+        menuDescriptionController.Show(true, false);
     }
 
-    private void MenuTabChanged(TabType tabType) {
+    private void MenuTabChanged(TabType tabType)
+    {
         Debug.Log("New tab type: " + tabType);
+
+        if (tabType == TabType.PLANETS)
+        {
+            SetTexts(mars);
+            menuDescriptionController.Show(true, true);
+        }
+        else if (tabType == TabType.SPACECRAFTS)
+        {
+            menuDescriptionController.MiddlePartTexts = new MenuDescription[2] {
+                new MenuDescription() {
+                    Header = "Spacecraft1",
+                    Text = "Info about spacecraft1"
+                },
+                new MenuDescription() {
+                    Header = "Spacecraft2",
+                    Text = "Info about spacecraft2"
+                }
+            };
+            menuDescriptionController.Show(true, false);
+        }
+        else if (tabType == TabType.MISSIONS)
+        {
+            menuDescriptionController.MiddlePartTexts = missionManager.GetMissionDescriptions();
+
+            menuDescriptionController.Show(true, false);
+        }
     }
 
     public void SetTexts(PlanetInformation mars)
     {
-        menuDescriptionController.MiddlePartTexts[0].Header = "Name";
-        menuDescriptionController.MiddlePartTexts[0].Text = mars.Get("name");
+        menuDescriptionController.MiddlePartTexts = new MenuDescription[2] {
+            new MenuDescription() {
+                Header = "Name",
+                Text = mars.Get("name")
+            },
+            new MenuDescription() {
+                Header = "Elements",
+                Text = mars.Get("elements")
+            }
+        };
 
-        menuDescriptionController.MiddlePartTexts[1].Header = "Elements";
-        menuDescriptionController.MiddlePartTexts[1].Text = mars.Get("elements");
+        menuDescriptionController.LeftPartTexts = new MenuDescription[3] {
+            new MenuDescription() {
+                Header = "First Spacecraft",
+                Text = mars.Get("firstSpacecraft")
+            },
+            new MenuDescription() {
+                Header = "Surface Spacecraft",
+                Text = mars.Get("surfaceSpacecraft")
+            },
+            new MenuDescription() {
+                Header = "Fun Facts",
+                Text = mars.Get("funFacts")
+            }
+        };
 
-        menuDescriptionController.LeftPartTexts[0].Header = "First Spacecraft";
-        menuDescriptionController.LeftPartTexts[0].Text = mars.Get("firstSpacecraft");
-
-        menuDescriptionController.LeftPartTexts[1].Header = "Surface Spacecraft";
-        menuDescriptionController.LeftPartTexts[1].Text = mars.Get("surfaceSpacecraft");
-
-        menuDescriptionController.LeftPartTexts[2].Header = "Fun Facts";
-        menuDescriptionController.LeftPartTexts[2].Text = mars.Get("funFacts");
-
-        menuDescriptionController.RightPartTexts[0].Header = "Atmosphere Condition";
-        menuDescriptionController.RightPartTexts[0].Text = mars.Get("atmosphereCondition");
-
-        menuDescriptionController.RightPartTexts[1].Header = "Proximity to Sun";
-        menuDescriptionController.RightPartTexts[1].Text = mars.Get("proximityToSun");
-
-        menuDescriptionController.RightPartTexts[2].Header = "Surface Temperature";
-        menuDescriptionController.RightPartTexts[2].Text = mars.Get("surfaceTemperature");
-
-        menuDescriptionController.UpdateTexts();
+        menuDescriptionController.RightPartTexts = new MenuDescription[3] {
+            new MenuDescription() {
+                Header = "Atmosphere Condition",
+                Text = mars.Get("atmosphereCondition")
+            },
+            new MenuDescription() {
+                Header = "Proximity to Sun",
+                Text = mars.Get("proximityToSun")
+            },
+            new MenuDescription() {
+                Header = "Surface Temperature",
+                Text = mars.Get("surfaceTemperature")
+            }
+        };
     }
 }
