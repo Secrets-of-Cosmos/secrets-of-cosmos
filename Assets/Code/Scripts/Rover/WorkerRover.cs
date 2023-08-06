@@ -12,11 +12,14 @@ public class WorkerRover : MonoBehaviour
     public SphereCollider armCollider;
     public WheelCollider[] frontWheelColliders;
     public WheelCollider[] rearWheelColliders;
+    public Camera roverCamera;
     LayerMask collectableLayer;
     private Rigidbody rb;
+    private PapermanAC player;
     // Start is called before the first frame update
     void Start()
     {
+        player = GetComponent<CollectMission>().player;
         rb = GetComponent<Rigidbody>();
         collectableLayer = LayerMask.NameToLayer("Collectable");
 
@@ -41,6 +44,30 @@ public class WorkerRover : MonoBehaviour
         }
     }
 
+    public void SetPlayerControlling(bool playerControlling)
+    {
+        this.playerControlling = playerControlling;
+        if (playerControlling)
+        {
+            Debug.Log("Player is controlling");
+            rb.isKinematic = false;
+            rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.None;
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            roverCamera.gameObject.SetActive(true);
+            player.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("Player is not controlling");
+            rb.isKinematic = true;
+            rb.useGravity = false;
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+            roverCamera.gameObject.SetActive(false);
+            player.gameObject.SetActive(true);
+        }
+    }
+
     void CollisionCheck()
     {
 
@@ -58,6 +85,7 @@ public class WorkerRover : MonoBehaviour
 
         for (int i = 0; i < frontWheelColliders.Length; i++)
         {
+            // frontWheelColliders[i].motorTorque = motorForce;
             frontWheelColliders[i].steerAngle = steerAngle;
         }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Collectable : MonoBehaviour
 {
     private Rigidbody rb;
+    public bool collected = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +23,7 @@ public class Collectable : MonoBehaviour
     {
         if (parent != null)
         {
+            collected = true;
             rb.isKinematic = true;
             rb.mass = 0;
             transform.SetParent(parent);

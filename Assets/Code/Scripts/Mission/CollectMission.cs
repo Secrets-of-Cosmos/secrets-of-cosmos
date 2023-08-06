@@ -1,17 +1,27 @@
 using UnityEngine;
-public class TalkMission : Mission
+public class CollectMission : Mission
 {
     private DialogueTree dialogueTree;
     public GameObject dialoguePanel;
 
     // UI elements
     private DialoguePanel dialoguePanelScript;
+
+
     private string dialogueStartedBy = "";
     private Rigidbody rb;
+    enum CollectMissionState
+    {
+        NotStarted,
+        Drivable,
+        Driving,
+    }
+
+    CollectMissionState state = CollectMissionState.NotStarted;
     // Start is called before the first frame update
     void Start()
     {
-        InitializeTalkMission();
+        InitializeCollectMission();
         AddMission();
         dialogueTree = new DialogueTree(DialogueTree.DialogueType.WelcomeMission);
     }
@@ -27,7 +37,7 @@ public class TalkMission : Mission
         }
     }
 
-    void InitializeTalkMission()
+    void InitializeCollectMission()
     {
         if (GetComponent<Rigidbody>() != null)
         {
@@ -35,7 +45,7 @@ public class TalkMission : Mission
         }
         missionManager = GameObject.FindObjectOfType<MissionManager>();
         dialoguePanelScript = dialoguePanel.GetComponent<DialoguePanel>();
-        missionType = MissionType.Talk;
+        missionType = MissionType.Collect;
         dialoguePanel.SetActive(false);
     }
 
@@ -60,6 +70,7 @@ public class TalkMission : Mission
             {
                 dialoguePanel.SetActive(false);
                 FreezeRigidbody(false);
+                state = CollectMissionState.Drivable;
                 CompleteMission();
                 return;
             }
@@ -85,9 +96,18 @@ public class TalkMission : Mission
 
         if (IsPlayerNearby() && !dialoguePanel.activeSelf && dialogueStartedBy == "")
         {
-            dialogueStartedBy = name;
-            dialoguePanelScript.openDialogueText.text = "Press E to talk";
+            if (state == CollectMissionState.NotStarted)
+            {
+                dialoguePanelScript.openDialogueText.text = "Press E to talk";
+                dialoguePanelScript.openDialogueText.gameObject.SetActive(true);
+            }
+            else if (state == CollectMissionState.Drivable)
+            {
+                dialoguePanelScript.openDialogueText.text = "Press E to drive";
+            }
+
             dialoguePanelScript.openDialogueText.gameObject.SetActive(true);
+            dialogueStartedBy = name;
         }
         else if (!IsPlayerNearby() && dialogueStartedBy == name)
         {
@@ -100,7 +120,30 @@ public class TalkMission : Mission
     {
         if (Input.GetKeyDown(KeyCode.E) && IsPlayerNearby() && dialogueStartedBy == name)
         {
-            StartDialogue();
+            if (state == CollectMissionState.NotStarted)
+            {
+                StartDialogue();
+            }
+            else if (state == CollectMissionState.Drivable)
+            {
+                state = CollectMissionState.Driving;
+                GetComponent<WorkerRover>().SetPlayerControlling(true);
+            }
+            else if (state == CollectMissionState.Driving)
+            {
+                state = CollectMissionState.Drivable;
+                GetComponent<WorkerRover>().SetPlayerControlling(false);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (state == CollectMissionState.Driving)
+            {
+                state = CollectMissionState.Drivable;
+                GetComponent<WorkerRover>().SetPlayerControlling(false);
+            }
         }
     }
+
+
 }
