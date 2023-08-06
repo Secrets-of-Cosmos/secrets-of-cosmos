@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Cinemachine;
 
 [System.Serializable]
 public struct SceneObject
@@ -22,6 +23,8 @@ public class SceneAdmin : MonoBehaviour
     public InsideOutsideController issInsideOutsideController;
     public InsideOutsideController spaceshipInsideOutsideController;
     public GameObject playerPrefab;
+    public GameObject playerStateDrivenCamPrefab;
+    public GameObject playerAndCamera;
     public GameObject spaceShipUI;
 
 
@@ -53,12 +56,27 @@ public class SceneAdmin : MonoBehaviour
                 Transform viewer = GameObject.Find("Viewer").transform;
                 spaceshipInsideOutsideController.GoOutside();
                 spaceship.GetComponentsInChildren<Camera>()[0].enabled = false;
-                GameObject playerNew = Instantiate(playerPrefab, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
+                GameObject playerNew = Instantiate(playerAndCamera, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
+                //InstantiateStateDrivenCam(playerNew);
                 //set child
-                viewer.SetParent(playerNew.transform);
+                viewer.SetParent(playerNew.transform.GetChild(1));
                 viewer.localPosition = new Vector3(0, 0, 0);
             }
         }
+    }
+
+    void InstantiateStateDrivenCam(GameObject player)
+    {
+        PapermanAC controller = player.GetComponent<PapermanAC>();
+        GameObject stateDrivenCam = Instantiate(playerStateDrivenCamPrefab, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
+
+        CinemachineFreeLook cmFreeLook = stateDrivenCam.transform.GetChild(0).gameObject.GetComponent<CinemachineFreeLook>();
+        cmFreeLook.m_Follow = player.transform.GetChild(5); // Getting the FPCamFocus
+        cmFreeLook.m_LookAt = player.transform.GetChild(5); // Getting the FPCamFocus
+
+        controller.vcam = stateDrivenCam.transform.GetChild(1).gameObject.GetComponent<CinemachineVirtualCamera>();
+        controller.vcam.m_Follow = player.transform.GetChild(5); // Getting the FPCamFocus
+        controller.vcam.m_LookAt = player.transform.GetChild(5); // Getting the FPCamFocus
     }
 
     void CheckPlanets()

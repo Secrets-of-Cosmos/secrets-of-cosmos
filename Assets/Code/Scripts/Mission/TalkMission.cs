@@ -5,16 +5,14 @@ public class TalkMission : Mission
     public GameObject dialoguePanel;
 
     // UI elements
-    public DialoguePanel dialoguePanelScript;
-
-    // Distance to player to start dialogue
-    public float nearDistance = 5.0f;
-
+    private DialoguePanel dialoguePanelScript;
     private string dialogueStartedBy = "";
     private Rigidbody rb;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        gameObject.SetActive(false);
+
         InitializeTalkMission();
         AddMission();
         dialogueTree = new DialogueTree(DialogueTree.DialogueType.WelcomeMission);
@@ -41,11 +39,6 @@ public class TalkMission : Mission
         dialoguePanelScript = dialoguePanel.GetComponent<DialoguePanel>();
         missionType = MissionType.Talk;
         dialoguePanel.SetActive(false);
-    }
-
-    void UpdateTalkMission()
-    {
-
     }
 
     public void StartDialogue()
@@ -95,6 +88,7 @@ public class TalkMission : Mission
         if (IsPlayerNearby() && !dialoguePanel.activeSelf && dialogueStartedBy == "")
         {
             dialogueStartedBy = name;
+            dialoguePanelScript.openDialogueText.text = "Press E to talk";
             dialoguePanelScript.openDialogueText.gameObject.SetActive(true);
         }
         else if (!IsPlayerNearby() && dialogueStartedBy == name)
@@ -109,19 +103,6 @@ public class TalkMission : Mission
         if (Input.GetKeyDown(KeyCode.E) && IsPlayerNearby() && dialogueStartedBy == name)
         {
             StartDialogue();
-        }
-    }
-
-    private bool IsPlayerNearby()
-    {
-        return Vector3.Distance(player.transform.position, transform.position) < nearDistance;
-    }
-
-    private void FreezeRigidbody(bool isFrozen)
-    {
-        if (rb != null)
-        {
-            rb.constraints = isFrozen ? RigidbodyConstraints.FreezeAll : RigidbodyConstraints.None;
         }
     }
 }

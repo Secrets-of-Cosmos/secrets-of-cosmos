@@ -13,16 +13,10 @@ public class CinemachineSwitcher : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        //Temporary Sitting to Idle Transition
-        if (Input.GetKey(KeyCode.K))
+    {        
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            animator.Play("Third Person");
-        }   
-        
-        if (Input.GetKey(KeyCode.T))
-        {
-            animator.Play("FirstPerson");
+            animator.SetBool("isThirdPerson", !animator.GetBool("isThirdPerson"));
         }   
     }
 }

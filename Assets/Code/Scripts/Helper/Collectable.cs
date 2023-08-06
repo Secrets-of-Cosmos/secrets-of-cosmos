@@ -5,6 +5,7 @@ using UnityEngine;
 public class Collectable : MonoBehaviour
 {
     private Rigidbody rb;
+    public bool collected = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,9 +23,11 @@ public class Collectable : MonoBehaviour
     {
         if (parent != null)
         {
+            collected = true;
             rb.isKinematic = true;
+            rb.mass = 0;
             transform.SetParent(parent);
-            gameObject.layer = LayerMask.NameToLayer("Default");
+            gameObject.layer = LayerMask.NameToLayer("Rock");
         }
         else
         {
@@ -36,6 +39,7 @@ public class Collectable : MonoBehaviour
     {
         rb.isKinematic = false;
         transform.SetParent(null);
+        rb.mass = 1;
         StartCoroutine(SetLayerAfterDelay(0.2f, LayerMask.NameToLayer("Collectable")));
     }
 

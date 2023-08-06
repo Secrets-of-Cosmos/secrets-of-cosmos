@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,8 +35,13 @@ public class MenuDescriptionController : MonoBehaviour
     private float refWidth;
     private Vector2 refScale;
 
-    public CardViewController.ClickedButtonInfo buttonInfo;
-    public UnityEvent buttonClickedEvent = new();
+    public static MenuDescriptionController Instance { get; private set; }
+    public UnityEvent<ClickedButtonInfo> buttonClickedEvent = new();
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -46,7 +52,8 @@ public class MenuDescriptionController : MonoBehaviour
         refScale = rectTransform.localScale;
     }
 
-    public void Show(bool showMiddlePart, bool showLeftAndRightParts) {
+    public void Show(bool showMiddlePart, bool showLeftAndRightParts)
+    {
         foreach (Transform child in leftPart) Destroy(child.gameObject);
         foreach (Transform child in middlePart) Destroy(child.gameObject);
         foreach (Transform child in rightPart) Destroy(child.gameObject);
@@ -82,7 +89,7 @@ public class MenuDescriptionController : MonoBehaviour
         foreach (Transform child in middlePart) Destroy(child.gameObject);
         foreach (Transform child in rightPart) Destroy(child.gameObject);
     }
-    
+
     private void InitializeLeftAndRightParts()
     {
         var leftAndRight = refWidth * spaceForLeftAndRightRatio;
@@ -112,7 +119,8 @@ public class MenuDescriptionController : MonoBehaviour
             SetCardViewTexts(cardView, menuDescription);
         }
 
-        for (var i = 0; i < RightPartTexts.Length; i++) {
+        for (var i = 0; i < RightPartTexts.Length; i++)
+        {
             var cardView = InitializeCardView(rightPart.transform);
             var rectTransform = cardView.GetComponent<RectTransform>();
             var menuDescription = RightPartTexts[i];
@@ -156,18 +164,18 @@ public class MenuDescriptionController : MonoBehaviour
 
             rectTransform.localScale = refScale * textScale;
             rectTransform.sizeDelta /= refScale * textScale;
-            
+
             SetCardViewTexts(cardView, menuDescription);
         }
     }
 
-    private CardViewController InitializeCardView(Transform parent) {
+    private CardViewController InitializeCardView(Transform parent)
+    {
         var cardView = Instantiate(scrollViewPrefab, parent);
         cardView.buttonClickedEvent = this.buttonClickedEvent;
-        cardView.buttonInfo = this.buttonInfo;
         return cardView;
     }
-    
+
     private void SetCardViewTexts(CardViewController cardView, MenuDescription menuDescription)
     {
         cardView.header.text = menuDescription.Header;
@@ -176,12 +184,13 @@ public class MenuDescriptionController : MonoBehaviour
         cardView.button.gameObject.SetActive(menuDescription.showButton);
     }
 
-    [System.Serializable]
-    public struct MenuDescription
-    {
-        public string Header;
-        public string Text;
-        public bool showButton;
-        public string ButtonText;
-    }
+
+}
+[System.Serializable]
+public struct MenuDescription
+{
+    public string Header;
+    public string Text;
+    public bool showButton;
+    public string ButtonText;
 }

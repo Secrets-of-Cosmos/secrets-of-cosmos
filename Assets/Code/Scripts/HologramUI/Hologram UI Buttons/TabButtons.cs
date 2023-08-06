@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Tabs : MonoBehaviour, IButton
 {
-    [SerializeField] private TabsType buttonType;
+    [SerializeField] private TabType buttonType;
     [SerializeField] private float selectedColorIntensity;
     
     private Material material;
@@ -30,11 +30,10 @@ public class Tabs : MonoBehaviour, IButton
     }
 }
 
-public enum TabsType {
+public enum TabType {
     NOT_SELECTED,
     MISSIONS,
     PLANETS,
     SPACECRAFTS,
-    INVENTORY,
     MAPS
 }

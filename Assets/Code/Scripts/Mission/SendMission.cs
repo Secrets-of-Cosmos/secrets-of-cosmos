@@ -1,32 +1,38 @@
 using UnityEngine;
+using UnityEngine.VFX;
+
 public class SendMission : Mission
 {
     private DialogueTree dialogueTreeSender;
     private DialogueTree dialogueTreeInfo;
     private DialogueTree dialogueTree;
     public GameObject dialoguePanel;
+    private VisualEffect visualEffect;
+    [SerializeField]
+    private int rocksNeeded = 3;
 
     enum SendMissionState
     {
+        Broken,
         NotStarted,
+        Flying,
         Started,
         Finished
     }
 
-    SendMissionState state = SendMissionState.NotStarted;
+    SendMissionState state = SendMissionState.Broken;
 
     // UI elements
-    public DialoguePanel dialoguePanelScript;
-
-    // Distance to player to start dialogue
-    public float nearDistance = 5.0f;
+    private DialoguePanel dialoguePanelScript;
 
     private string dialogueStartedBy = "";
     private Rigidbody rb;
     private Ingenuity ingenuity;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        gameObject.SetActive(false);
+
         InitializeTalkMission();
         AddMission();
         dialogueTreeSender = new DialogueTree(DialogueTree.DialogueType.Ingenuity);
@@ -51,6 +57,7 @@ public class SendMission : Mission
         {
             rb = GetComponent<Rigidbody>();
         }
+        visualEffect = GetComponentInChildren<VisualEffect>();
         missionManager = GameObject.FindObjectOfType<MissionManager>();
         dialoguePanelScript = dialoguePanel.GetComponent<DialoguePanel>();
         missionType = MissionType.Send;
@@ -69,6 +76,33 @@ public class SendMission : Mission
         FreezeRigidbody(true);
     }
 
+    public void Fix()
+    {
+        int rocksCollected = CollectedRocks();
+        if (rocksCollected >= rocksNeeded)
+        {
+            state = SendMissionState.NotStarted;
+            visualEffect.Stop();
+            dialoguePanelScript.openDialogueText.text = "Press E to talk to Ingenuity";
+        }
+        else
+        {
+            dialoguePanelScript.openDialogueText.text = "Press E to fix ( " + rocksCollected + " / " + rocksNeeded + " )";
+        }
+    }
+
+    public void StartMission()
+    {
+        state = SendMissionState.Started;
+        dialogueTree = dialogueTreeInfo;
+    }
+
+    private int CollectedRocks()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10f, 1 << LayerMask.NameToLayer("Collectable"));
+        return hitColliders.Length;
+    }
+
     private void HandleAnswerSelection()
     {
         bool isAlpha1Pressed = Input.GetKeyDown(KeyCode.Alpha1);
@@ -81,9 +115,8 @@ public class SendMission : Mission
                 FreezeRigidbody(false);
                 if (state == SendMissionState.NotStarted)
                 {
-                    state = SendMissionState.Started;
-                    dialogueTree = dialogueTreeInfo;
                     ingenuity.Fly();
+                    state = SendMissionState.Flying;
                     return;
                 }
                 else if (state == SendMissionState.Started)
@@ -116,7 +149,21 @@ public class SendMission : Mission
         if (IsPlayerNearby() && !dialoguePanel.activeSelf && dialogueStartedBy == "")
         {
             dialogueStartedBy = name;
-            dialoguePanelScript.openDialogueText.gameObject.SetActive(true);
+            if (state == SendMissionState.Broken)
+            {
+                dialoguePanelScript.openDialogueText.text = "Press E to fix ( " + CollectedRocks() + " / " + rocksNeeded + " )";
+                dialoguePanelScript.openDialogueText.gameObject.SetActive(true);
+            }
+            else if (state == SendMissionState.Flying || state == SendMissionState.Finished)
+            {
+                dialoguePanelScript.openDialogueText.gameObject.SetActive(false);
+            }
+            else
+            {
+                dialoguePanelScript.openDialogueText.text = "Press E to talk to Ingenuity";
+                dialoguePanelScript.openDialogueText.gameObject.SetActive(true);
+            }
+
         }
         else if (!IsPlayerNearby() && dialogueStartedBy == name)
         {
@@ -129,20 +176,21 @@ public class SendMission : Mission
     {
         if (Input.GetKeyDown(KeyCode.E) && IsPlayerNearby() && dialogueStartedBy == name)
         {
+            if (state == SendMissionState.Broken)
+            {
+                Fix();
+                return;
+            }
+            else if (state == SendMissionState.Flying)
+            {
+                return;
+            }
+            else if (state == SendMissionState.Finished)
+            {
+                return;
+            }
+
             StartDialogue();
-        }
-    }
-
-    private bool IsPlayerNearby()
-    {
-        return Vector3.Distance(player.transform.position, transform.position) < nearDistance;
-    }
-
-    private void FreezeRigidbody(bool isFrozen)
-    {
-        if (rb != null)
-        {
-            rb.constraints = isFrozen ? RigidbodyConstraints.FreezeAll : RigidbodyConstraints.None;
         }
     }
 }

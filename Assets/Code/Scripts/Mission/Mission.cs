@@ -15,19 +15,32 @@ public class Mission : MonoBehaviour
         Send
     }
 
+    public enum MissionStatus
+    {
+        Available,
+        Active,
+        Completed
+    }
+
+
+
     [SerializeField]
     protected MissionManager missionManager;
 
     [SerializeField]
     protected MissionType missionType;
     [SerializeField]
-    string missionName;
+    public string missionName;
     [SerializeField]
-    string missionDescription;
+    public string missionDescription;
     [SerializeField]
-    bool isComplete = false;
+    public MissionStatus missionStatus;
     [SerializeField]
     public string attributeToCheck;
+
+    // Distance to player to start dialogue
+    [SerializeField]
+    protected float nearDistance = 5.0f;
 
     public PapermanAC player;
 
@@ -44,6 +57,21 @@ public class Mission : MonoBehaviour
     public string GetMissionName()
     {
         return missionName;
+    }
+
+
+    protected bool IsPlayerNearby()
+    {
+        return Vector3.Distance(player.transform.position, transform.position) < nearDistance;
+    }
+
+    protected void FreezeRigidbody(bool isFrozen)
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.constraints = isFrozen ? RigidbodyConstraints.FreezeAll : RigidbodyConstraints.None;
+        }
     }
 
 
