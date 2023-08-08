@@ -9,10 +9,11 @@ public class TalkMission : Mission
     private string dialogueStartedBy = "";
     private Rigidbody rb;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        gameObject.SetActive(false);
+
         InitializeTalkMission();
-        AddMission();
         dialogueTree = new DialogueTree(DialogueTree.DialogueType.WelcomeMission);
     }
 

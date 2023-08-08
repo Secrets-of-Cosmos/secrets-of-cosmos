@@ -19,10 +19,10 @@ public class CollectMission : Mission
 
     CollectMissionState state = CollectMissionState.NotStarted;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        gameObject.SetActive(false);
         InitializeCollectMission();
-        AddMission();
         dialogueTree = new DialogueTree(DialogueTree.DialogueType.WelcomeMission);
     }
 

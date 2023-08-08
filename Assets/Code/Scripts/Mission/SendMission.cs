@@ -29,10 +29,11 @@ public class SendMission : Mission
     private Rigidbody rb;
     private Ingenuity ingenuity;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        gameObject.SetActive(false);
+
         InitializeTalkMission();
-        AddMission();
         dialogueTreeSender = new DialogueTree(DialogueTree.DialogueType.Ingenuity);
         dialogueTreeInfo = new DialogueTree(DialogueTree.DialogueType.Information);
         dialogueTree = dialogueTreeSender;
