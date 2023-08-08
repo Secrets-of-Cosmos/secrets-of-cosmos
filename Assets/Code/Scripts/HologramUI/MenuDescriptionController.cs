@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 public class MenuDescriptionController : MonoBehaviour
 {
@@ -26,6 +22,7 @@ public class MenuDescriptionController : MonoBehaviour
     public RectTransform leftPart;
     public RectTransform middlePart;
     public RectTransform rightPart;
+    public TMP_Text planetPercentageText;
 
     public MenuDescription[] LeftPartTexts;
     public MenuDescription[] MiddlePartTexts;

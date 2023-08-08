@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using TMPro;
 using UnityEngine;
 
 public class InformationManager : MonoBehaviour
 {
     [Header("Planet Information")]
-    [SerializeField]
-    public PlanetInformation mars;
+    [SerializeField] public PlanetInformation mars;
     public MissionManager missionManager;
     private MenuDescriptionController menuDescriptionController;
 
@@ -33,12 +33,7 @@ public class InformationManager : MonoBehaviour
         HologramMenuController.Instance.tabSelectedEvent.AddListener(MenuTabChanged);
         menuDescriptionController = MenuDescriptionController.Instance;
         menuDescriptionController.buttonClickedEvent.AddListener(CardButtonClicked);
-        SetTexts(mars);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        SetPlanetTexts(mars);
     }
 
     private void CardButtonClicked(ClickedButtonInfo buttonInfo)
@@ -53,10 +48,10 @@ public class InformationManager : MonoBehaviour
     private void MenuTabChanged(TabType tabType)
     {
         Debug.Log("New tab type: " + tabType);
-
+        
         if (tabType == TabType.PLANETS)
         {
-            SetTexts(mars);
+            SetPlanetTexts(mars);
             menuDescriptionController.Show(true, true);
         }
         else if (tabType == TabType.SPACECRAFTS)
@@ -81,7 +76,7 @@ public class InformationManager : MonoBehaviour
         }
     }
 
-    public void SetTexts(PlanetInformation mars)
+    public void SetPlanetTexts(PlanetInformation mars)
     {
         menuDescriptionController.MiddlePartTexts = new MenuDescription[2] {
             new MenuDescription() {
@@ -123,5 +118,6 @@ public class InformationManager : MonoBehaviour
                 Text = mars.Get("surfaceTemperature")
             }
         };
+        menuDescriptionController.planetPercentageText.text = mars.GetPercentageDiscovered().ToString("P1", CultureInfo.InvariantCulture);
     }
 }

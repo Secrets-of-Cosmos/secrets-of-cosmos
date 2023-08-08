@@ -51,7 +51,7 @@ public class MissionManager : MonoBehaviour
             Mission mission = missions[index];
             informationManager.mars.Discover(mission.attributeToCheck);
             mission.missionStatus = Mission.MissionStatus.Completed;
-            informationManager.SetTexts(informationManager.mars);
+            informationManager.SetPlanetTexts(informationManager.mars);
         }
     }
 

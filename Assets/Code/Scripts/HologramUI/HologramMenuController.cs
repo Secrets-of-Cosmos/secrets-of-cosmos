@@ -23,6 +23,7 @@ public class HologramMenuController : MonoBehaviour
     [Header("Planets")] 
     [SerializeField] private List<PlanetProperties> planetsProperties;
     [SerializeField] private GameObject planetGameObject;
+    [SerializeField] private GameObject planetPercentageText;
 
     [Header("Spacecrafts")]
     [SerializeField] private List<Mesh> spacecraftsMeshes;
@@ -31,7 +32,7 @@ public class HologramMenuController : MonoBehaviour
     [Header("DescriptionController")]
     [SerializeField] private MenuDescriptionController menuDescriptionController;
 
-    public TabType CurrentTab { get; private set; } = TabType.NOT_SELECTED;
+    private TabType currentTab { get; set; } = TabType.NOT_SELECTED;
     private int _currentPlanet;
     private int _currentSpacecraft;
     private VisualEffect _hologramEffect;
@@ -58,14 +59,15 @@ public class HologramMenuController : MonoBehaviour
         gameObject.SetActive(false);
         leftButton.SetActive(false);
         rightButton.SetActive(false);
+        planetPercentageText.SetActive(false);
         tabButtons.ForEach(button => button.SetActive(false));
-        
+
         planetGameObject.GetComponent<MeshRenderer>().material.SetTexture(BaseTexture, planetsProperties[_currentPlanet].planetTexture);
         _eventAttribute.SetVector4(PlanetRayColor, planetsProperties[_currentPlanet].rayColor);
     }
 
     private void Update() {
-        if (CurrentTab == TabType.SPACECRAFTS || CurrentTab == TabType.PLANETS) {
+        if (currentTab == TabType.SPACECRAFTS || currentTab == TabType.PLANETS) {
             hologramEffectGameObject.transform.Rotate(Vector3.up, spacecraftsRotationSpeed * Time.deltaTime);
         }
     }
@@ -86,12 +88,13 @@ public class HologramMenuController : MonoBehaviour
     }
     
     public void CloseMenu() {
-        CurrentTab = TabType.NOT_SELECTED;
+        currentTab = TabType.NOT_SELECTED;
         _currentPlanet = 0;
         _currentSpacecraft = 0;
         leftButton.SetActive(false);
         rightButton.SetActive(false);
         planetGameObject.SetActive(false);
+        planetPercentageText.SetActive(false);
         hologramEffectGameObject.transform.rotation = Quaternion.identity;
         gameObject.SetActive(false);
         menuDescriptionController.Hide();
@@ -102,9 +105,9 @@ public class HologramMenuController : MonoBehaviour
     }
     
     public void OnTabSelected(TabType tab) {
-        if (CurrentTab == tab) return;
+        if (currentTab == tab) return;
         tabSelectedEvent.Invoke(tab);
-        if (CurrentTab == TabType.NOT_SELECTED) {
+        if (currentTab == TabType.NOT_SELECTED) {
             var mostLeft = tabButtons.Count/2*-1;
             for (var i = 0; i < tabButtons.Count; i++, mostLeft++) {
                 LeanTween.moveLocal(tabButtons[i], new Vector3(tabButtonsFinalPosition.x + mostLeft * tabButtonsFinalGap + tabButtonsFinalGap/2, tabButtonsFinalPosition.y, tabButtonsFinalPosition.z), 0.5f).setEaseOutBack();
@@ -116,11 +119,13 @@ public class HologramMenuController : MonoBehaviour
             LeanTween.scale(button, new Vector3(0.5f, 0.5f, 0.5f), 0.5f).setEaseOutBack();
             button.GetComponent<MeshRenderer>().material.SetColor(EmissionColor, currentTabColor);
         });
-        CurrentTab = tab;
+        currentTab = tab;
         planetGameObject.SetActive(false);
         hologramEffectGameObject.transform.rotation = Quaternion.identity;
+        planetPercentageText.SetActive(false);
         switch (tab) {
             case TabType.PLANETS:
+                planetPercentageText.SetActive(true);
                 ChangeControlButtonStatus(true);
                 SetDescriptionMenuMiddleLenght(false);
                 planetGameObject.SetActive(true);
@@ -149,7 +154,7 @@ public class HologramMenuController : MonoBehaviour
     }
     public void OnControlButtonsPressed(ControlButtonsType button) {
         var direction = button == ControlButtonsType.LEFT ? -1 : 1;
-        switch (CurrentTab) {
+        switch (currentTab) {
             case TabType.PLANETS:
                 _currentPlanet += direction;
                 _currentPlanet = _currentPlanet < 0 ? planetsProperties.Count - 1 : (_currentPlanet >= planetsProperties.Count ? 0 : _currentPlanet);
