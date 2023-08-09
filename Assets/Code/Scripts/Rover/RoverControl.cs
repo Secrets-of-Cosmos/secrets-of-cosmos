@@ -2,14 +2,37 @@ using UnityEngine;
 
 public class RoverControl : MonoBehaviour
 {
+    public enum ControlMode { Player, Random }
+    public ControlMode controlMode = ControlMode.Player;
+
     public float motorForce = 200f;
     public float maxSteerAngle = 30f;
+    public float randomDirectionChangeTime = 3f; // Rastgele yön değişikliği süresi
+
     public WheelCollider[] wheelColliders;
+
+    private float h, v;
+    private float timeSinceLastDirectionChange;
 
     void FixedUpdate()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        switch (controlMode)
+        {
+            case ControlMode.Player:
+                h = Input.GetAxis("Horizontal");
+                v = Input.GetAxis("Vertical");
+                break;
+
+            case ControlMode.Random:
+                if (timeSinceLastDirectionChange > randomDirectionChangeTime)
+                {
+                    h = Random.Range(-1f, 1f);
+                    v = Random.Range(0f, 1f); // Sadece ileri hareket
+                    timeSinceLastDirectionChange = 0f;
+                }
+                timeSinceLastDirectionChange += Time.fixedDeltaTime;
+                break;
+        }
         Move(v, h);
     }
 
@@ -18,7 +41,6 @@ public class RoverControl : MonoBehaviour
         float steeringAngle = maxSteerAngle * steering;
         float motorTorque = motorForce * acceleration;
 
-        // Ön tekerleklerin direksiyon açısını ve arka tekerleklerin motor torkunu ayarla
         for (int i = 0; i < wheelColliders.Length; i++)
         {
             WheelCollider wheelCollider = wheelColliders[i];

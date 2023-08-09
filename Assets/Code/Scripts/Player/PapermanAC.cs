@@ -55,24 +55,24 @@ public class PapermanAC : MonoBehaviour
             updateJump = true;
         }
 
-        //Temporary Sitting to Idle Transition
-        if(Input.GetKey(KeyCode.K))
-        {
-            animator.Play("Sit To Idle");
-            asm.defaultState = asm.states[0].state; // Changing the default state the Movement BlendTree
-        }
         camType = (CamType)(Convert.ToInt32(stateDrivenCamAnimator.GetBool("isThirdPerson")));
+    }
+
+    public void StandUp()
+    {
+        animator.Play("Sit To Idle");
+        asm.defaultState = asm.states[0].state; // Changing the default state the Movement BlendTree
     }
 
     private void FixedUpdate()
     {
         vertical = Input.GetAxis("Vertical");
         horizontal = Input.GetAxis("Horizontal");
-        if(camType == CamType.FirstPerson)
+        if (camType == CamType.FirstPerson)
         {
             FirstPersonMovement();
         }
-        else if(camType == CamType.ThirdPerson)
+        else if (camType == CamType.ThirdPerson)
         {
             ThirdPersonMovement();
         }
@@ -130,7 +130,7 @@ public class PapermanAC : MonoBehaviour
             bool isSitting = animInfo.Length > 0 && animInfo[0].clip.name == "Sitting Idle";
             if (movementDirection.x == 0 && movementDirection.z == 0 && !isSitting)
             {
-                if(isOnGroundMovements)
+                if (isOnGroundMovements)
                     asm.states[0].state.speed = 1;
                 movementDirection = new Vector3(vcam.transform.forward.x, vcam.transform.forward.y, vcam.transform.forward.z * asm.states[0].state.speed);
                 if (Vector3.Dot(transform.forward, vcam.transform.forward) >= 0)
@@ -165,6 +165,7 @@ public class PapermanAC : MonoBehaviour
     {
         rootMotion += animator.deltaPosition;
     }
+
     private void Jump()
     {
         isJumping = true;

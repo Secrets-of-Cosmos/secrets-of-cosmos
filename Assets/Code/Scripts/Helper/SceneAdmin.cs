@@ -11,6 +11,7 @@ public struct SceneObject
     public float threshold;
     public Material skybox;
     public int ambientIntensity;
+    public float gravity;
 }
 
 public class SceneAdmin : MonoBehaviour
@@ -46,8 +47,6 @@ public class SceneAdmin : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.F) && spaceshipInsideOutsideController.IsOutside())
         {
-            Debug.Log(issInsideOutsideController.IsOutside());
-            Debug.Log(CloseToSpaceship());
             if (issInsideOutsideController.IsInside())
             {
                 issInsideOutsideController.GoOutside();
@@ -58,6 +57,7 @@ public class SceneAdmin : MonoBehaviour
             else if (CloseToSpaceship())
             {
                 EnterSpaceship();
+                enterExitText.text = "";
             }
         }
 
@@ -71,6 +71,10 @@ public class SceneAdmin : MonoBehaviour
             if (CloseToSpaceship())
             {
                 enterExitText.text = "Press F to go inside";
+            }
+            else
+            {
+                enterExitText.text = "";
             }
         }
 
@@ -89,7 +93,6 @@ public class SceneAdmin : MonoBehaviour
 
     private void CheckExitDoorText()
     {
-        Debug.Log(CloseToExitDoor());
         if (CloseToExitDoor())
         {
             enterExitText.text = "Press F to go outside";
@@ -139,6 +142,7 @@ public class SceneAdmin : MonoBehaviour
         }
         GameObject playerNew = Instantiate(playerAndCamera, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
         papermanAC = playerNew.GetComponentInChildren<PapermanAC>();
+        papermanAC.gravity = 3.6f;
         playerNew.name = "Player";
         playerNew.SetActive(true);
         viewer.SetParent(playerNew.transform.GetChild(1));
@@ -154,7 +158,6 @@ public class SceneAdmin : MonoBehaviour
 
     private bool CloseToExitDoor()
     {
-        Debug.Log(Vector3.Distance(papermanAC.transform.position, outsideDoor.position));
         return Vector3.Distance(papermanAC.transform.position, outsideDoor.position) < 5;
     }
 

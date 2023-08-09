@@ -51,6 +51,7 @@ public class MissionManager : MonoBehaviour
         if (activeMission != null)
         {
             missionMarker.gameObject.SetActive(true);
+            missionMarkerText.gameObject.SetActive(true);
             Vector3 direction = activeMission.transform.position - player.transform.position;
             direction.y = 0;
             float angle = Vector3.SignedAngle(direction, player.transform.forward, Vector3.up);
@@ -60,7 +61,7 @@ public class MissionManager : MonoBehaviour
         else
         {
             missionMarker.gameObject.SetActive(false);
-            missionMarkerText.text = "";
+            missionMarkerText.gameObject.SetActive(false);
         }
     }
 
