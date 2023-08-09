@@ -44,11 +44,11 @@ public class HologramMenuController : MonoBehaviour
     private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
     private static readonly int PlanetRayColor = Shader.PropertyToID("PlanetRayColor");
 
-    public static HologramMenuController Instance { get; private set; }
-    public UnityEvent<TabType> tabSelectedEvent = new UnityEvent<TabType>();
+    public static HologramMenuController instance { get; private set; }
+    public UnityEvent<TabType> tabSelectedEvent = new();
     
     private void Awake() {
-        Instance = this;
+        instance = this;
     }
 
     private void Start() {

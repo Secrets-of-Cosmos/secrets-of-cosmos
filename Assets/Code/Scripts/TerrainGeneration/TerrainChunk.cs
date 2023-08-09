@@ -49,7 +49,9 @@ public class TerrainChunk
         Vector2 position = coord * meshSettings.meshWorldSize;
         bounds = new Bounds(position, Vector2.one * meshSettings.meshWorldSize);
 
-        meshObject = new GameObject("Terrain Chunk");
+        meshObject = new GameObject("Terrain Chunk") {
+            tag = "Terrain"
+        };
         meshRenderer = meshObject.AddComponent<MeshRenderer>();
         meshFilter = meshObject.AddComponent<MeshFilter>();
         meshCollider = meshObject.AddComponent<MeshCollider>();

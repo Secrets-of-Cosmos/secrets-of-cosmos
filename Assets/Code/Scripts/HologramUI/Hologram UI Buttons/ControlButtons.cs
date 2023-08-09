@@ -15,7 +15,7 @@ public class ControlButtons : MonoBehaviour, IButton
     
     
     public void OnMouseDown() {
-        HologramMenuController.Instance.OnControlButtonsPressed(buttonType);
+        HologramMenuController.instance.OnControlButtonsPressed(buttonType);
     }
     
     public void OnMouseEnter() {

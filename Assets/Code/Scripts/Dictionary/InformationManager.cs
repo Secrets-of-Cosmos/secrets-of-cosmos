@@ -40,7 +40,7 @@ public class InformationManager : MonoBehaviour
 
     public void AddListenerUpdate()
     {
-        HologramMenuController.Instance.tabSelectedEvent.AddListener(MenuTabChanged);
+        HologramMenuController.instance.tabSelectedEvent.AddListener(MenuTabChanged);
         menuDescriptionController = MenuDescriptionController.Instance;
         menuDescriptionController.buttonClickedEvent.AddListener(CardButtonClicked);
     }
