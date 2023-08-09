@@ -232,8 +232,9 @@ MonoBehaviour:
   missionType: 1
   missionName: Collect1
   missionDescription: Collect1
-  isComplete: 0
+  missionStatus: 0
   attributeToCheck: elements
+  nearDistance: 5
   player: {fileID: 0}
 --- !u!4 &678412623
 Transform:
@@ -630,11 +631,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae441787aabc4a598b170c59c693d88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  availableMissions:
-  - {fileID: 678412622}
-  activeMissions: []
-  completedMissions: []
+  missions: []
   informationManager: {fileID: 1433654430}
+  missionPlacementDistance: 50
+  distances: 
+  missionMarker: {fileID: 0}
+  missionMarkerText: {fileID: 0}
+  player: {fileID: 0}
 --- !u!4 &1433654429
 Transform:
   m_ObjectHideFlags: 0
@@ -665,6 +668,7 @@ MonoBehaviour:
   mars:
     name: mars
     attributeNames: []
+  missionManager: {fileID: 0}
 --- !u!1 &1444728278
 GameObject:
   m_ObjectHideFlags: 0

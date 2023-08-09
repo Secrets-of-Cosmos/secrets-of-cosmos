@@ -81,16 +81,22 @@ public class SpaceShipController : MonoBehaviour
         controls.Disable();
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            Teleport();
+        }
+    }
+
+
     private void FixedUpdate()
     {
         if (controlsEnabled)
         {
             MoveShip();
         }
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            Teleport();
-        }
+
         LockToPlanet();
     }
 

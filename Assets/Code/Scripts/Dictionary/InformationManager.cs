@@ -30,15 +30,21 @@ public class InformationManager : MonoBehaviour
 
         mars = new PlanetInformation("mars", marsAttributes);
 
-        HologramMenuController.Instance.tabSelectedEvent.AddListener(MenuTabChanged);
-        menuDescriptionController = MenuDescriptionController.Instance;
-        menuDescriptionController.buttonClickedEvent.AddListener(CardButtonClicked);
+        AddListenerUpdate();
         SetTexts(mars);
     }
 
     // Update is called once per frame
     void Update()
     {
+
+    }
+
+    public void AddListenerUpdate()
+    {
+        HologramMenuController.Instance.tabSelectedEvent.AddListener(MenuTabChanged);
+        menuDescriptionController = MenuDescriptionController.Instance;
+        menuDescriptionController.buttonClickedEvent.AddListener(CardButtonClicked);
     }
 
     private void CardButtonClicked(ClickedButtonInfo buttonInfo)

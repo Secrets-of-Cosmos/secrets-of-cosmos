@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 
 public class MissionManager : MonoBehaviour
 {
@@ -11,6 +11,7 @@ public class MissionManager : MonoBehaviour
     public int missionPlacementDistance = 50;
     public int[] distances;
     public Image missionMarker;
+    public TextMeshProUGUI missionMarkerText;
     public PapermanAC player;
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,12 @@ public class MissionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (player == null)
+        {
+            informationManager.AddListenerUpdate();
+            player = GameObject.FindObjectOfType<PapermanAC>();
+            SetPlayerForMissions(player);
+        }
         UpdateMissions();
         UpdateMissionArrow();
 
@@ -49,10 +56,12 @@ public class MissionManager : MonoBehaviour
             direction.y = 0;
             float angle = Vector3.SignedAngle(direction, player.transform.forward, Vector3.up);
             missionMarker.transform.rotation = Quaternion.Euler(0, 0, angle);
+            missionMarkerText.text = DistanceToMission(activeMission).ToString() + "m";
         }
         else
         {
             missionMarker.gameObject.SetActive(false);
+            missionMarkerText.text = "";
         }
     }
 
@@ -73,6 +82,7 @@ public class MissionManager : MonoBehaviour
             }
         }
     }
+
 
     private void SetPositionByRaycast(Mission m)
     {
@@ -95,11 +105,17 @@ public class MissionManager : MonoBehaviour
         int[] distances = new int[missions.Count];
         for (int i = 0; i < missions.Count; i++)
         {
-            float xDistance = Mathf.Abs(player.transform.position.x - missions[i].transform.position.x);
-            float zDistance = Mathf.Abs(player.transform.position.z - missions[i].transform.position.z);
-            distances[i] = (int)Mathf.Sqrt(xDistance * xDistance + zDistance * zDistance);
+            distances[i] = DistanceToMission(missions[i]);
         }
         return distances;
+    }
+
+
+    int DistanceToMission(Mission m)
+    {
+        float xDistance = Mathf.Abs(player.transform.position.x - m.transform.position.x);
+        float zDistance = Mathf.Abs(player.transform.position.z - m.transform.position.z);
+        return (int)Mathf.Sqrt(xDistance * xDistance + zDistance * zDistance);
     }
 
 

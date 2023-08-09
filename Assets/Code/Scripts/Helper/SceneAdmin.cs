@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using Cinemachine;
+using TMPro;
 
 [System.Serializable]
 public struct SceneObject
@@ -16,6 +16,8 @@ public struct SceneObject
 public class SceneAdmin : MonoBehaviour
 {
     public Transform spaceship; // Uzay aracının Transform component'ı
+    public Transform outsideDoor;
+    public TextMeshProUGUI enterExitText;
     public GameObject[] shouldDisable;
     public Animator transitionAnimator; // Fade efekti için bir Animator component'ı
     private bool isLoading = false; // Kilit mekanizması olarak kullanılacak değişken
@@ -24,6 +26,7 @@ public class SceneAdmin : MonoBehaviour
     public InsideOutsideController spaceshipInsideOutsideController;
     public GameObject playerAndCamera;
     public GameObject spaceShipUI;
+    public PapermanAC papermanAC;
 
 
     void Start()
@@ -33,44 +36,131 @@ public class SceneAdmin : MonoBehaviour
 
     void Update()
     {
-        var currentScene = SceneManager.GetActiveScene();
-        //Debug.Log(currentScene.name);
-        // Tüm gezegenleri kontrol et
-        if (currentScene.name == "Solar System")
+        if (issInsideOutsideController.IsOutside() && spaceshipInsideOutsideController.IsInside())
         {
             CheckPlanets();
-
-            if (Input.GetKeyDown(KeyCode.O))
+        }
+        if (Input.GetKeyDown(KeyCode.P) && spaceshipInsideOutsideController.IsInside())
+        {
+            ExitSpaceShip();
+        }
+        else if (Input.GetKeyDown(KeyCode.F) && spaceshipInsideOutsideController.IsOutside())
+        {
+            Debug.Log(issInsideOutsideController.IsOutside());
+            Debug.Log(CloseToSpaceship());
+            if (issInsideOutsideController.IsInside())
             {
                 issInsideOutsideController.GoOutside();
                 spaceship.gameObject.SetActive(true);
                 spaceShipUI.SetActive(true);
+                enterExitText.text = "";
             }
-        }
-        if (currentScene.name == "Solar System" && spaceshipInsideOutsideController.inside)
-        {
-            if (Input.GetKeyDown(KeyCode.P))
+            else if (CloseToSpaceship())
             {
-                spaceShipUI.SetActive(false);
-                Transform viewer = GameObject.Find("Viewer").transform;
-                spaceshipInsideOutsideController.GoOutside();
-                spaceship.GetComponentsInChildren<Camera>()[0].enabled = false;
-                GameObject ISS_Wrapper = GameObject.Find("ISS_Wrapper");
-                Destroy(ISS_Wrapper.transform.GetChild(1).GetChild(1).gameObject);
-                GameObject playerNew = Instantiate(playerAndCamera, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
-                playerNew.SetActive(true);
-                //InstantiateStateDrivenCam(playerNew);
-                //set child
-                viewer.SetParent(playerNew.transform.GetChild(1));
-                viewer.localPosition = new Vector3(0, 0, 0);
-
-                GameObject manager = GameObject.Find("Manager");
-                foreach (Transform child in manager.transform)
-                {
-                    child.gameObject.SetActive(true);
-                }
+                EnterSpaceship();
             }
         }
+
+        if (issInsideOutsideController.IsInside())
+        {
+            CheckExitDoorText();
+            ExitDoor();
+        }
+        else if (spaceshipInsideOutsideController.IsOutside())
+        {
+            if (CloseToSpaceship())
+            {
+                enterExitText.text = "Press F to go inside";
+            }
+        }
+
+    }
+
+    private void ExitDoor()
+    {
+        if (CloseToExitDoor())
+        {
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                EnterSpaceship();
+            }
+        }
+    }
+
+    private void CheckExitDoorText()
+    {
+        Debug.Log(CloseToExitDoor());
+        if (CloseToExitDoor())
+        {
+            enterExitText.text = "Press F to go outside";
+        }
+        else
+        {
+            enterExitText.text = "";
+        }
+    }
+
+    private void EnterSpaceship()
+    {
+        spaceShipUI.SetActive(true);
+        spaceshipInsideOutsideController.GoInside();
+        spaceship.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        spaceship.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        spaceship.GetComponentsInChildren<Camera>()[0].enabled = true;
+        GameObject ISS_Wrapper = GameObject.Find("ISS_Wrapper");
+        GameObject playerNew = GameObject.Find("Player");
+        Destroy(playerNew);
+        Transform viewer = GameObject.Find("Viewer").transform;
+        viewer.SetParent(spaceship);
+        viewer.localPosition = new Vector3(0, 0, 0);
+        GameObject manager = GameObject.Find("Manager");
+        foreach (Transform child in manager.transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+
+    }
+
+    private void ExitSpaceShip()
+    {
+        spaceShipUI.SetActive(false);
+        spaceship.GetComponent<Rigidbody>().isKinematic = false;
+        Transform viewer = GameObject.Find("Viewer").transform;
+        spaceshipInsideOutsideController.GoOutside();
+        spaceship.GetComponentsInChildren<Camera>()[0].enabled = false;
+        GameObject ISS_Wrapper = GameObject.Find("ISS_Wrapper");
+        if (ISS_Wrapper.transform.GetChild(1).childCount > 1)
+        {
+            Destroy(ISS_Wrapper.transform.GetChild(1).GetChild(1).gameObject);
+        }
+        else
+        {
+            Destroy(GameObject.Find("Player"));
+        }
+        GameObject playerNew = Instantiate(playerAndCamera, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
+        papermanAC = playerNew.GetComponentInChildren<PapermanAC>();
+        playerNew.name = "Player";
+        playerNew.SetActive(true);
+        viewer.SetParent(playerNew.transform.GetChild(1));
+        viewer.localPosition = new Vector3(0, 0, 0);
+
+        GameObject manager = GameObject.Find("Manager");
+
+        foreach (Transform child in manager.transform)
+        {
+            child.gameObject.SetActive(true);
+        }
+    }
+
+    private bool CloseToExitDoor()
+    {
+        Debug.Log(Vector3.Distance(papermanAC.transform.position, outsideDoor.position));
+        return Vector3.Distance(papermanAC.transform.position, outsideDoor.position) < 5;
+    }
+
+    private bool CloseToSpaceship()
+    {
+        return Vector3.Distance(papermanAC.transform.position, spaceshipInsideOutsideController.GetOutsidePosition()) < 10;
     }
 
     void CheckPlanets()
@@ -86,13 +176,6 @@ public class SceneAdmin : MonoBehaviour
                 break;
             }
         }
-    }
-
-    public void LoadSolarSystemScene()
-    {
-        SceneManager.LoadScene("Solar System");
-
-        spaceship = GameObject.Find("Spaceship").transform;
     }
 
     IEnumerator LoadPlanetScene(int planetIndex)
