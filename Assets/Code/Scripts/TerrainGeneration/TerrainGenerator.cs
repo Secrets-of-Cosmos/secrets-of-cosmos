@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class TerrainGenerator : MonoBehaviour {
 
-	const float viewerMoveThresholdForChunkUpdate = 25f;
+	const float viewerMoveThresholdForChunkUpdate = 10f;
 	const float sqrViewerMoveThresholdForChunkUpdate = viewerMoveThresholdForChunkUpdate * viewerMoveThresholdForChunkUpdate;
 	
 	public int colliderLODIndex;
@@ -29,9 +29,6 @@ public class TerrainGenerator : MonoBehaviour {
 		float maxViewDst = detailLevels [detailLevels.Length - 1].visibleDstThreshold;
 		meshWorldSize = meshSettings.meshWorldSize;
 		chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / meshWorldSize);
-
-		var spaceShip = FindFirstObjectByType<SceneAdmin>()?.spaceship;
-		if (spaceShip != null) viewer = spaceShip;
 
 		UpdateVisibleChunks ();
 	}
