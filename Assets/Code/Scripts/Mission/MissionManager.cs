@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -146,7 +145,7 @@ public class MissionManager : MonoBehaviour
             Mission mission = missions[index];
             informationManager.mars.Discover(mission.attributeToCheck);
             mission.missionStatus = Mission.MissionStatus.Completed;
-            informationManager.SetPlanetTexts(informationManager.mars);
+            informationManager.SetTexts(informationManager.mars);
         }
     }
 
