@@ -99,7 +99,16 @@ public class SendMission : Mission
     private int CollectedRocks()
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, 10f, 1 << LayerMask.NameToLayer("Collectable"));
-        return hitColliders.Length;
+        int rocksCollected = 0;
+        foreach (Collider collider in hitColliders)
+        {
+            Collectable collectable = collider.GetComponent<Collectable>();
+            if (collectable != null && collectable.collected)
+            {
+                rocksCollected++;
+            }
+        }
+        return rocksCollected;
     }
 
     private void HandleAnswerSelection()

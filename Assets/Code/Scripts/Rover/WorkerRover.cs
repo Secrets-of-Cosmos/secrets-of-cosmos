@@ -48,6 +48,7 @@ public class WorkerRover : MonoBehaviour
             case ControlMode.Player:
                 h = Input.GetAxis("Horizontal");
                 v = Input.GetAxis("Vertical");
+                player.transform.position = transform.position;
 
                 break;
 
@@ -86,7 +87,7 @@ public class WorkerRover : MonoBehaviour
 
     public void SetPlayerControlling(bool playerControlling)
     {
-        controlMode = ControlMode.Player;
+        controlMode = playerControlling ? ControlMode.Player : ControlMode.Random;
         if (controlMode == ControlMode.Player)
         {
             rb.isKinematic = false;
@@ -101,6 +102,7 @@ public class WorkerRover : MonoBehaviour
             // rb.isKinematic = true;
             // rb.useGravity = false;
             // rb.constraints = RigidbodyConstraints.FreezeAll;
+            player.transform.position = transform.position + Vector3.right * 2;
             roverCamera.gameObject.SetActive(false);
             player.gameObject.SetActive(true);
         }
