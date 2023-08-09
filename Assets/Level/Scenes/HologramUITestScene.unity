@@ -633,6 +633,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   missions: []
   informationManager: {fileID: 1433654430}
+  missionPlacementDistance: 50
+  distances: 
+  missionMarker: {fileID: 0}
+  missionMarkerText: {fileID: 0}
+  player: {fileID: 0}
 --- !u!4 &1433654429
 Transform:
   m_ObjectHideFlags: 0
@@ -663,8 +668,7 @@ MonoBehaviour:
   mars:
     name: mars
     attributeNames: []
-    percentageDiscovered: 0
-  missionManager: {fileID: 1433654428}
+  missionManager: {fileID: 0}
 --- !u!1 &1444728278
 GameObject:
   m_ObjectHideFlags: 0

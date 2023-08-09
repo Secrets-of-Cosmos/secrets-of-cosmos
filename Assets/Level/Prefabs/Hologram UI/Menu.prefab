@@ -90,8 +90,8 @@ MonoBehaviour:
   - {fileID: 6281996996856901034}
   tabButtonsStartPosition: {x: 0, y: 0, z: 0}
   tabButtonsStartGap: 0.18
-  tabButtonsFinalGap: 0.12
-  tabButtonsFinalPosition: {x: 0, y: 0.3, z: 0}
+  tabButtonsFinalGap: 0.1
+  tabButtonsFinalPosition: {x: 0, y: 0.25, z: 0}
   leftButton: {fileID: 1611872836147298332}
   rightButton: {fileID: 5180604023770655844}
   currentTabColor: {r: 0.055, g: 0.2, b: 0.2, a: 0}
@@ -211,7 +211,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1611872836147298332}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.16, y: 0, z: 0}
+  m_LocalPosition: {x: -0.12, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -343,7 +343,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 16, y: 9}
+  m_SizeDelta: {x: 13, y: 7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &3350745064896337823
 Canvas:
@@ -585,7 +585,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5180604023770655844}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.16, y: 0, z: 0}
+  m_LocalPosition: {x: 0.12, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1196,7 +1196,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7634822539280819203}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.22, z: 0}
+  m_LocalPosition: {x: 0, y: -0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1524,7 +1524,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 868806797957461844, guid: 528a001fe9dda48e99c8a151a6a5b48a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.19
+      value: -0.16
       objectReference: {fileID: 0}
     - target: {fileID: 868806797957461844, guid: 528a001fe9dda48e99c8a151a6a5b48a, type: 3}
       propertyPath: m_LocalPosition.z

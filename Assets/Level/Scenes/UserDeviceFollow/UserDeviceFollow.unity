@@ -1175,11 +1175,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5907832296091331951, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
       propertyPath: m_Constraints
-      value: 112
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5907832296091331951, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
       propertyPath: m_Interpolate
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6985016583827307784, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
       propertyPath: player
@@ -1204,12 +1204,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1258481190858562, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
       insertIndex: 1
-      addedObject: {fileID: 1300712271}
-    - targetCorrespondingSourceObject: {fileID: 1258481190858562, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
-      insertIndex: 2
-      addedObject: {fileID: 1300712276}
-    - targetCorrespondingSourceObject: {fileID: 1258481190858562, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
-      insertIndex: 3
       addedObject: {fileID: 1300712260}
     - targetCorrespondingSourceObject: {fileID: 1258481190858562, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
       insertIndex: -1
@@ -1233,8 +1227,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1612830108}
+  followDistance: 5
   proximityDistance: 7
   stopDistance: 7
+  rotationSpeed: 1.5
 --- !u!4 &1300712265 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4532726864411000, guid: 5e72d6c8cceb4814f90f8a19bcb36ae9, type: 3}
@@ -1247,7 +1243,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1300712240}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fff0960ef4ea6e04eac66b4a7fd2189d, type: 3}
   m_Name: 
@@ -1256,42 +1252,6 @@ MonoBehaviour:
   - m_Rig: {fileID: 1268574240}
     m_Active: 1
   m_Effectors: []
---- !u!114 &1300712271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1300712240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b00b6c696d660a478a7a58f4e0ec033, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  legTargets: []
-  stepSize: 1
-  smoothness: 1
-  stepHeight: 0.1
-  bodyOrientation: 1
---- !u!114 &1300712276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1300712240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cb6a36254e5ea04bb66b776d3129446, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1612830108}
-  _speed: 3
-  smoothness: 5
-  raysNb: 8
-  raysEccentricity: 0.2
-  outerRaysOffset: 2
-  innerRaysOffset: 25
 --- !u!1 &1460275449
 GameObject:
   m_ObjectHideFlags: 0
