@@ -62,6 +62,11 @@ public class Mission : MonoBehaviour
 
     protected bool IsPlayerNearby()
     {
+        if (player == null)
+        {
+            return false;
+        }
+
         return Vector3.Distance(player.transform.position, transform.position) < nearDistance;
     }
 
