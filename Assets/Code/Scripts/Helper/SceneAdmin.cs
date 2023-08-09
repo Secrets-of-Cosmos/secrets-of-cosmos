@@ -11,6 +11,7 @@ public struct SceneObject
     public float threshold;
     public Material skybox;
     public int ambientIntensity;
+    public float gravity;
 }
 
 public class SceneAdmin : MonoBehaviour
@@ -141,6 +142,7 @@ public class SceneAdmin : MonoBehaviour
         }
         GameObject playerNew = Instantiate(playerAndCamera, spaceship.position + new Vector3(0, 0, 10), Quaternion.identity);
         papermanAC = playerNew.GetComponentInChildren<PapermanAC>();
+        papermanAC.gravity = 3.6f;
         playerNew.name = "Player";
         playerNew.SetActive(true);
         viewer.SetParent(playerNew.transform.GetChild(1));
