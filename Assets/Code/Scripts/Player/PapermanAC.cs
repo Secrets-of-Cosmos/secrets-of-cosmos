@@ -61,6 +61,13 @@ public class PapermanAC : MonoBehaviour
     public void StandUp()
     {
         animator.Play("Sit To Idle");
+        StartCoroutine(ChangeAnimatorDefaultState());
+    }
+
+    private IEnumerator ChangeAnimatorDefaultState()
+    {
+
+        yield return new WaitForSeconds(3);
         asm.defaultState = asm.states[0].state; // Changing the default state the Movement BlendTree
     }
 
