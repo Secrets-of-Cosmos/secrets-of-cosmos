@@ -155,7 +155,11 @@ public class MissionManager : MonoBehaviour
         if (index != -1)
         {
             Mission mission = missions[index];
-            informationManager.mars.Discover(mission.attributeToCheck);
+            foreach (string attribute in mission.attributesToChange)
+            {
+                informationManager.mars.Discover(attribute);
+            }
+
             mission.missionStatus = Mission.MissionStatus.Completed;
             informationManager.SetTexts(informationManager.mars);
         }
