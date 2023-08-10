@@ -17,15 +17,34 @@ public class InformationManager : MonoBehaviour
         Dictionary<string, object> marsAttributes = new Dictionary<string, object>
         {
             { "name", "Mars" },
-            { "elements", new List<string> { "Iron", "Oxygen", "Carbon" } },
+            { "elements", new List<string> {
+                    "Silicon Dioxide (SiO₂): Comprises approximately 45% of Mars' soil.",
+                    "Iron(III) Oxide (Fe₂O₃): Comprises approximately 18% of Mars' soil.",
+                    "Aluminum Oxide (Al₂O₃): Comprises approximately 7% of Mars' soil."
+                }
+            },
             { "firstSpacecraft", "Viking 1" },
-            { "surfaceSpacecraft", new List<string> { "Rover 1", "Rover 2", "Rover 3" } },
-            { "atmosphereCondition", "Thin Atmosphere" },
-            { "proximityToSun", 227.9 },
-            { "surfaceTemperature", -63 },
+            { "surfaceSpacecraft", new List<string> { "Ingenuity", "Perseverance", "Curiosity" } },
+            { "atmosphereCondition", new List<string> {
+                    "95% carbon dioxide",
+                    "3% nitrogen",
+                    "1.6% argon",
+                    "and it has traces of oxygen, carbon monoxide",
+                }
+            },
+            { "proximityToSun", new List<string> {
+                    "From an average distance of 228 million kilometers",
+                    "It takes sunlight 13 minutes to travel from the Sun to Mars.",
+                }
+            },
+            { "surfaceTemperature", new List<string> {
+                    "The temperature on Mars can be as high as 20 degrees Celsius",
+                    "or as low as about -153 degrees Celsius."
+                }
+            },
             { "lengthOfDay", 24.7 },
             { "lengthOfYear", 687 },
-            { "funFacts", "Second thinnest atmosphere in the Solar System!" }
+            { "funFacts", "Mars was named after the Roman god of war." }
         };
 
         mars = new PlanetInformation("mars", marsAttributes);

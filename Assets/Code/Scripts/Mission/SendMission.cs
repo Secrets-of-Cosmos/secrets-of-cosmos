@@ -11,7 +11,7 @@ public class SendMission : Mission
     [SerializeField]
     private int rocksNeeded = 3;
 
-    enum SendMissionState
+    public enum SendMissionState
     {
         Broken,
         NotStarted,
@@ -20,7 +20,7 @@ public class SendMission : Mission
         Finished
     }
 
-    SendMissionState state = SendMissionState.Broken;
+    public SendMissionState state = SendMissionState.Broken;
 
     // UI elements
     private DialoguePanel dialoguePanelScript;
