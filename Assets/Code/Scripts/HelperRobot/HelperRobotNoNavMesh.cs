@@ -5,11 +5,11 @@ using UnityEngine;
 public class HelperRobotNoNavMesh : MonoBehaviour
 {
     public Transform player;
-    public float followDistance = 5.0f;
-    public float rayDistance = 10.0f;
-    public float proximityDistance = 7.0f;
-    public float stopDistance = 7.0f;
-    public float rotationSpeed = 1.5f;
+    public float followDistance = 1.0f;
+    public float rayDistance = 3.0f;
+    public float proximityDistance = 2.0f;
+    public float stopDistance = 2.0f;
+    public float rotationSpeed = 1f;
 
     private enum State { Follow, Idle };
     private State state = State.Idle;
@@ -61,11 +61,11 @@ public class HelperRobotNoNavMesh : MonoBehaviour
                     if (distanceToPlayer > stopDistance * 3) // Check if the distance is greater than stopDistance * 3
                     {
                        
-                        followDistance = 10.0f;
+                        followDistance = 2.0f;
                     }
                     else
                     {
-                        followDistance = 4.0f;
+                        followDistance = 1.0f;
                     }
                     // Raycast in the forward direction to detect obstacles
                     if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, rayDistance))
