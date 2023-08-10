@@ -6,7 +6,7 @@ using UnityEngine;
 public class TerrainChunk
 {
 
-    const float colliderGenerationDistanceThreshold = 50;
+    const float colliderGenerationDistanceThreshold = 300;
     public event System.Action<TerrainChunk, bool> onVisibilityChanged;
     public Vector2 coord;
 
@@ -135,8 +135,7 @@ public class TerrainChunk
 
                         if (lodIndex == 0)
                         {
-                            if (!placedObjects) PlaceObjects();
-                            else objects.ForEach(x =>
+                            if (placedObjects) objects.ForEach(x =>
                             {
                                 if (!x.IsDestroyed()) x.SetActive(true);
                             });
@@ -171,11 +170,11 @@ public class TerrainChunk
         }
     }
 
-    public void PlaceObjects()
-    {
-        List<int> indices = Enumerable.Range(0, meshFilter.mesh.vertices.Length).ToList();
+    public void PlaceObjects() {
+        var mesh = meshCollider.sharedMesh;
+        List<int> indices = Enumerable.Range(0, mesh.vertices.Length).ToList();
 
-        for (int i = 0; i < generator.placeableObjects.Length; i++)
+        for (int i = 0; i < generator.placeableObjects.Length; i++)     
         {
             for (int j = 0; j < generator.placeableObjects[i].countPerChunk; j++)
             {
@@ -186,18 +185,25 @@ public class TerrainChunk
                 int selectedVertice = indices[randomIndex];
                 indices.RemoveAt(randomIndex);
 
-                Vector3 verticePosition = meshFilter.mesh.vertices[selectedVertice];
+                Vector3 verticePosition = mesh.vertices[selectedVertice];
                 Vector3 worldVerticePosition = meshFilter.transform.TransformPoint(verticePosition);
 
-                Quaternion rotation = Quaternion.FromToRotation(Vector3.up, meshFilter.mesh.normals[selectedVertice]);
-
+                Quaternion rotation = Quaternion.FromToRotation(Vector3.up, mesh.normals[selectedVertice]);
                 GameObject gameObject = Object.Instantiate(generator.placeableObjects[i].gameObject, worldVerticePosition, rotation);
 
-                // TODO: Local scale and position will be adjusted furthermore
-                gameObject.transform.localScale = Vector3.one * (generator.placeableObjects[i].scale * Random.Range(0.7f, 1.3f));
-                gameObject.transform.localPosition -= Vector3.up * 0.2f;
-
+                
+                var rb = gameObject.GetComponent<Rigidbody>();
+                var collider = gameObject.GetComponent<BoxCollider>();
+                
+                Vector3 localSize = collider.size;
+                Vector3 scale = gameObject.transform.localScale;
+                Vector3 worldSize = Vector3.Scale(localSize, scale);
+                float volume = worldSize.x * worldSize.y * worldSize.z;
+                if (rb) rb.mass = volume * 20f;
+                
                 gameObject.transform.parent = meshObject.transform;
+                gameObject.transform.localScale = Vector3.one * (generator.placeableObjects[i].scale * Random.Range(0.9f, 1.1f));
+                gameObject.transform.localPosition += new Vector3(0, collider.bounds.size.y / 3, 0);
 
                 objects.Add(gameObject);
             }
@@ -225,6 +231,7 @@ public class TerrainChunk
                 if (lodMeshes[colliderLODIndex].hasMesh)
                 {
                     meshCollider.sharedMesh = lodMeshes[colliderLODIndex].mesh;
+                    PlaceObjects();
                     hasSetCollider = true;
                 }
             }

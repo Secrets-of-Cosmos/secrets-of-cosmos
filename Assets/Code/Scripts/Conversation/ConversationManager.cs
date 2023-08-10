@@ -8,6 +8,8 @@ public class ConversationManager : MonoBehaviour
     public Text answerText1;
     public Text answerText2;
     public Text questionText;
+    public PapermanAC papermanAC;
+
 
     // Define a dialogue node structure
     struct DialogueNode
@@ -41,11 +43,11 @@ public class ConversationManager : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             OnClickAnswer1();
         }
-        else if(Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             OnClickAnswer2();
         }
@@ -71,7 +73,7 @@ public class ConversationManager : MonoBehaviour
 
         node1a.Answers.Add("Yes, I remember.", nodeFinal);
         node1a.Answers.Add("No, I need a refresher.", nodeFinal);
-        
+
         node1b.Answers.Add("I'm ready now.", nodeFinal);
         node1b.Answers.Add("I need a little more time.", nodeFinal);
 
@@ -80,7 +82,7 @@ public class ConversationManager : MonoBehaviour
 
         node2a.Answers.Add("Yes, I remember my objectives.", nodeFinal);
         node2a.Answers.Add("No, I need to review them.", nodeFinal);
-        
+
         node2b.Answers.Add("Yes, I can continue.", nodeFinal);
         node2b.Answers.Add("No, I need more rest.", nodeFinal);
 
@@ -94,7 +96,7 @@ public class ConversationManager : MonoBehaviour
         questionText.text = currentNode.Question;
 
         // Check if there are any answers
-        if(currentNode.Answers.Count > 0)
+        if (currentNode.Answers.Count > 0)
         {
             List<string> keys = new List<string>(currentNode.Answers.Keys);
             answerText1.text = keys[0];
@@ -103,15 +105,20 @@ public class ConversationManager : MonoBehaviour
         else
         {
             // If there are no more answers, hide the answer texts
-            answerText1.text = "";
-            answerText2.text = "";
+            answerText1.text = "Finish";
+            answerText2.text = "Finish";
         }
     }
 
     public void OnClickAnswer1()
     {
         // Check if there is a next node for answer 1 before trying to access it
-        if(currentNode.Answers.ContainsKey(answerText1.text))
+        if (answerText1.text == "Finish")
+        {
+            papermanAC.StandUp();
+            this.gameObject.SetActive(false);
+        }
+        if (currentNode.Answers.ContainsKey(answerText1.text))
         {
             // Go to next node based on answer 1 and update the display
             currentNode = currentNode.Answers[answerText1.text];
@@ -121,8 +128,13 @@ public class ConversationManager : MonoBehaviour
 
     public void OnClickAnswer2()
     {
+        if (answerText2.text == "Finish")
+        {
+            papermanAC.StandUp();
+            this.gameObject.SetActive(false);
+        }
         // Check if there is a next node for answer 2 before trying to access it
-        if(currentNode.Answers.ContainsKey(answerText2.text))
+        if (currentNode.Answers.ContainsKey(answerText2.text))
         {
             // Go to next node based on answer 2 and update the display
             currentNode = currentNode.Answers[answerText2.text];

@@ -13,6 +13,7 @@ public class MissionManager : MonoBehaviour
     public Image missionMarker;
     public TextMeshProUGUI missionMarkerText;
     public PapermanAC player;
+    public WorkerRover workerRover;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,6 +53,7 @@ public class MissionManager : MonoBehaviour
         if (activeMission != null)
         {
             missionMarker.gameObject.SetActive(true);
+            missionMarkerText.gameObject.SetActive(true);
             Vector3 direction = activeMission.transform.position - player.transform.position;
             direction.y = 0;
             float angle = Vector3.SignedAngle(direction, player.transform.forward, Vector3.up);
@@ -61,7 +63,7 @@ public class MissionManager : MonoBehaviour
         else
         {
             missionMarker.gameObject.SetActive(false);
-            missionMarkerText.text = "";
+            missionMarkerText.gameObject.SetActive(false);
         }
     }
 
@@ -113,9 +115,18 @@ public class MissionManager : MonoBehaviour
 
     int DistanceToMission(Mission m)
     {
-        float xDistance = Mathf.Abs(player.transform.position.x - m.transform.position.x);
-        float zDistance = Mathf.Abs(player.transform.position.z - m.transform.position.z);
-        return (int)Mathf.Sqrt(xDistance * xDistance + zDistance * zDistance);
+        if (workerRover.controlMode == WorkerRover.ControlMode.Player)
+        {
+            float xDistance = Mathf.Abs(workerRover.transform.position.x - m.transform.position.x);
+            float zDistance = Mathf.Abs(workerRover.transform.position.z - m.transform.position.z);
+            return (int)Mathf.Sqrt(xDistance * xDistance + zDistance * zDistance);
+        }
+        else
+        {
+            float xDistance = Mathf.Abs(player.transform.position.x - m.transform.position.x);
+            float zDistance = Mathf.Abs(player.transform.position.z - m.transform.position.z);
+            return (int)Mathf.Sqrt(xDistance * xDistance + zDistance * zDistance);
+        }
     }
 
 
