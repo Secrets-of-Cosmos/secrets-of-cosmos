@@ -24,6 +24,7 @@ public class MiniMapController : MonoBehaviour
         _mapMeshFilter = mapGameObject.GetComponent<MeshFilter>();
         _hologramEffect = hologramEffectGameObject.GetComponent<VisualEffect>();
         _eventAttribute = _hologramEffect.CreateVFXEventAttribute();
+        mapGameObject.transform.localScale = new Vector3(0.005f, 0.007f, 0.005f);
         mapGameObject.SetActive(false);
     }
 
@@ -52,7 +53,7 @@ public class MiniMapController : MonoBehaviour
         for (var i = 0; i < meshFilters.Count; i++) {
             combine[i].mesh = meshFilters[i].sharedMesh;
             combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
-            combine[i].transform = Matrix4x4.Scale(new Vector3(0.005f, 0.007f, 0.005f)) * combine[i].transform;
+            // combine[i].transform = Matrix4x4.Scale(new Vector3(0.005f, 0.007f, 0.005f)) * combine[i].transform;
         }
         
         var mapMesh = new Mesh {

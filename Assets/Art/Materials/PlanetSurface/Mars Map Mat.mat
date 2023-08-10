@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Mars Map Mat
-  m_Shader: {fileID: -6465566751694194690, guid: db863999fc00e4cf2aa4856a464baab9, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 31079a09679a84a97832d9ce27a70a5d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -114,11 +114,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Vector1_4C3F5EE4: 0.05
-    - Vector1_5857EFB5: 0.1285
-    - Vector1_65D18AD4: 0.3226
-    - Vector1_6F228B9F: 0.725
-    - Vector1_A956083A: 6861
+    - Vector1_4C3F5EE4: 0.5
+    - Vector1_5857EFB5: 12.85
+    - Vector1_65D18AD4: 32.26
+    - Vector1_6F228B9F: 7.25
+    - Vector1_A956083A: 68.61
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -129,6 +129,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _Opacity: 0.8
     - _Parallax: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
