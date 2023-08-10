@@ -106,6 +106,11 @@ MonoBehaviour:
     rayColor: {r: 0, g: 0.0022729002, b: 0.0029960957, a: 0}
   planetGameObject: {fileID: 6322292411210884588}
   planetPercentageText: {fileID: 7542805634448788618}
+  mapGameObject: {fileID: 4595264548143528067}
+  mapMaterial: {fileID: 2100000, guid: cc13418f7470541f2911e6b5802a7809, type: 2}
+  defaultMapMaterial: {fileID: 2100000, guid: d75b34d14fdd54db0b953db0e56e4169, type: 2}
+  defaultMapMesh: {fileID: 4300000, guid: a15a06d781dd9411f92bcd2737bf5a68, type: 3}
+  defaultMapColor: {r: 0.039215688, g: 0.039215688, b: 0.039215688, a: 0}
   spacecraftsMeshes:
   - {fileID: 3615115322689252889, guid: 367873f16f1fc4e1f9523ac9ea3eb4e3, type: 3}
   - {fileID: 8062119269106632852, guid: 4695f2212bef94feb80eeeb625f42acc, type: 3}
@@ -1558,6 +1563,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2303371662768685078, guid: 528a001fe9dda48e99c8a151a6a5b48a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8589453141175174113, guid: 528a001fe9dda48e99c8a151a6a5b48a, type: 3}
       propertyPath: m_Name
       value: VFXHologramEffect
@@ -1570,6 +1579,11 @@ PrefabInstance:
 --- !u!4 &3596707643328007214 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 868806797957461844, guid: 528a001fe9dda48e99c8a151a6a5b48a, type: 3}
+  m_PrefabInstance: {fileID: 4459845276647914362}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4595264548143528067 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 153444977404740601, guid: 528a001fe9dda48e99c8a151a6a5b48a, type: 3}
   m_PrefabInstance: {fileID: 4459845276647914362}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &5392871133459609755 stripped

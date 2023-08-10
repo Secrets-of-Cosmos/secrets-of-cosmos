@@ -57,7 +57,7 @@ public class MissionManager : MonoBehaviour
             direction.y = 0;
             float angle = Vector3.SignedAngle(direction, player.transform.forward, Vector3.up);
             missionMarker.transform.rotation = Quaternion.Euler(0, 0, angle);
-            missionMarkerText.text = DistanceToMission(activeMission).ToString() + "m";
+            missionMarkerText.text = DistanceToMission(activeMission) + "m";
         }
         else
         {
