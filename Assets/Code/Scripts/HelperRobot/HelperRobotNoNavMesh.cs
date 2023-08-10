@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class HelperRobotNoNavMesh : MonoBehaviour
 {
-    public Transform player;
-    public float followDistance = 1.0f;
-    public float rayDistance = 3.0f;
-    public float proximityDistance = 2.0f;
-    public float stopDistance = 2.0f;
-    public float rotationSpeed = 1f;
+    public GameObject target;
+    private Transform player;
+    private Vector3[] rayArray;
+    private Vector3 lerpedTargetDir;
+    public float rayLength = 2;
+    public float lerpSpeed = 1.0f;
+    public float mult = 1.0f;
+    public float speed = 1.5f;  
+    public float rotSpeed = 0.15f;
+    public float stopDistance = 1f;
+    public float proximityDistance = 1f;
+   
 
     private enum State { Follow, Idle };
     private State state = State.Idle;
@@ -21,9 +27,6 @@ public class HelperRobotNoNavMesh : MonoBehaviour
     private float idleAnimationDuration = 0.5f; // Adjust this duration as needed
     private int currentIdleAnimationIndex = 0;
 
-    private float startFollowDelay = 1.0f; // Adjust this delay as needed
-    private float followTimer = 0.0f;
-
     private string[] idleAnimations = { "GoToRoll_Anim", "RollLoop_Anim", "StopRoll_Anim", "Idle_Anim" };
 
     private void Start()
@@ -31,22 +34,34 @@ public class HelperRobotNoNavMesh : MonoBehaviour
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        player = target.transform;
+        rayArray = new Vector3[3];
+
     }
 
     private void Update()
     {
-
+        player = target.transform;
         float distanceToPlayer = Vector3.Distance(transform.position, new Vector3(player.position.x, transform.position.y, player.position.z));
         switch (state)
         {
             case State.Follow:
-                Debug.DrawRay(transform.position, transform.forward * followDistance, Color.red);
+                Debug.Log(distanceToPlayer);
                 anim.SetBool("GoToRoll_Anim", false);
                 anim.SetBool("RollLoop_Anim", false);
                 anim.SetBool("StopRoll_Anim", false);
                 anim.SetBool("Idle_Anim", false);
                 anim.SetBool("Walk_Anim", true);
-
+                if (distanceToPlayer > 30f)
+                {
+                    anim.SetBool("GoToRoll_Anim", false);
+                    anim.SetBool("RollLoop_Anim", false);
+                    anim.SetBool("StopRoll_Anim", false);
+                    anim.SetBool("Idle_Anim", false);
+                    anim.SetBool("Walk_Anim", true);
+                    Vector3 teleportPosition = new Vector3(player.position.x,player.position.y+4,player.position.z-6); 
+                    transform.position = teleportPosition;
+                }
                 if (distanceToPlayer < proximityDistance)
                 {
                     state = State.Idle;
@@ -58,35 +73,17 @@ public class HelperRobotNoNavMesh : MonoBehaviour
                 }
                 else
                 {
-                    if (distanceToPlayer > stopDistance * 3) // Check if the distance is greater than stopDistance * 3
+                    if (distanceToPlayer > stopDistance * 3 && distanceToPlayer < 30f) 
                     {
                        
-                        followDistance = 2.0f;
+                        speed = 3.0f;
                     }
                     else
                     {
-                        followDistance = 1.0f;
+                        speed = 1.5f;
                     }
-                    // Raycast in the forward direction to detect obstacles
-                    if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, rayDistance))
-                    {
-                        // Calculate a new direction to avoid the obstacle
-                        Vector3 avoidDirection = Vector3.Reflect(transform.forward, hit.normal);
-                        Vector3 targetPosition = transform.position + avoidDirection * followDistance;
-                        Vector3 direction = targetPosition - transform.position;
-                        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-                        transform.Translate(Vector3.forward * Time.deltaTime * followDistance);
-                    }
-                    else
-                    {
-                        // No obstacle, continue following the player
-                        Vector3 targetPosition = player.position + (transform.position - player.position).normalized * followDistance;
-                        Vector3 direction = targetPosition - transform.position;
-                        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-                        transform.Translate(Vector3.forward * Time.deltaTime * followDistance);
-                    }
+                    MoveTowardsAndAvoid(target.transform);
+
                 }
                 break;
 
@@ -110,6 +107,7 @@ public class HelperRobotNoNavMesh : MonoBehaviour
                 }
                 break;
         }
+
     }
 
 
@@ -146,6 +144,43 @@ public class HelperRobotNoNavMesh : MonoBehaviour
         }
 
         currentIdleAnimationIndex = (currentIdleAnimationIndex + 1) % idleAnimations.Length;
+    }
+    private void MoveTowardsAndAvoid(Transform target)
+    {
+        
+        Vector3 targetPos = target.position;
+        targetPos.y = transform.position.y;
+        Vector3 targetDir = targetPos - transform.position;
+
+        rayArray[0] = transform.TransformDirection(new Vector3(-0.20f, 0.2f, 0.5f));
+        rayArray[1] = transform.TransformDirection(new Vector3(0f, 0.2f, 1f));
+        rayArray[2] = transform.TransformDirection(new Vector3(0.20f, 0.2f, 0.5f));
+
+        bool moveIt = false;
+
+        for (int i = 0; i < 3; i++)
+        {
+            RaycastHit hit;
+            
+            if (Physics.Raycast(transform.position, rayArray[i], out hit, rayLength))
+            {
+                targetDir += mult * hit.normal;
+            }
+            else
+            {
+                moveIt = true;
+            }
+            Debug.DrawLine(transform.position, hit.point, Color.magenta);
+        }
+
+        lerpedTargetDir = Vector3.Lerp(lerpedTargetDir, targetDir, Time.deltaTime * lerpSpeed);
+        Quaternion targetRotation = Quaternion.LookRotation(lerpedTargetDir);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
+
+        if (moveIt)
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        }
     }
 
 
