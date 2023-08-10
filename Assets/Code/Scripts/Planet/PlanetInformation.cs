@@ -31,7 +31,6 @@ public class PlanetInformation
 
     public void Discover(string attribute)
     {
-        Debug.Log("Discovering " + attribute);
         if (discovered.ContainsKey(attribute))
         {
             discovered[attribute] = true;

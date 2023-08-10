@@ -20,7 +20,8 @@ public class DialogueTree
         WakeUp,
         WelcomeMission,
         Ingenuity,
-        Information
+        Information,
+        CollectMission
     }
 
     DialogueNode rootNode;
@@ -34,13 +35,16 @@ public class DialogueTree
                 BuildExampleDialogueTree();
                 break;
             case DialogueType.WelcomeMission:
-                BuildExampleDialogueTree();
+                ConversationWithCuriosity();
                 break;
             case DialogueType.Ingenuity:
-                BuildIngenuityDialogueTree();
+                RepairAndLaunchDialogue();
                 break;
             case DialogueType.Information:
-                BuildInformationDialogueTree();
+                ReturnFromMissionDialogue();
+                break;
+            case DialogueType.CollectMission:
+                CollectMissionDialogue();
                 break;
             default:
                 BuildExampleDialogueTree();
@@ -49,58 +53,115 @@ public class DialogueTree
 
         currentNode = rootNode;
     }
-    void BuildInformationDialogueTree()
+
+    void CollectMissionDialogue()
     {
-        rootNode = new DialogueNode("I analyzed the atmosphere. The data seems interesting.");
+        rootNode = new DialogueNode("Hi. I am Perseverance.");
+        var node1 = new DialogueNode("Can I help you?");
+        var node2 = new DialogueNode("There are lots of rovers on Mars.");
+        var node3 = new DialogueNode("Perseverance, Ingenuity and Curiosity");
+        var node4 = new DialogueNode("The most common compound on Mars is Iron.");
+        var node5 = new DialogueNode("Second most common compound on Mars is Oxygen.");
+        var node6 = new DialogueNode("Third most common compound on Mars is Carbon.");
+        var node7 = new DialogueNode("You can use the rover to collect rocks.");
 
-        var node1 = new DialogueNode("Would you like to see the detailed analysis?");
-        var node2 = new DialogueNode("Do you need me to perform any specific actions based on the analysis?");
+        var nodeFinal = new DialogueNode("You're welcome!");
 
-        var node1a = new DialogueNode("Here are the details: [insert detailed analysis here].");
-        var node1b = new DialogueNode("Understood. Just let me know if you need more information later.");
+        rootNode.Answers.Add("Hi Perseverance!", node1);
+        rootNode.Answers.Add("Hello!", node1);
 
-        var node2a = new DialogueNode("Action completed. What would you like to do next?");
-        var node2b = new DialogueNode("Okay, I'll stand by for further instructions.");
+        node1.Answers.Add("What can you tell me about the rovers?", node2);
+        node1.Answers.Add("How many rovers are there?", node2);
 
-        var nodeFinal = new DialogueNode("Mission accomplished. Awaiting next command.");
+        node2.Answers.Add("Tell me some of their names.", node3);
+        node2.Answers.Add("What are their names?", node3);
 
-        rootNode.Answers.Add("Can you show me the details?", node1);
-        rootNode.Answers.Add("Is there any action I should take?", node2);
+        node3.Answers.Add("What can you tell me about the compounds?", node4);
+        node3.Answers.Add("What's common on Mars?", node4);
 
-        node1.Answers.Add("Sure, here are the details.", node1a);
-        node1.Answers.Add("No need for details right now.", node1b);
+        node4.Answers.Add("What else can you tell me?", node5);
+        node4.Answers.Add("What else is common?", node5);
 
-        node2.Answers.Add("Yes, please perform this action: [insert action here].", node2a);
-        node2.Answers.Add("No, no action needed at this time.", node2b);
+        node5.Answers.Add("What is the third most common compound?", node6);
+        node5.Answers.Add("And what else?", node6);
 
-        node1a.Answers.Add("Thank you for the details.", nodeFinal);
-        node1b.Answers.Add("Thank you, I'll reach out if I need anything.", nodeFinal);
+        node6.Answers.Add("How can I collect rocks?", node7);
+        node6.Answers.Add("How do I collect rocks?", node7);
 
-        node2a.Answers.Add("Great job, thank you.", nodeFinal);
-        node2b.Answers.Add("Thank you, I'll let you know if anything is needed.", nodeFinal);
+        node7.Answers.Add("Thank you!", nodeFinal);
     }
 
-
-    void BuildIngenuityDialogueTree()
+    void ConversationWithCuriosity()
     {
-        rootNode = new DialogueNode("Hi, I am Ingenuity helicopter. Who are you?");
+        rootNode = new DialogueNode("Hi. I am Curiosity.");
+        var node1 = new DialogueNode("You are on Mars surface.");
+        var node2 = new DialogueNode("Mars was named after the Roman god of war.");
+        var node3 = new DialogueNode("First spacecraft to reach Mars was Viking 1.");
 
-        var node1 = new DialogueNode("Great! I will make my best to help you.");
-        var node2 = new DialogueNode("Fantastic! I will make my best to help you.");
+        var nodeFinal = new DialogueNode("You're welcome! Stay curious!");
 
-        var nodeFinal = new DialogueNode("Yep, let's fly!");
+        rootNode.Answers.Add("Where am I?", node1);
+        rootNode.Answers.Add("Which planet is this?", node1);
 
-        rootNode.Answers.Add("I'm the operator assigned to control you.", node1);
-        rootNode.Answers.Add("I'm a scientist working on this project.", node2);
+        node1.Answers.Add("Is there any reason for that?", node2);
+        node1.Answers.Add("Why was it named so?", node2);
 
-        node1.Answers.Add("Are you ready to analysis?", nodeFinal);
-        node1.Answers.Add("Shall we start the analysis?", nodeFinal);
+        node2.Answers.Add("Which was the first spacecraft to reach Mars?", node3);
+        node2.Answers.Add("What was the first spacecraft to reach Mars?", node3);
 
-        node2.Answers.Add("Shall we start the analysis?", nodeFinal);
-        node2.Answers.Add("Are you ready to analysis?", nodeFinal);
+        node3.Answers.Add("Thank you!", nodeFinal);
+        node3.Answers.Add("That's great!", nodeFinal);
     }
 
+    void ReturnFromMissionDialogue()
+    {
+        rootNode = new DialogueNode("I'm back from the mission!");
+        var node1 = new DialogueNode("Surface Temperature is -80 degrees.");
+        var node2 = new DialogueNode("Proximity to Sun is 246.9 million km.");
+        var node3 = new DialogueNode("Atmosphere Condition is 95% Carbon Dioxide.");
+        var nodeFinal = new DialogueNode("It's a pleasure");
 
+        rootNode.Answers.Add("What about Surface Temperature?", node1);
+        rootNode.Answers.Add("Tell me about Surface Temperature", node1);
+
+        node1.Answers.Add("What about Proximity to Sun?", node2);
+        node1.Answers.Add("Tell me about Proximity to Sun", node2);
+
+        node2.Answers.Add("What about Atmosphere Condition?", node3);
+        node2.Answers.Add("Tell me about Atmosphere Condition", node3);
+
+        node3.Answers.Add("Thank you.", nodeFinal);
+        node3.Answers.Add("That's great.", nodeFinal);
+    }
+
+    void RepairAndLaunchDialogue()
+    {
+        rootNode = new DialogueNode("Thank you for repairing me!");
+        var node1 = new DialogueNode("Who are you?");
+        var node2 = new DialogueNode("I am Ingenuity. Can I help you?");
+        var node3 = new DialogueNode("Can you tell me more about the mission?");
+        var node4 = new DialogueNode("Anything else?");
+        var node5 = new DialogueNode("I'm ready to launch!");
+        var nodeFinal = new DialogueNode("Mission started!");
+
+        rootNode.Answers.Add("You are welcome!", node1);
+        rootNode.Answers.Add("It's my pleasure!", node1);
+
+        node1.Answers.Add("I'm here to learn about Mars.", node2);
+        node1.Answers.Add("I want to explore Mars.", node2);
+
+        node2.Answers.Add("Yes please!", node3);
+        node2.Answers.Add("It would be great!", node3);
+
+        node3.Answers.Add("I need to learn about the atmosphere.", node4);
+        node3.Answers.Add("Atmosphere is my main focus.", node4);
+
+        node4.Answers.Add("Surface temperature and proximity to the sun.", node5);
+        node4.Answers.Add("proximity to the sun and surface temperature.", node5);
+
+        node5.Answers.Add("Great!", nodeFinal);
+        node5.Answers.Add("Let's go!", nodeFinal);
+    }
 
     void BuildExampleDialogueTree()
     {
