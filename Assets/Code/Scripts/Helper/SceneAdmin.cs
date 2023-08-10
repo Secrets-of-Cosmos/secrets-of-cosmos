@@ -77,6 +77,10 @@ public class SceneAdmin : MonoBehaviour
                 enterExitText.text = "";
             }
         }
+        else
+        {
+            enterExitText.text = "";
+        }
 
     }
 
@@ -107,6 +111,10 @@ public class SceneAdmin : MonoBehaviour
     {
         spaceShipUI.SetActive(true);
         spaceshipInsideOutsideController.GoInside();
+        if (issInsideOutsideController.IsInside())
+        {
+            issInsideOutsideController.GoOutside();
+        }
         spaceship.GetComponent<Rigidbody>().velocity = Vector3.zero;
         spaceship.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         spaceship.GetComponentsInChildren<Camera>()[0].enabled = true;
@@ -158,12 +166,22 @@ public class SceneAdmin : MonoBehaviour
 
     private bool CloseToExitDoor()
     {
-        return Vector3.Distance(papermanAC.transform.position, outsideDoor.position) < 5;
+        if (papermanAC.gameObject.activeSelf)
+        {
+            return Vector3.Distance(papermanAC.transform.position, outsideDoor.position) < 5;
+        }
+
+        return false;
     }
 
     private bool CloseToSpaceship()
     {
-        return Vector3.Distance(papermanAC.transform.position, spaceshipInsideOutsideController.GetOutsidePosition()) < 10;
+        if (papermanAC.gameObject.activeSelf)
+        {
+            return Vector3.Distance(papermanAC.transform.position, spaceshipInsideOutsideController.GetOutsidePosition()) < 10;
+        }
+
+        return false;
     }
 
     void CheckPlanets()
@@ -213,6 +231,7 @@ public class SceneAdmin : MonoBehaviour
         RenderSettings.skybox = sceneObjects[planetIndex].skybox;
         spaceship.transform.position = new Vector3(0, 1000, 0);
         spaceship.transform.rotation = Quaternion.Euler(90, 0, 0);
+        spaceship.GetComponent<Rigidbody>().velocity = Vector3.zero;
         spaceship.GetComponent<Rigidbody>().useGravity = true;
 
         Transform viewer = GameObject.Find("Viewer").transform;

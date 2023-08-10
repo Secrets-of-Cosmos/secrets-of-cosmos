@@ -23,7 +23,7 @@ public class CollectMission : Mission
     {
         gameObject.SetActive(false);
         InitializeCollectMission();
-        dialogueTree = new DialogueTree(DialogueTree.DialogueType.WelcomeMission);
+        dialogueTree = new DialogueTree(DialogueTree.DialogueType.CollectMission);
     }
 
     // Update is called once per frame

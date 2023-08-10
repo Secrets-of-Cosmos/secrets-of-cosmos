@@ -36,7 +36,7 @@ public class Mission : MonoBehaviour
     [SerializeField]
     public MissionStatus missionStatus;
     [SerializeField]
-    public string attributeToCheck;
+    public List<string> attributesToChange;
 
     // Distance to player to start dialogue
     [SerializeField]
