@@ -10,12 +10,12 @@ public class HelperRobotNoNavMesh : MonoBehaviour
     private Vector3 lerpedTargetDir;
     public float rayLength = 2;
     public float lerpSpeed = 1.0f;
-    public float mult = 1.0f;
-    public float speed = 1.5f;  
+    public float mult = 1.5f;
+    public float speed = 1f;
     public float rotSpeed = 0.15f;
-    public float stopDistance = 1f;
-    public float proximityDistance = 1f;
-   
+    public float stopDistance = 4f;
+    public float proximityDistance = 4f;
+
 
     private enum State { Follow, Idle };
     private State state = State.Idle;
@@ -59,7 +59,7 @@ public class HelperRobotNoNavMesh : MonoBehaviour
                     anim.SetBool("StopRoll_Anim", false);
                     anim.SetBool("Idle_Anim", false);
                     anim.SetBool("Walk_Anim", true);
-                    Vector3 teleportPosition = new Vector3(player.position.x,player.position.y+4,player.position.z-6); 
+                    Vector3 teleportPosition = new Vector3(player.position.x, player.position.y + 4, player.position.z - 6);
                     transform.position = teleportPosition;
                 }
                 if (distanceToPlayer < proximityDistance)
@@ -73,9 +73,9 @@ public class HelperRobotNoNavMesh : MonoBehaviour
                 }
                 else
                 {
-                    if (distanceToPlayer > stopDistance * 3 && distanceToPlayer < 30f) 
+                    if (distanceToPlayer > stopDistance * 3 && distanceToPlayer < 30f)
                     {
-                       
+
                         speed = 3.0f;
                     }
                     else
@@ -147,39 +147,49 @@ public class HelperRobotNoNavMesh : MonoBehaviour
     }
     private void MoveTowardsAndAvoid(Transform target)
     {
-        
+
         Vector3 targetPos = target.position;
         targetPos.y = transform.position.y;
         Vector3 targetDir = targetPos - transform.position;
 
-        rayArray[0] = transform.TransformDirection(new Vector3(-0.20f, 0.2f, 0.5f));
-        rayArray[1] = transform.TransformDirection(new Vector3(0f, 0.2f, 1f));
-        rayArray[2] = transform.TransformDirection(new Vector3(0.20f, 0.2f, 0.5f));
+        Vector3 forward = transform.forward;
+        Vector3 right = transform.right;
+        Vector3 up = transform.up;
+
+        rayArray[0] = -transform.forward + (transform.right * -0.20f) + (transform.up * 0.2f);
+        rayArray[1] = -transform.forward + (transform.up * 0.2f);
+        rayArray[2] = -transform.forward + (transform.right * 0.20f) + (transform.up * 0.2f);
+
+
 
         bool moveIt = false;
 
         for (int i = 0; i < 3; i++)
         {
             RaycastHit hit;
-            
+
             if (Physics.Raycast(transform.position, rayArray[i], out hit, rayLength))
             {
                 targetDir += mult * hit.normal;
+
             }
             else
             {
                 moveIt = true;
             }
-            Debug.DrawLine(transform.position, hit.point, Color.magenta);
+           Debug.DrawLine(transform.position, rayArray[i], Color.magenta);
+           
         }
-
+       
         lerpedTargetDir = Vector3.Lerp(lerpedTargetDir, targetDir, Time.deltaTime * lerpSpeed);
+        Debug.DrawRay(transform.position, targetDir, Color.blue);
+        Debug.DrawRay(transform.position, lerpedTargetDir, Color.green);
         Quaternion targetRotation = Quaternion.LookRotation(lerpedTargetDir);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
 
         if (moveIt)
         {
-            transform.Translate(Vector3.forward * Time.deltaTime * speed);
+            transform.Translate(targetDir.normalized* Time.deltaTime * speed);
         }
     }
 
