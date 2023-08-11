@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.VFX;
@@ -44,6 +45,7 @@ public class HologramMenuController : MonoBehaviour
     private TabType currentTab { get; set; } = TabType.NOT_SELECTED;
     private int _currentPlanet;
     private int _currentSpacecraft;
+    private Transform player;
     
     private Transform _terrainParent;
     private MeshFilter _mapMeshFilter;
@@ -100,9 +102,15 @@ public class HologramMenuController : MonoBehaviour
         if (currentTab is TabType.SPACECRAFTS or TabType.PLANETS) {
             hologramEffectGameObject.transform.Rotate(Vector3.up, spacecraftsRotationSpeed * Time.deltaTime);
         }
+
+        if (mapGameObject.activeSelf && player is not null) {
+            var targetRotation = Quaternion.LookRotation(player.position - mapGameObject.transform.position);
+            mapGameObject.transform.rotation = Quaternion.Slerp(mapGameObject.transform.rotation, targetRotation, Time.deltaTime * 0.2f);
+        }
     }
 
     public void OpenMenu() {
+        player = gameObject.GetComponentInParent<PapermanAC>()?.transform;
         gameObject.SetActive(true);
         var mostLeft = tabButtons.Count / 2 * -1;
         for (var i = 0; i < tabButtons.Count; i++, mostLeft++) {
@@ -186,6 +194,10 @@ public class HologramMenuController : MonoBehaviour
                 try {
                     _terrainParent = GameObject.Find("Map Generator").transform;
                     InstantiateMap();
+                    if (player is not null) {
+                        var targetRotation = Quaternion.LookRotation(player.position - mapGameObject.transform.position);
+                        mapGameObject.transform.rotation = targetRotation;
+                    }
                     mapGameObject.SetActive(true);
                 }
                 catch (NullReferenceException) {
@@ -193,7 +205,7 @@ public class HologramMenuController : MonoBehaviour
                     fogParticleSystem.gameObject.SetActive(true);
                     fogParticleSystem.Play();
                     mapGameObject.SetActive(true);
-                    Console.WriteLine("Map Generator not found");
+                    Debug.Log("Map Generator not found");
                 }
                 break;
             default:
