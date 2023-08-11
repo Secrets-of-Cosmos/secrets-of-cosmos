@@ -127,6 +127,7 @@ public class CollectMission : Mission
             else if (state == CollectMissionState.Drivable)
             {
                 state = CollectMissionState.Driving;
+                dialoguePanelScript.openDialogueText.text = "";
                 GetComponent<WorkerRover>().SetPlayerControlling(true);
             }
             else if (state == CollectMissionState.Driving)

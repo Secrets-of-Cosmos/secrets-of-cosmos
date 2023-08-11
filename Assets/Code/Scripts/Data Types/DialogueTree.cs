@@ -60,9 +60,9 @@ public class DialogueTree
         var node1 = new DialogueNode("Can I help you?");
         var node2 = new DialogueNode("There are lots of rovers on Mars.");
         var node3 = new DialogueNode("Perseverance, Ingenuity and Curiosity");
-        var node4 = new DialogueNode("The most common compound on Mars is Iron.");
-        var node5 = new DialogueNode("Second most common compound on Mars is Oxygen.");
-        var node6 = new DialogueNode("Third most common compound on Mars is Carbon.");
+        var node4 = new DialogueNode("The most common compound on Mars is SiO₂.");
+        var node5 = new DialogueNode("Second most common compound on Mars is Fe₂O₃.");
+        var node6 = new DialogueNode("Third most common compound on Mars is Al₂O₃.");
         var node7 = new DialogueNode("You can use the rover to collect rocks.");
 
         var nodeFinal = new DialogueNode("You're welcome!");
@@ -89,6 +89,7 @@ public class DialogueTree
         node6.Answers.Add("How do I collect rocks?", node7);
 
         node7.Answers.Add("Thank you!", nodeFinal);
+        node7.Answers.Add("That's great!", nodeFinal);
     }
 
     void ConversationWithCuriosity()
