@@ -52,7 +52,7 @@ public class HelperRobotNoNavMesh : MonoBehaviour
                 anim.SetBool("StopRoll_Anim", false);
                 anim.SetBool("Idle_Anim", false);
                 anim.SetBool("Walk_Anim", true);
-                if (distanceToPlayer > 30f)
+                if (distanceToPlayer > 1000f)
                 {
                     anim.SetBool("GoToRoll_Anim", false);
                     anim.SetBool("RollLoop_Anim", false);
@@ -76,11 +76,11 @@ public class HelperRobotNoNavMesh : MonoBehaviour
                     if (distanceToPlayer > stopDistance * 3 && distanceToPlayer < 30f)
                     {
 
-                        speed = 3.0f;
+                        speed = 4.0f;
                     }
                     else
                     {
-                        speed = 1.5f;
+                        speed = 2f;
                     }
                     MoveTowardsAndAvoid(target.transform);
 
@@ -156,9 +156,9 @@ public class HelperRobotNoNavMesh : MonoBehaviour
         Vector3 right = transform.right;
         Vector3 up = transform.up;
 
-        rayArray[0] = -transform.forward + (transform.right * -0.20f) + (transform.up * 0.2f);
-        rayArray[1] = -transform.forward + (transform.up * 0.2f);
-        rayArray[2] = -transform.forward + (transform.right * 0.20f) + (transform.up * 0.2f);
+        rayArray[0] = transform.forward + (transform.right * -0.50f) + (transform.up * 0.2f);
+        rayArray[1] = transform.forward + (transform.up * 0.50f);
+        rayArray[2] = transform.forward + (transform.right * 0.50f) + (transform.up * 0.2f);
 
 
 
@@ -170,6 +170,8 @@ public class HelperRobotNoNavMesh : MonoBehaviour
 
             if (Physics.Raycast(transform.position, rayArray[i], out hit, rayLength))
             {
+                Quaternion newRotation = Quaternion.LookRotation(Vector3.Reflect(targetDir.normalized, hit.normal));
+                transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, rotSpeed * Time.deltaTime);
                 targetDir += mult * hit.normal;
 
             }
