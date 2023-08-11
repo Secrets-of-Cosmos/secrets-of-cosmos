@@ -32,6 +32,7 @@ public class HologramMenuController : MonoBehaviour
     [SerializeField] private Material defaultMapMaterial;
     [SerializeField] private Mesh defaultMapMesh;
     [SerializeField] [ColorUsage(true, true)] private Color defaultMapColor;
+    [SerializeField] private ParticleSystem fogParticleSystem;
 
     [Header("Spacecrafts")]
     [SerializeField] private List<Mesh> spacecraftsMeshes;
@@ -70,6 +71,7 @@ public class HologramMenuController : MonoBehaviour
         _hologramEffect = hologramEffectGameObject.GetComponent<VisualEffect>();
         _eventAttribute = _hologramEffect.CreateVFXEventAttribute();
 
+        fogParticleSystem.gameObject.SetActive(false);
         gameObject.SetActive(false);
         leftButton.SetActive(false);
         rightButton.SetActive(false);
@@ -124,6 +126,8 @@ public class HologramMenuController : MonoBehaviour
         planetGameObject.SetActive(false);
         planetPercentageText.SetActive(false);
         mapGameObject.SetActive(false);
+        fogParticleSystem.Stop();
+        fogParticleSystem.gameObject.SetActive(false);
         hologramEffectGameObject.transform.rotation = Quaternion.identity;
         gameObject.SetActive(false);
         menuDescriptionController.Hide();
@@ -153,6 +157,8 @@ public class HologramMenuController : MonoBehaviour
         mapGameObject.SetActive(false);
         hologramEffectGameObject.transform.rotation = Quaternion.identity;
         planetPercentageText.SetActive(false);
+        fogParticleSystem.Stop();
+        fogParticleSystem.gameObject.SetActive(false);
         switch (tab) {
             case TabType.PLANETS:
                 planetPercentageText.SetActive(true);
@@ -184,6 +190,8 @@ public class HologramMenuController : MonoBehaviour
                 }
                 catch (NullReferenceException) {
                     OpenDefaultMap();
+                    fogParticleSystem.gameObject.SetActive(true);
+                    fogParticleSystem.Play();
                     mapGameObject.SetActive(true);
                     Console.WriteLine("Map Generator not found");
                 }
