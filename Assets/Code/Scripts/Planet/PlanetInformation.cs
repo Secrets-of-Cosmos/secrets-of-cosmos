@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -13,6 +14,8 @@ public class PlanetInformation
     private string name;
     [SerializeField]
     private string[] attributeNames;
+    [SerializeField]
+    private float percentageDiscovered = 0;
 
     public PlanetInformation(string name, Dictionary<string, object> initialAttributes)
     {
@@ -32,6 +35,16 @@ public class PlanetInformation
         {
             discovered[attribute] = true;
         }
+    }
+    
+    public float GetPercentageDiscovered()
+    {
+        return percentageDiscovered;
+    }
+    
+    public void SetPercentageDiscovered(float percentage)
+    {
+        percentageDiscovered = percentage;
     }
 
     public string Get(string attribute)

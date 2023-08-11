@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using UnityEngine;
 
 public class InformationManager : MonoBehaviour
@@ -61,7 +59,7 @@ public class InformationManager : MonoBehaviour
 
     public void AddListenerUpdate()
     {
-        HologramMenuController.Instance.tabSelectedEvent.AddListener(MenuTabChanged);
+        HologramMenuController.instance.tabSelectedEvent.AddListener(MenuTabChanged);
         menuDescriptionController = MenuDescriptionController.Instance;
         menuDescriptionController.buttonClickedEvent.AddListener(CardButtonClicked);
     }

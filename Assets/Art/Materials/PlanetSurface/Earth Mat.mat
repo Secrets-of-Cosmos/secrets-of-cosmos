@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Earth Mat
-  m_Shader: {fileID: -6465566751694194690, guid: db863999fc00e4cf2aa4856a464baab9, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 52c52e20c124e4e46b5b6fa6f9ada92a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []

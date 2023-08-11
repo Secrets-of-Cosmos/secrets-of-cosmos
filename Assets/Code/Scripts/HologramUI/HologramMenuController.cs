@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.VFX;
@@ -23,6 +25,15 @@ public class HologramMenuController : MonoBehaviour
     [Header("Planets")] 
     [SerializeField] private List<PlanetProperties> planetsProperties;
     [SerializeField] private GameObject planetGameObject;
+    [SerializeField] private GameObject planetPercentageText;
+    
+    [Header("Map")]
+    [SerializeField] private GameObject mapGameObject;
+    [SerializeField] private Material mapMaterial;
+    [SerializeField] private Material defaultMapMaterial;
+    [SerializeField] private Mesh defaultMapMesh;
+    [SerializeField] [ColorUsage(true, true)] private Color defaultMapColor;
+    [SerializeField] private ParticleSystem fogParticleSystem;
 
     [Header("Spacecrafts")]
     [SerializeField] private List<Mesh> spacecraftsMeshes;
@@ -31,9 +42,16 @@ public class HologramMenuController : MonoBehaviour
     [Header("DescriptionController")]
     [SerializeField] private MenuDescriptionController menuDescriptionController;
 
-    public TabType CurrentTab { get; private set; } = TabType.NOT_SELECTED;
+    private TabType currentTab { get; set; } = TabType.NOT_SELECTED;
     private int _currentPlanet;
     private int _currentSpacecraft;
+    private Transform player;
+    
+    private Transform _terrainParent;
+    private MeshFilter _mapMeshFilter;
+    private MeshRenderer _mapRenderer;
+    private bool _isMapActive;
+
     private VisualEffect _hologramEffect;
     private VFXEventAttribute _eventAttribute;
     private static readonly int BaseTexture = Shader.PropertyToID("_BaseTexture");
@@ -42,35 +60,57 @@ public class HologramMenuController : MonoBehaviour
     private static readonly int SelectionChangedEvent = Shader.PropertyToID("OnSelectionChanged");
     private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
     private static readonly int PlanetRayColor = Shader.PropertyToID("PlanetRayColor");
+    private static readonly int MapEvent = Shader.PropertyToID("OnMapSelected");
 
-    public static HologramMenuController Instance { get; private set; }
-    public UnityEvent<TabType> tabSelectedEvent = new UnityEvent<TabType>();
+    public static HologramMenuController instance { get; private set; }
+    public UnityEvent<TabType> tabSelectedEvent = new();
     
     private void Awake() {
-        Instance = this;
+        instance = this;
     }
 
     private void Start() {
         _hologramEffect = hologramEffectGameObject.GetComponent<VisualEffect>();
         _eventAttribute = _hologramEffect.CreateVFXEventAttribute();
 
-        planetGameObject.SetActive(false);
+        fogParticleSystem.gameObject.SetActive(false);
         gameObject.SetActive(false);
         leftButton.SetActive(false);
         rightButton.SetActive(false);
+        mapGameObject.SetActive(false);
+        planetGameObject.SetActive(false);
+        planetPercentageText.SetActive(false);
         tabButtons.ForEach(button => button.SetActive(false));
         
+        _mapRenderer = mapGameObject.GetComponent<MeshRenderer>();
+        _mapMeshFilter = mapGameObject.GetComponent<MeshFilter>();
+
         planetGameObject.GetComponent<MeshRenderer>().material.SetTexture(BaseTexture, planetsProperties[_currentPlanet].planetTexture);
         _eventAttribute.SetVector4(PlanetRayColor, planetsProperties[_currentPlanet].rayColor);
+        
+        // var vertices = defaultMapMesh.vertices;
+        // for (var i = 0; i < vertices.Length; i++) {
+        //     vertices[i] = Quaternion.Euler(-90, 0, 0) * vertices[i];
+        // }
+        // defaultMapMesh.vertices = vertices;
+        // defaultMapMesh.RecalculateNormals();
+        // defaultMapMesh.RecalculateBounds();
+        // defaultMapMesh.Optimize();
     }
 
     private void Update() {
-        if (CurrentTab == TabType.SPACECRAFTS || CurrentTab == TabType.PLANETS) {
+        if (currentTab is TabType.SPACECRAFTS or TabType.PLANETS) {
             hologramEffectGameObject.transform.Rotate(Vector3.up, spacecraftsRotationSpeed * Time.deltaTime);
+        }
+
+        if (mapGameObject.activeSelf && player is not null) {
+            var targetRotation = Quaternion.LookRotation(player.position - mapGameObject.transform.position);
+            mapGameObject.transform.rotation = Quaternion.Slerp(mapGameObject.transform.rotation, targetRotation, Time.deltaTime * 0.2f);
         }
     }
 
     public void OpenMenu() {
+        player = gameObject.GetComponentInParent<PapermanAC>()?.transform;
         gameObject.SetActive(true);
         var mostLeft = tabButtons.Count / 2 * -1;
         for (var i = 0; i < tabButtons.Count; i++, mostLeft++) {
@@ -86,12 +126,16 @@ public class HologramMenuController : MonoBehaviour
     }
     
     public void CloseMenu() {
-        CurrentTab = TabType.NOT_SELECTED;
+        currentTab = TabType.NOT_SELECTED;
         _currentPlanet = 0;
         _currentSpacecraft = 0;
         leftButton.SetActive(false);
         rightButton.SetActive(false);
         planetGameObject.SetActive(false);
+        planetPercentageText.SetActive(false);
+        mapGameObject.SetActive(false);
+        fogParticleSystem.Stop();
+        fogParticleSystem.gameObject.SetActive(false);
         hologramEffectGameObject.transform.rotation = Quaternion.identity;
         gameObject.SetActive(false);
         menuDescriptionController.Hide();
@@ -102,9 +146,9 @@ public class HologramMenuController : MonoBehaviour
     }
     
     public void OnTabSelected(TabType tab) {
-        if (CurrentTab == tab) return;
+        if (currentTab == tab) return;
         tabSelectedEvent.Invoke(tab);
-        if (CurrentTab == TabType.NOT_SELECTED) {
+        if (currentTab == TabType.NOT_SELECTED) {
             var mostLeft = tabButtons.Count/2*-1;
             for (var i = 0; i < tabButtons.Count; i++, mostLeft++) {
                 LeanTween.moveLocal(tabButtons[i], new Vector3(tabButtonsFinalPosition.x + mostLeft * tabButtonsFinalGap + tabButtonsFinalGap/2, tabButtonsFinalPosition.y, tabButtonsFinalPosition.z), 0.5f).setEaseOutBack();
@@ -116,11 +160,16 @@ public class HologramMenuController : MonoBehaviour
             LeanTween.scale(button, new Vector3(0.5f, 0.5f, 0.5f), 0.5f).setEaseOutBack();
             button.GetComponent<MeshRenderer>().material.SetColor(EmissionColor, currentTabColor);
         });
-        CurrentTab = tab;
+        currentTab = tab;
         planetGameObject.SetActive(false);
+        mapGameObject.SetActive(false);
         hologramEffectGameObject.transform.rotation = Quaternion.identity;
+        planetPercentageText.SetActive(false);
+        fogParticleSystem.Stop();
+        fogParticleSystem.gameObject.SetActive(false);
         switch (tab) {
             case TabType.PLANETS:
+                planetPercentageText.SetActive(true);
                 ChangeControlButtonStatus(true);
                 SetDescriptionMenuMiddleLenght(false);
                 planetGameObject.SetActive(true);
@@ -142,14 +191,82 @@ public class HologramMenuController : MonoBehaviour
             case TabType.MAPS:
                 menuDescriptionController.Hide();
                 ChangeControlButtonStatus(false);
+                try {
+                    _terrainParent = GameObject.Find("Map Generator").transform;
+                    InstantiateMap();
+                    if (player is not null) {
+                        var targetRotation = Quaternion.LookRotation(player.position - mapGameObject.transform.position);
+                        mapGameObject.transform.rotation = targetRotation;
+                    }
+                    mapGameObject.SetActive(true);
+                }
+                catch (NullReferenceException) {
+                    OpenDefaultMap();
+                    fogParticleSystem.gameObject.SetActive(true);
+                    fogParticleSystem.Play();
+                    mapGameObject.SetActive(true);
+                    Debug.Log("Map Generator not found");
+                }
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(tab), tab, null);
         }
     }
+    
+    private void InstantiateMap() {
+        mapGameObject.transform.localScale = new Vector3(0.00015f, 0.0003f, 0.00015f);
+        mapGameObject.transform.localRotation = Quaternion.Euler(0, 0, -25);
+        // instantiate terrain meshes
+        var meshFilters = (from Transform terrain in _terrainParent where terrain.gameObject.activeSelf select terrain.GetComponent<MeshFilter>()).ToList();
+
+        // combine meshes
+        var combine = new CombineInstance[meshFilters.Count];
+        
+        // scale and combine meshes
+        for (var i = 0; i < meshFilters.Count; i++) {
+            combine[i].mesh = meshFilters[i].sharedMesh;
+            combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
+        }
+        
+        var mapMesh = new Mesh {
+            indexFormat = UnityEngine.Rendering.IndexFormat.UInt32
+        };
+        
+        mapMesh.CombineMeshes(combine);
+        mapMesh.Optimize();
+        mapMesh.name = "Map";
+        _mapMeshFilter.sharedMesh = mapMesh;
+        _mapRenderer.sharedMaterial = mapMaterial;
+        
+        _hologramEffect.SetMesh("MapMesh", mapMesh);
+        _hologramEffect.SetVector3("MapTransform_position", mapGameObject.transform.localPosition);
+        _hologramEffect.SetVector3("MapTransform_angles", mapGameObject.transform.localRotation.eulerAngles);
+        _hologramEffect.SetVector3("MapTransform_scale", mapGameObject.transform.localScale);
+        _hologramEffect.SetVector3("MapLineScale", new Vector3(0, -2.6f, 0));
+        
+        _hologramEffect.SendEvent(MapEvent, _eventAttribute);
+
+    }
+    
+    private void OpenDefaultMap() {
+        mapGameObject.transform.localRotation = Quaternion.Euler(-90, 0, -25);
+        mapGameObject.transform.localScale = new Vector3(0.005f, 0.007f, 0.005f);
+        _mapMeshFilter.sharedMesh = defaultMapMesh;
+        _mapRenderer.sharedMaterial = defaultMapMaterial;
+        
+        _hologramEffect.SetMesh("MapMesh", _mapMeshFilter.sharedMesh);
+        _hologramEffect.SetVector3("MapTransform_position", mapGameObject.transform.localPosition);
+        _hologramEffect.SetVector3("MapTransform_angles", mapGameObject.transform.localRotation.eulerAngles);
+        _hologramEffect.SetVector3("MapTransform_scale", mapGameObject.transform.localScale);
+        _hologramEffect.SetVector3("MapLineScale", new Vector3(0, -2.6f, 0));
+        _hologramEffect.SetVector4("MapLineColor", defaultMapColor);
+        
+        _hologramEffect.SendEvent(MapEvent, _eventAttribute);
+    }
+    
     public void OnControlButtonsPressed(ControlButtonsType button) {
         var direction = button == ControlButtonsType.LEFT ? -1 : 1;
-        switch (CurrentTab) {
+        switch (currentTab) {
             case TabType.PLANETS:
                 _currentPlanet += direction;
                 _currentPlanet = _currentPlanet < 0 ? planetsProperties.Count - 1 : (_currentPlanet >= planetsProperties.Count ? 0 : _currentPlanet);
