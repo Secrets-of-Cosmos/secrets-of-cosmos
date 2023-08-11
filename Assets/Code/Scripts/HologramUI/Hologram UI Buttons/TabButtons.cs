@@ -12,7 +12,7 @@ public class Tabs : MonoBehaviour, IButton
     }
 
     public void OnMouseDown() {
-        HologramMenuController.Instance.OnTabSelected(buttonType);
+        HologramMenuController.instance.OnTabSelected(buttonType);
         LeanTween.scale(gameObject, new Vector3(0.6f, 0.6f, 0.6f), 0.5f).setEaseOutBack();
         material.SetColor("_EmissionColor", material.color * selectedColorIntensity);
     }

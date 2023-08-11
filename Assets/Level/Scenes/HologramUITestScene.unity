@@ -233,7 +233,7 @@ MonoBehaviour:
   missionName: Collect1
   missionDescription: Collect1
   missionStatus: 0
-  attributeToCheck: elements
+  attributesToChange: []
   nearDistance: 5
   player: {fileID: 0}
 --- !u!4 &678412623
@@ -638,6 +638,7 @@ MonoBehaviour:
   missionMarker: {fileID: 0}
   missionMarkerText: {fileID: 0}
   player: {fileID: 0}
+  workerRover: {fileID: 0}
 --- !u!4 &1433654429
 Transform:
   m_ObjectHideFlags: 0
@@ -668,7 +669,8 @@ MonoBehaviour:
   mars:
     name: mars
     attributeNames: []
-  missionManager: {fileID: 0}
+    percentageDiscovered: 0
+  missionManager: {fileID: 1433654428}
 --- !u!1 &1444728278
 GameObject:
   m_ObjectHideFlags: 0
