@@ -8,7 +8,7 @@ public class HelperRobotNoNavMesh : MonoBehaviour
     private Transform player;
     private Vector3[] rayArray;
     private Vector3 lerpedTargetDir;
-    public float rayLength = 2;
+    public float rayLength = 5;
     public float lerpSpeed = 1.0f;
     public float mult = 1.5f;
     public float speed = 1f;
@@ -59,7 +59,7 @@ public class HelperRobotNoNavMesh : MonoBehaviour
                     anim.SetBool("StopRoll_Anim", false);
                     anim.SetBool("Idle_Anim", false);
                     anim.SetBool("Walk_Anim", true);
-                    Vector3 teleportPosition = new Vector3(player.position.x, player.position.y + 4, player.position.z - 6);
+                    Vector3 teleportPosition = new Vector3(player.position.x, player.position.y + 3, player.position.z);
                     transform.position = teleportPosition;
                 }
                 if (distanceToPlayer < proximityDistance)
