@@ -6,16 +6,21 @@ public class HelperRobotNoNavMesh : MonoBehaviour
 {
     public GameObject target;
     private Transform player;
-    private Vector3[] rayArray;
     private Vector3 lerpedTargetDir;
     public float rayLength = 5;
-    public float lerpSpeed = 1.0f;
-    public float mult = 1.5f;
-    public float speed = 1f;
+    public float speed = 1.5f;
     public float rotSpeed = 0.15f;
     public float stopDistance = 4f;
     public float proximityDistance = 4f;
+    // Define the number of directions to consider for ray casting
+    private const int NumDirections = 8;
 
+    // Define the maximum distance for ray casting
+    private const float MaxDistance = 2.0f;
+
+    // Define the borrowing factors for neighbors
+    private const float BorrowNeighbor1 = 0.5f;
+    private const float BorrowNeighbor2 = 0.25f;
 
     private enum State { Follow, Idle };
     private State state = State.Idle;
@@ -24,7 +29,7 @@ public class HelperRobotNoNavMesh : MonoBehaviour
     private Rigidbody rb;
 
     private float idleAnimationTimer = 0.0f;
-    private float idleAnimationDuration = 0.5f; // Adjust this duration as needed
+    private float idleAnimationDuration = 0.5f;
     private int currentIdleAnimationIndex = 0;
 
     private string[] idleAnimations = { "GoToRoll_Anim", "RollLoop_Anim", "StopRoll_Anim", "Idle_Anim" };
@@ -35,8 +40,6 @@ public class HelperRobotNoNavMesh : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         player = target.transform;
-        rayArray = new Vector3[3];
-
     }
 
     private void Update()
@@ -76,13 +79,13 @@ public class HelperRobotNoNavMesh : MonoBehaviour
                     if (distanceToPlayer > stopDistance * 3 && distanceToPlayer < 30f)
                     {
 
-                        speed = 4.0f;
+                        MoveTowardsAndAvoid(target.transform, speed*2);
                     }
                     else
                     {
-                        speed = 2f;
+                        MoveTowardsAndAvoid(target.transform, speed);
                     }
-                    MoveTowardsAndAvoid(target.transform);
+                   
 
                 }
                 break;
@@ -145,54 +148,61 @@ public class HelperRobotNoNavMesh : MonoBehaviour
 
         currentIdleAnimationIndex = (currentIdleAnimationIndex + 1) % idleAnimations.Length;
     }
-    private void MoveTowardsAndAvoid(Transform target)
+    private void MoveTowardsAndAvoid(Transform target, float speed)
     {
+        Vector3 moveDirection = (target.position - transform.position).normalized;
+        List<Vector3> directions = CalculateDirections();
 
-        Vector3 targetPos = target.position;
-        targetPos.y = transform.position.y;
-        Vector3 targetDir = targetPos - transform.position;
+        float maxPriority = float.MinValue;
+        Vector3 bestDirection = Vector3.zero;
 
-        Vector3 forward = transform.forward;
-        Vector3 right = transform.right;
-        Vector3 up = transform.up;
-
-        rayArray[0] = transform.forward + (transform.right * -0.50f) + (transform.up * 0.2f);
-        rayArray[1] = transform.forward + (transform.up * 0.50f);
-        rayArray[2] = transform.forward + (transform.right * 0.50f) + (transform.up * 0.2f);
-
-
-
-        bool moveIt = false;
-
-        for (int i = 0; i < 3; i++)
+        foreach (Vector3 direction in directions)
         {
-            RaycastHit hit;
-
-            if (Physics.Raycast(transform.position, rayArray[i], out hit, rayLength))
+            float priority = CalculatePriority(direction, moveDirection);
+            Debug.DrawRay(transform.position, direction );
+            if (priority > maxPriority)
             {
-                Quaternion newRotation = Quaternion.LookRotation(Vector3.Reflect(targetDir.normalized, hit.normal));
-                transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, rotSpeed * Time.deltaTime);
-                targetDir += mult * hit.normal;
-
+                maxPriority = priority;
+                bestDirection = direction;
             }
-            else
-            {
-                moveIt = true;
-            }
-           Debug.DrawLine(transform.position, rayArray[i], Color.magenta);
-           
         }
-       
-        lerpedTargetDir = Vector3.Lerp(lerpedTargetDir, targetDir, Time.deltaTime * lerpSpeed);
-        Debug.DrawRay(transform.position, targetDir, Color.blue);
-        Debug.DrawRay(transform.position, lerpedTargetDir, Color.green);
-        Quaternion targetRotation = Quaternion.LookRotation(lerpedTargetDir);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotSpeed * Time.deltaTime);
 
-        if (moveIt)
+        // Move the robot towards the best direction while avoiding obstacles
+        Vector3 newPosition = transform.position + (bestDirection * Time.deltaTime*speed);
+        transform.position = newPosition;
+    }
+
+    private List<Vector3> CalculateDirections()
+    {
+        List<Vector3> directions = new List<Vector3>();
+        float angleIncrement = 360.0f / NumDirections;
+
+        for (int i = 0; i < NumDirections; i++)
         {
-            transform.Translate(targetDir.normalized* Time.deltaTime * speed);
+            float angle = i * angleIncrement;
+            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
+            directions.Add(direction);
         }
+
+        return directions;
+    }
+
+    private float CalculatePriority(Vector3 direction, Vector3 moveDirection)
+    {
+        float dotProduct = Vector3.Dot(direction, moveDirection);
+
+        // Calculate the collision factor
+        RaycastHit hit;
+        bool hasHit = Physics.Raycast(transform.position, direction, out hit, MaxDistance);
+        float collisionFactor = hasHit ? (1.0f - hit.distance / MaxDistance) : 1.0f;
+
+        // Calculate final priority
+        float priority = dotProduct * collisionFactor;
+        float borrowedPriority = (1.0f - collisionFactor) * BorrowNeighbor1 +
+                                (1.0f - BorrowNeighbor1) * BorrowNeighbor2;
+        priority += borrowedPriority;
+
+        return priority;
     }
 
 
